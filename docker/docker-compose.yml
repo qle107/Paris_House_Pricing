@@ -1,0 +1,92 @@
+# Full local stack: PostGIS+pgvector, the app image, and Airflow (LocalExecutor).
+# Bring up:  docker compose -f docker/docker-compose.yml --env-file .env up -d --build
+# The DB auto-applies the schema on first boot (docker/init-db.sh).
+
+x-app-env: &app-env
+  REI_PG_HOST: db
+  REI_PG_PORT: "5432"
+  REI_PG_DB: ${REI_PG_DB:-rei}
+  REI_PG_USER: ${REI_PG_USER:-rei}
+  REI_PG_PASSWORD: ${REI_PG_PASSWORD:-change_me}
+  REI_DATA_DIR: /data/rei
+  REI_LLM_PROVIDER: ${REI_LLM_PROVIDER:-manual}
+
+services:
+  db:
+    build:
+      context: ..
+      dockerfile: docker/postgres.Dockerfile
+    environment:
+      POSTGRES_DB: ${REI_PG_DB:-rei}
+      POSTGRES_USER: ${REI_PG_USER:-rei}
+      POSTGRES_PASSWORD: ${REI_PG_PASSWORD:-change_me}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../database:/sql:ro
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${REI_PG_USER:-rei}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment: *app-env
+    volumes:
+      - reidata:/data/rei
+      - ..:/app
+    depends_on:
+      db: {condition: service_healthy}
+    command: ["python", "-m", "rei.cli", "list-sources"]
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment: *app-env
+    depends_on:
+      db: {condition: service_healthy}
+    command: ["streamlit", "run", "dashboards/app.py", "--server.address=0.0.0.0"]
+    ports: ["8501:8501"]
+    volumes: ["..:/app", "reidata:/data/rei"]
+
+  mapserver:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment: *app-env
+    depends_on:
+      db: {condition: service_healthy}
+    command: ["uvicorn", "rei.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports: ["8000:8000"]
+    volumes: ["..:/app", "reidata:/data/rei"]
+
+  airflow:
+    image: apache/airflow:2.10.2-python3.11
+    restart: always
+    depends_on:
+      db: {condition: service_healthy}
+    environment:
+      <<: *app-env
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${REI_PG_USER:-rei}:${REI_PG_PASSWORD:-change_me}@db:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      _PIP_ADDITIONAL_REQUIREMENTS: "geopandas shapely pyproj requests tenacity beautifulsoup4 pydantic-settings pyyaml polars duckdb sqlalchemy psycopg2-binary geoalchemy2 pgvector pandera lightgbm"
+    volumes:
+      - ../airflow/dags:/opt/airflow/dags
+      - ..:/app
+      - reidata:/data/rei
+    ports: ["8080:8080"]
+    command: >
+      bash -c "pip install -e /app &&
+               airflow db migrate &&
+               airflow users create --username admin --password admin --firstname a --lastname b --role Admin --email admin@rei.local || true &&
+               airflow scheduler & airflow webserver"
+
+volumes:
+  pgdata:
+  reidata:

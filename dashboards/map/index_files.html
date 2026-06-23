@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" /><title>France RE Intelligence — IRIS Map (file mode)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:system-ui,Segoe UI,Roboto,sans-serif}
+  #map{position:absolute;inset:0}
+  .panel{position:absolute;z-index:1;background:#fff;border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.3);padding:12px 14px;font-size:13px}
+  #controls{top:12px;left:12px;width:250px}#legend{bottom:24px;left:12px;width:250px}
+  #ranking{bottom:24px;right:12px;width:224px;max-height:50vh;overflow:auto}
+  .rank-row:hover{background:#eef3f8;border-radius:3px}
+  #controls h1{font-size:14px;margin:0 0 8px}#controls label{display:block;margin:4px 0;cursor:pointer}
+  .swatch{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .ramp{height:10px;border-radius:3px;margin:6px 0;background:linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)}
+  .muted{color:#666;font-size:11px}.maplibregl-popup-content{font-size:12px;max-width:280px}
+  .maplibregl-popup-content h3{margin:0 0 4px;font-size:13px}table.kv td{padding:1px 6px 1px 0}
+</style></head>
+<body>
+<div id="map"></div>
+<div id="controls" class="panel">
+  <h1>Layers</h1>
+  <label><input type="checkbox" id="t-iris" checked> IRIS score (choropleth)</label>
+  <label><input type="checkbox" id="t-hotspots"> Hotspot tiers</label>
+  <label><input type="checkbox" id="t-communes"> Commune score (fallback)</label>
+  <label><input type="checkbox" id="t-projects" checked> Transit + GPE projects</label>
+  <label><input type="checkbox" id="t-transit"> Transit stops</label>
+  <label><input type="checkbox" id="t-zoning"> PLU zoning</label>
+  <label><input type="checkbox" id="t-parcels"> Parcel buildable-upside</label>
+  <label style="margin-top:8px;display:block">Colour IRIS by:
+    <select id="iris-metric" style="width:100%;margin-top:3px">
+      <option value="score_total">Attractiveness (base)</option>
+      <option value="institutional_score">Institutional score</option>
+      <option value="alpha_score">Acquisition Alpha</option>
+      <option value="inst_value">Value (&euro;/m&sup2; discount)</option>
+      <option value="inst_appreciation">Appreciation</option>
+      <option value="inst_development">Development</option>
+      <option value="inst_risk">Risk</option>
+    </select>
+  </label>
+  <div id="metric-desc" class="muted" style="margin-top:5px;line-height:1.35"></div>
+  <div class="muted" id="status" style="margin-top:8px"></div>
+</div>
+<div id="legend" class="panel">
+  <strong id="legend-title">IRIS attractiveness</strong><div class="ramp"></div>
+  <div class="muted">0 — 50 — 75 — 100 (grey = not scored)</div>
+  <div style="margin-top:8px">
+    <span class="swatch" style="background:#238b45"></span>Hotspot top 5% &nbsp;
+    <span class="swatch" style="background:#74c476"></span>10% &nbsp;
+    <span class="swatch" style="background:#c7e9c0"></span>20%<br>
+    <span class="swatch" style="background:#e6550d"></span>GPE / transport project<br>
+    <span class="swatch" style="background:#3182bd"></span>Transit stop</div>
+</div>
+<div id="ranking" class="panel">
+  <strong id="rank-title">Top 10</strong>
+  <div id="rank-list" style="margin-top:6px"></div>
+</div>
+<script>
+const RAMP=[-1,"#cccccc",0,"#d73027",50,"#fee08b",75,"#1a9850",100,"#006837"];
+const irisColor=["interpolate",["linear"],["coalesce",["get","score_total"],-1],...RAMP];
+const scoreColor=["interpolate",["linear"],["coalesce",["get","score"],-1],...RAMP];
+const hotspotColor=["match",["coalesce",["get","hotspot_tier"],0],5,"#238b45",10,"#74c476",20,"#c7e9c0","#cccccc"];
+const zoningColor=["match",["slice",["coalesce",["get","typezone"],""],0,2],"U","#fb9a99","AU","#e31a1c","A","#a6d96a","N","#1a9850","#bdbdbd"];
+const upsideColor=["interpolate",["linear"],["coalesce",["get","upside_m2"],0],0,"#fde0dd",500,"#fa9fb5",2000,"#dd3497",8000,"#7a0177"];
+
+const map=new maplibregl.Map({container:"map",style:{version:8,
+  sources:{carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png","https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],tileSize:256,attribution:"© OpenStreetMap, © CARTO"}},
+  layers:[{id:"carto",type:"raster",source:"carto"}]},center:[2.35,48.86],zoom:11});
+map.addControl(new maplibregl.NavigationControl(),"top-right");
+map.addControl(new maplibregl.ScaleControl());
+
+async function exists(u){ try{const r=await fetch(u,{method:"HEAD"});return r.ok;}catch(_){return false;} }
+const labelize=k=>k.replace("score_","").replace(/_/g," ");
+
+const METRICS={
+  score_total:        {t:"Attractiveness",    d:"Weighted blend of six components (0–100)."},
+  institutional_score:{t:"Institutional",     d:"Composite: appreciation, rental, value, development, risk."},
+  alpha_score:        {t:"Alpha",             d:"Value + appreciation + development (transit term optional)."},
+  inst_value:         {t:"Value discount",    d:"Observed vs hedonic €/m² gap."},
+  inst_appreciation:  {t:"Appreciation",      d:"Price momentum and supply constraint."},
+  inst_development:   {t:"Development",       d:"Underbuilt land (low footprint coverage)."},
+  inst_risk:          {t:"Risk",              d:"Low volatility and adequate sales volume."},
+};
+function refreshMetric(){
+  const sel=document.getElementById("iris-metric"); if(!sel) return;
+  const m=sel.value, meta=METRICS[m]||{t:m,d:""};
+  const desc=document.getElementById("metric-desc"); if(desc) desc.textContent=meta.d;
+  const lt=document.getElementById("legend-title"); if(lt) lt.textContent=meta.t;
+  if(map.getLayer("iris-fill"))
+    map.setPaintProperty("iris-fill","fill-color",["interpolate",["linear"],["coalesce",["get",m],-1],...RAMP]);
+  const title=document.getElementById("rank-title"); if(title) title.textContent="Top 10 · "+meta.t;
+  const list=document.getElementById("rank-list"); if(!list) return;
+  const ranked=irisFeatures.map(f=>({p:f.properties||{},g:f.geometry}))
+    .filter(o=>o.p[m]!=null&&!isNaN(o.p[m])).sort((a,b)=>b.p[m]-a.p[m]).slice(0,10);
+  if(!ranked.length){ list.innerHTML='<div class="muted">No scored IRIS yet — re-run with --score-level iris.</div>'; return; }
+  list.innerHTML=ranked.map((o,i)=>`<div class="rank-row" data-i="${i}" style="display:flex;justify-content:space-between;gap:8px;padding:2px 4px;cursor:pointer">`+
+    `<span>${i+1}. ${o.p.iris_name||o.p.iris_code}</span><b>${Math.round(o.p[m])}</b></div>`).join("");
+  [...list.querySelectorAll(".rank-row")].forEach(el=>el.addEventListener("click",()=>{
+    const o=ranked[+el.dataset.i]; if(!o) return;
+    if(map.getLayer("iris-highlight")) map.setFilter("iris-highlight",["==",["to-string",["get","iris_code"]],String(o.p.iris_code)]);
+    list.querySelectorAll(".rank-row").forEach(r=>{r.style.fontWeight="";r.style.color="";}); el.style.fontWeight="bold"; el.style.color="#c0008f";
+    if(!o.g) return; const b=new maplibregl.LngLatBounds();
+    ((o.g.type==="MultiPolygon")?o.g.coordinates.flat(2):o.g.coordinates.flat(1)).forEach(c=>b.extend(c));
+    if(!b.isEmpty()) map.fitBounds(b,{padding:80,maxZoom:15}); }));
+}
+
+map.on("load", async () => {
+  const present={};
+  for (const f of ["iris","communes","parcels","zoning","transit","projects"]) present[f]=await exists(`./${f}.geojson`);
+  if(present.iris)     map.addSource("iris",{type:"geojson",data:"./iris.geojson",generateId:true});
+  if(present.communes) map.addSource("communes",{type:"geojson",data:"./communes.geojson"});
+  if(present.parcels)  map.addSource("parcels",{type:"geojson",data:"./parcels.geojson"});
+  if(present.zoning)   map.addSource("zoning",{type:"geojson",data:"./zoning.geojson"});
+  if(present.transit)  map.addSource("transit",{type:"geojson",data:"./transit.geojson"});
+  if(present.projects) map.addSource("projects",{type:"geojson",data:"./projects.geojson"});
+
+  if(present.iris){
+    map.addLayer({id:"iris-fill",type:"fill",source:"iris",paint:{"fill-color":irisColor,
+      "fill-opacity":["case",["boolean",["feature-state","hover"],false],0.85,0.55]}});
+    map.addLayer({id:"iris-line",type:"line",source:"iris",paint:{"line-color":"#555","line-width":0.4}});
+    map.addLayer({id:"hotspots",type:"fill",source:"iris",layout:{visibility:"none"},
+      filter:[">",["coalesce",["get","hotspot_tier"],0],0],
+      paint:{"fill-color":hotspotColor,"fill-opacity":0.8,"fill-outline-color":"#00441b"}});
+  }
+  if(present.communes){
+    map.addLayer({id:"communes-fill",type:"fill",source:"communes",layout:{visibility:"none"},paint:{"fill-color":scoreColor,"fill-opacity":0.6}});
+    map.addLayer({id:"communes-line",type:"line",source:"communes",layout:{visibility:"none"},paint:{"line-color":"#555","line-width":0.5}});
+  }
+  if(present.zoning)   map.addLayer({id:"zoning-fill",type:"fill",source:"zoning",layout:{visibility:"none"},paint:{"fill-color":zoningColor,"fill-opacity":0.35,"fill-outline-color":"#888"}});
+  if(present.parcels)  map.addLayer({id:"parcels-fill",type:"fill",source:"parcels",layout:{visibility:"none"},paint:{"fill-color":upsideColor,"fill-opacity":0.75,"fill-outline-color":"#7a0177"}});
+  if(present.transit)  map.addLayer({id:"transit-pt",type:"circle",source:"transit",layout:{visibility:"none"},paint:{"circle-radius":3,"circle-color":"#3182bd","circle-stroke-width":0.5,"circle-stroke-color":"#fff"}});
+  if(present.projects) map.addLayer({id:"projects-pt",type:"circle",source:"projects",paint:{"circle-radius":6,"circle-color":"#e6550d","circle-stroke-width":1.5,"circle-stroke-color":"#fff"}});
+  // highlight outline for the IRIS selected from the Top-10 list (filter set on click)
+  if(present.iris) map.addLayer({id:"iris-highlight",type:"line",source:"iris",
+    filter:["==",["to-string",["get","iris_code"]],"__none__"],
+    paint:{"line-color":"#ff00d4","line-width":4,"line-blur":0.2,"line-opacity":1}});
+
+  const fitTo = present.iris ? "iris" : (present.communes ? "communes" : null);
+  if(fitTo){ try{
+    const gj=await (await fetch(`./${fitTo}.geojson`)).json();
+    const b=new maplibregl.LngLatBounds();
+    gj.features.forEach(ft=>{ const g=ft.geometry; if(!g) return; const cs=(g.type==="MultiPolygon"?g.coordinates.flat(2):g.coordinates.flat(1)); cs.forEach(c=>b.extend(c)); });
+    if(!b.isEmpty()) map.fitBounds(b,{padding:30});
+  }catch(_){} }
+
+  const sel=document.getElementById("iris-metric");
+  if(sel) sel.addEventListener("change", refreshMetric);
+  document.getElementById("status").textContent = "Layers: " + Object.keys(present).filter(k=>present[k]).join(", ");
+  if(present.iris){
+    try{
+      const fj=await (await fetch("./iris.geojson")).json(); const fs=fj.features||[]; irisFeatures=fs;
+      const scored=fs.filter(f=>f.properties&&f.properties.score_total!=null).length;
+      const hot=fs.filter(f=>+((f.properties||{}).hotspot_tier||0)>0).length;
+      console.log(`IRIS loaded: ${fs.length}  IRIS scored: ${scored}  IRIS rendered: ${map.getLayer("iris-fill")?fs.length:0}  IRIS hotspots: ${hot}`);
+      refreshMetric();
+    }catch(e){ console.warn("IRIS diag: failed to read iris.geojson", e); }
+  } else {
+    document.getElementById("rank-list").innerHTML='<div class="muted">IRIS not scored yet — re-run with --score-level iris.</div>';
+    console.warn("IRIS: ./iris.geojson not found — run with --score-level iris.");
+  }
+  wireHover(); wireToggles();
+});
+
+function wireHover(){
+  if(!map.getLayer("iris-fill")) return;
+  let hov=null;
+  map.on("mousemove","iris-fill",(e)=>{ if(!e.features.length) return;
+    if(hov!==null) map.setFeatureState({source:"iris",id:hov},{hover:false});
+    hov=e.features[0].id; map.setFeatureState({source:"iris",id:hov},{hover:true});
+    map.getCanvas().style.cursor="pointer"; });
+  map.on("mouseleave","iris-fill",()=>{ if(hov!==null) map.setFeatureState({source:"iris",id:hov},{hover:false}); hov=null; map.getCanvas().style.cursor=""; });
+}
+
+function wireToggles(){
+  const pairs=[["t-iris",["iris-fill","iris-line"]],["t-hotspots",["hotspots"]],
+    ["t-communes",["communes-fill","communes-line"]],["t-projects",["projects-pt"]],
+    ["t-transit",["transit-pt"]],["t-zoning",["zoning-fill"]],["t-parcels",["parcels-fill"]]];
+  for(const [id,ls] of pairs){const el=document.getElementById(id); if(!el) continue;
+    el.addEventListener("change",()=>{const v=el.checked?"visible":"none"; ls.forEach(L=>map.getLayer(L)&&map.setLayoutProperty(L,"visibility",v));});}
+}
+
+const s1=v=>v!=null&&!isNaN(v)?Math.round(v):"n/a";
+const fmtEur=v=>v!=null&&!isNaN(v)?"€"+Math.round(v).toLocaleString():"n/a";
+const outlook=v=>v==null||isNaN(v)?"n/a":(v>=75?"Strong":v>=60?"Moderate":v>=45?"Average":"Weak");
+function instBlock(p){
+  if(p.institutional_score==null) return "";
+  const cov=p.data_coverage!=null?` <span class="muted">(${Math.round(p.data_coverage*100)}% coverage)</span>`:"";
+  const disc=p.discount_pct!=null&&!isNaN(p.discount_pct)?((+p.discount_pct>=0?"+":"")+(+p.discount_pct).toFixed(1)+"%"):"n/a";
+  return `<tr><td colspan="2" style="padding-top:6px"><b>Institutional</b>${cov}</td></tr>`+
+    `<tr><td>Institutional</td><td><b>${s1(p.institutional_score)}</b> &middot; alpha ${s1(p.alpha_score)} &middot; #${p.institutional_rank??"n/a"}</td></tr>`+
+    `<tr><td>Appreciation</td><td>${s1(p.inst_appreciation)}</td></tr>`+
+    `<tr><td>Rental</td><td>${s1(p.inst_rental)}</td></tr>`+
+    `<tr><td>Value</td><td>${s1(p.inst_value)}</td></tr>`+
+    `<tr><td>Development</td><td>${s1(p.inst_development)}</td></tr>`+
+    `<tr><td>Risk</td><td>${s1(p.inst_risk)}</td></tr>`+
+    `<tr><td>Toxicity</td><td>${s1(p.inst_toxicity)}</td></tr>`+
+    `<tr><td>Price/m²</td><td>${fmtEur(p.observed_prix_m2)} vs exp ${fmtEur(p.expected_prix_m2)}</td></tr>`+
+    `<tr><td>Discount</td><td><b>${disc}</b></td></tr>`+
+    `<tr><td>Outlook</td><td>appr ${outlook(p.inst_appreciation)} &middot; rent ${outlook(p.inst_rental)}</td></tr>`;
+}
+map.on("click","iris-fill",(e)=>{const p=e.features[0].properties;
+  const tier=(+p.hotspot_tier>0)?`<tr><td>Hotspot</td><td><b>top ${p.hotspot_tier}%</b></td></tr>`:"";
+  new maplibregl.Popup({maxWidth:"320px"}).setLngLat(e.lngLat).setHTML(
+    `<h3>${p.iris_name||p.iris_code}</h3><table class="kv">`+
+    `<tr><td>IRIS</td><td>${p.iris_code}</td></tr>`+
+    `<tr><td>Commune</td><td>${p.code_commune}</td></tr>`+
+    `<tr><td>Attractiveness</td><td><b>${p.score_total!=null?(+p.score_total).toFixed(1):"n/a"}</b> &middot; #${p.rank??"n/a"}</td></tr>`+
+    `${tier}${instBlock(p)}</table>`).addTo(map);});
+
+map.on("click","communes-fill",(e)=>{const p=e.features[0].properties;
+  const comp=Object.keys(p).filter(k=>k.startsWith("score_")).map(k=>`<tr><td>${labelize(k)}</td><td>${Math.round(p[k])}</td></tr>`).join("");
+  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<h3>${p.name||p.code_commune}</h3><table class="kv"><tr><td>INSEE</td><td>${p.code_commune}</td></tr><tr><td>Score</td><td><b>${p.score!=null?(+p.score).toFixed(1):"n/a"}</b></td></tr><tr><td>Rank</td><td>${p.rank??"n/a"}</td></tr>${comp}</table>`).addTo(map);});
+
+map.on("click","projects-pt",(e)=>{const p=e.features[0].properties;
+  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<h3>${p.project||"Project"}</h3><table class="kv"><tr><td>Line</td><td>${p.line??""}</td></tr><tr><td>Mode</td><td>${p.mode??""}</td></tr><tr><td>Opening</td><td>${p.opening??""}</td></tr><tr><td>Status</td><td>${p.status??""}</td></tr></table>`).addTo(map);});
+map.on("click","parcels-fill",(e)=>{const p=e.features[0].properties;
+  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<h3>Parcel ${p.id_parcelle||""}</h3><table class="kv"><tr><td>Upside</td><td><b>${p.upside_m2!=null?Math.round(p.upside_m2):"n/a"} m²</b></td></tr><tr><td>Zone</td><td>${p.zone_family??""}</td></tr></table>`).addTo(map);});
+</script>
+</body></html>

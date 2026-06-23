@@ -1,0 +1,358 @@
+# Dataset registry — see docs/master_strategy.md Part 2 for details.
+# tier: runnable (collector works) | scaffold (stub collector)
+
+sources:
+
+  # Demographics
+  insee_population:
+    name: "INSEE - Population legale & recensement (RP)"
+    collector: rei.ingestion.insee.InseePopulationCollector
+    tier: runnable
+    portal: "https://www.insee.fr/fr/statistiques"
+    api: "https://api.insee.fr/melodi/V2"
+    catalog: "https://api.insee.fr/melodi/V2/catalog/all"
+    auth: none
+    rate_limit_rpm: 30
+    cadence: annual       # legal population published end of December
+    granularity: IRIS
+    variables: [population, age, sex, csp, menages, logements]
+    score: 10
+
+  insee_employment:
+    name: "INSEE - Emploi / population active (RP + estimations d'emploi)"
+    collector: rei.ingestion.insee.InseeEmploymentCollector
+    tier: runnable
+    api: "https://api.insee.fr/melodi/V2"
+    auth: none
+    rate_limit_rpm: 30
+    cadence: annual
+    granularity: commune
+    variables: [actifs, emploi, chomage, secteur_activite, csp]
+    score: 9
+
+  insee_income:
+    name: "INSEE FiLoSoFi - revenus disponibles & pauvrete"
+    collector: rei.ingestion.insee.InseeIncomeCollector
+    tier: runnable
+    api: "https://api.insee.fr/melodi/V2"
+    auth: none
+    cadence: annual
+    granularity: IRIS
+    variables: [revenu_median, taux_pauvrete, deciles, gini]
+    score: 9
+
+  insee_migration:
+    name: "INSEE - Migrations residentielles (mobilite residentielle)"
+    collector: rei.ingestion.insee.InseeMigrationCollector
+    tier: scaffold
+    api: "https://api.insee.fr/melodi/V2"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [entrants, sortants, solde_migratoire, origine, destination]
+    score: 8
+
+  insee_household_formation:
+    name: "INSEE - Menages & projections (Omphale)"
+    collector: rei.ingestion.insee.InseeHouseholdCollector
+    tier: scaffold
+    api: "https://api.insee.fr/melodi/V2"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [nb_menages, taille_menage, projection_menages]
+    score: 8
+
+  # Business / economy
+  sirene_businesses:
+    name: "INSEE SIRENE - etablissements & creations d'entreprises"
+    collector: rei.ingestion.sirene.SireneCollector
+    tier: scaffold
+    api: "https://api.insee.fr/api-sirene/3.11"
+    bulk: "https://files.data.gouv.fr/insee-sirene/"
+    auth: api_key        # app key from portail-api.insee.fr
+    rate_limit_rpm: 30
+    cadence: daily
+    granularity: address
+    variables: [siret, naf, effectif, date_creation, etat_administratif, geo]
+    score: 8
+
+  bpe_equipements:
+    name: "INSEE BPE - Base Permanente des Equipements (commerces, services)"
+    collector: rei.ingestion.insee.BpeCollector
+    tier: scaffold
+    api: "https://api.insee.fr/melodi/V2"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [commerces, sante, education, sport, transport]
+    score: 7
+
+  fdi_businessfrance:
+    name: "Business France - investissements etrangers (FDI/IDE)"
+    collector: rei.ingestion.fdi.BusinessFranceCollector
+    tier: scaffold
+    portal: "https://www.businessfrance.fr/bilan"
+    auth: scrape         # annual report PDFs; no open API
+    cadence: annual
+    granularity: region
+    variables: [projets, emplois, secteur, pays_origine]
+    score: 6
+
+  # Property market
+  dvf_transactions:
+    name: "DGFiP DVF - Demandes de Valeurs Foncieres (geolocalisees)"
+    collector: rei.ingestion.dvf.DvfCollector
+    tier: runnable
+    portal: "https://www.data.gouv.fr/datasets/demandes-de-valeurs-foncieres-geolocalisees"
+    download: "https://files.data.gouv.fr/geo-dvf/latest/csv"
+    api: "https://api.cquest.org/dvf"      # community read API (optional)
+    auth: none
+    cadence: biannual    # April & October releases
+    granularity: parcel
+    variables: [valeur_fonciere, surface_bati, type_local, date_mutation, lat, lon]
+    score: 10
+
+  dvf_plus_aggregated:
+    name: "Cerema DV3F / DVF+ agregee a la mutation"
+    collector: rei.ingestion.dvf.DvfPlusCollector
+    tier: scaffold
+    portal: "https://www.data.gouv.fr/datasets/demande-de-valeurs-foncieres-agregee-a-la-mutation-dvf"
+    auth: none
+    cadence: biannual
+    granularity: parcel
+    variables: [segment_marche, prix_m2, filtre_qualite]
+    score: 8
+
+  rental_observatoires:
+    name: "Observatoires Locaux des Loyers (OLL) + carte des loyers ANIL"
+    collector: rei.ingestion.rental.RentObservatoryCollector
+    tier: scaffold
+    portal: "https://www.data.gouv.fr/datasets/carte-des-loyers-indicateurs-de-loyers-dannonce-par-commune"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [loyer_m2_maison, loyer_m2_appartement, loyer_m2_t3]
+    score: 8
+
+  # Construction / permits
+  sitadel_permits:
+    name: "SDES Sit@del - permis de construire & autorisations d'urbanisme"
+    collector: rei.ingestion.sitadel.SitadelCollector
+    tier: runnable
+    portal: "https://www.statistiques.developpement-durable.gouv.fr/donnees-des-permis-de-construire-et-autres-autorisations-durbanisme"
+    download: "https://www.data.gouv.fr/datasets/base-des-permis-de-construire-et-autres-autorisations-durbanisme"
+    auth: none
+    cadence: monthly
+    granularity: commune
+    variables: [type_permis, nb_logements, surface, date_autorisation, date_doc]
+    score: 10
+
+  housing_starts:
+    name: "SDES - logements autorises & commences (series mensuelles)"
+    collector: rei.ingestion.sitadel.HousingStartsCollector
+    tier: scaffold
+    portal: "https://www.data.gouv.fr/datasets/logements-autorises-et-commences-nombre-et-surfaces-series-mensuelles-donnees-estimees-1"
+    auth: none
+    cadence: monthly
+    granularity: departement
+    variables: [autorises, commences, surface]
+    score: 8
+
+  # Land / cadastre / zoning
+  cadastre_parcels:
+    name: "Etalab - Plan Cadastral Informatise (PCI) vecteur"
+    collector: rei.ingestion.cadastre.CadastreCollector
+    tier: runnable
+    portal: "https://cadastre.data.gouv.fr/datasets/cadastre-etalab"
+    download: "https://cadastre.data.gouv.fr/data/etalab-cadastre/latest/geojson/communes"
+    auth: none
+    cadence: quarterly   # PCI millesimes ~ every 3 months
+    granularity: parcel
+    variables: [geometry, contenance, section, numero, batiments]
+    score: 10
+
+  ban_addresses:
+    name: "Base Adresse Nationale (BAN) + geocodage"
+    collector: rei.ingestion.ban.BanCollector
+    tier: runnable
+    portal: "https://adresse.data.gouv.fr/"
+    api: "https://api-adresse.data.gouv.fr"
+    auth: none
+    cadence: continuous
+    granularity: address
+    variables: [lat, lon, label, citycode, score]
+    score: 9
+
+  gpu_zoning:
+    name: "Geoportail de l'Urbanisme (GPU) - PLU/PLUi/POS zonage + prescriptions"
+    collector: rei.ingestion.gpu.GpuCollector
+    tier: runnable
+    portal: "https://www.geoportail-urbanisme.gouv.fr/"
+    api: "https://apicarto.ign.fr/api/gpu"                       # API Carto module GPU
+    wfs: "https://data.geopf.fr/annexes/ressources/wfs/gpu.xml"  # bulk WFS (5000/page)
+    auth: none
+    cadence: continuous   # documents published as communes approve them
+    granularity: parcel
+    variables: [libelle, typezone, destdomi, partition, prescriptions, secteurs]
+    score: 10
+
+  scot_documents:
+    name: "SCoT - Schemas de Coherence Territoriale (via GPU)"
+    collector: rei.ingestion.gpu.ScotCollector
+    tier: scaffold
+    api: "https://apicarto.ign.fr/api/gpu"
+    auth: none
+    cadence: continuous
+    granularity: epci
+    variables: [perimetre, orientations, document_pdf]
+    score: 7
+
+  zac_operations:
+    name: "ZAC / operations d'amenagement (open data local + GPU prescriptions)"
+    collector: rei.ingestion.gpu.ZacCollector
+    tier: scaffold
+    api: "https://apicarto.ign.fr/api/gpu"
+    auth: scrape
+    cadence: irregular
+    granularity: parcel
+    variables: [perimetre_zac, amenageur, programme]
+    score: 8
+
+  # Transport
+  transit_gtfs:
+    name: "Point d'Acces National (transport.data.gouv.fr) - GTFS / GTFS-RT"
+    collector: rei.ingestion.transport.GtfsCollector
+    tier: runnable
+    portal: "https://transport.data.gouv.fr/"
+    api: "https://transport.data.gouv.fr/api/datasets"
+    auth: none
+    cadence: continuous
+    granularity: stop
+    variables: [stops, routes, frequencies, modes]
+    score: 9
+
+  transport_projects:
+    name: "Grands projets de transport (SGP/GPE, SNCF Reseau, regions)"
+    collector: rei.ingestion.transport.ProjectCollector
+    tier: scaffold
+    portal: "https://www.societedugrandparis.fr/"
+    auth: scrape
+    cadence: irregular
+    granularity: station
+    variables: [ligne, station, mise_en_service, statut]
+    score: 9
+
+  # Risk / environment
+  georisques:
+    name: "Georisques (BRGM) - inondation, retrait-gonflement argiles, PPRN"
+    collector: rei.ingestion.georisques.GeorisquesCollector
+    tier: scaffold
+    portal: "https://www.georisques.gouv.fr/"
+    api: "https://georisques.gouv.fr/api/v1"
+    auth: none
+    cadence: continuous
+    granularity: parcel
+    variables: [azi, ppr, tri, argiles, radon, cavites]
+    score: 8
+
+  dpe_energy:
+    name: "ADEME - DPE logements (observatoire performance energetique)"
+    collector: rei.ingestion.dpe.DpeCollector
+    tier: scaffold
+    portal: "https://data.ademe.fr/datasets"
+    api: "https://data.ademe.fr/data-fair/api/v1/datasets"
+    auth: none
+    cadence: continuous
+    granularity: address
+    variables: [classe_dpe, conso_energie, ges, surface, annee_construction]
+    score: 7
+
+  # Public services / social
+  education_ips:
+    name: "MEN - annuaire etablissements + IPS (indice position sociale)"
+    collector: rei.ingestion.education.EducationCollector
+    tier: scaffold
+    portal: "https://data.education.gouv.fr/"
+    api: "https://data.education.gouv.fr/api/explore/v2.1"
+    auth: none
+    cadence: annual
+    granularity: address
+    variables: [ips, effectifs, type_etab, resultats_brevet, lat, lon]
+    score: 7
+
+  crime_ssmsi:
+    name: "SSMSI - bases communales de la delinquance enregistree"
+    collector: rei.ingestion.crime.CrimeCollector
+    tier: scaffold
+    portal: "https://www.data.gouv.fr/datasets/bases-statistiques-communale-et-departementale-de-la-delinquance-enregistree-par-la-police-et-la-gendarmerie-nationales"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [type_infraction, nombre, taux_pour_mille]
+    score: 6
+
+  # Public finance / governance
+  ofgl_budgets:
+    name: "OFGL / DGFiP - comptes & budgets des collectivites locales"
+    collector: rei.ingestion.ofgl_budgets.OfglCollector
+    tier: scaffold
+    portal: "https://www.ofgl.fr/"
+    api: "https://data.ofgl.fr/api/explore/v2.1"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [recettes, depenses, investissement, encours_dette, capacite_autofin]
+    score: 7
+
+  municipal_minutes:
+    name: "Deliberations de conseils municipaux / comptes-rendus (sites mairie)"
+    collector: rei.ingestion.municipal.MinutesCollector
+    tier: scaffold
+    auth: scrape
+    cadence: irregular   # per council calendar
+    granularity: commune
+    variables: [date_seance, ordre_du_jour, deliberations_pdf]
+    score: 9
+
+  public_consultations:
+    name: "Concertations & enquetes publiques (registres en ligne, prefectures)"
+    collector: rei.ingestion.municipal.ConsultationCollector
+    tier: scaffold
+    auth: scrape
+    cadence: irregular
+    granularity: commune
+    variables: [objet, periode, documents, avis_commissaire]
+    score: 8
+
+  regional_plans:
+    name: "SRADDET / SDRIF / plans de developpement regionaux"
+    collector: rei.ingestion.municipal.RegionalPlanCollector
+    tier: scaffold
+    auth: scrape
+    cadence: irregular
+    granularity: region
+    variables: [objectifs_logement, armature_urbaine, corridors]
+    score: 7
+
+  admin_communes:
+    name: "geo.api.gouv.fr - contours communaux (boundaries for the map)"
+    collector: rei.ingestion.admin_boundaries.CommunesBoundaryCollector
+    tier: runnable
+    api: "https://geo.api.gouv.fr/communes"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [code, nom, contour]
+    score: 7
+
+  iris_contours:
+    name: "OpenDataSoft georef-france-iris - IRIS sub-municipal contours"
+    collector: rei.ingestion.iris.IrisContoursCollector
+    tier: runnable
+    api: "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-france-iris"
+    auth: none
+    cadence: annual
+    granularity: IRIS
+    variables: [iris_code, iris_name, com_code, com_arm_code, geometry]
+    score: 10

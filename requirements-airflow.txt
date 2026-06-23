@@ -1,0 +1,13 @@
+# Apache Airflow installs into its OWN environment, separate from the app, because
+# it constrains SQLAlchemy<2.0 and many other libraries. The official Docker image
+# (apache/airflow:2.10.2) already does this for you in docker/docker-compose.yml.
+#
+# For a LOCAL scheduler (optional), install Airflow with its constraints file so
+# its pins are resolved correctly, e.g. (Python 3.11):
+#
+#   pip install "apache-airflow==2.10.2" \
+#     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.2/constraints-3.11.txt"
+#
+# Then install the app WITHOUT re-pinning Airflow's deps:
+#   pip install -e .   # plus the platform libs you need for the DAG callables
+apache-airflow==2.10.2

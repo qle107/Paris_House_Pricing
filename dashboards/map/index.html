@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>France RE Intelligence — Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:system-ui,Segoe UI,Roboto,sans-serif}
+  #map{position:absolute;top:0;bottom:0;left:0;right:0}
+  .panel{position:absolute;z-index:1;background:#fff;border-radius:8px;
+         box-shadow:0 1px 6px rgba(0,0,0,.3);padding:12px 14px;font-size:13px}
+  #controls{top:12px;left:12px;width:230px}
+  #legend{bottom:24px;left:12px;width:230px}
+  #controls h1{font-size:14px;margin:0 0 8px}
+  #controls label{display:block;margin:4px 0;cursor:pointer}
+  .swatch{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  .ramp{height:10px;border-radius:3px;margin:6px 0;
+        background:linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)}
+  .muted{color:#666;font-size:11px}
+  .maplibregl-popup-content{font-size:12px;max-width:260px}
+  .maplibregl-popup-content h3{margin:0 0 4px;font-size:13px}
+  table.kv{border-collapse:collapse}
+  table.kv td{padding:1px 6px 1px 0}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="controls" class="panel">
+  <h1>Layers</h1>
+  <label><input type="checkbox" id="t-communes" checked> Commune score (choropleth)</label>
+  <label><input type="checkbox" id="t-projects" checked> Transit + GPE projects</label>
+  <label><input type="checkbox" id="t-transit"> Transit stops</label>
+  <label><input type="checkbox" id="t-zoning"> PLU zoning <span class="muted">(z≥11)</span></label>
+  <label><input type="checkbox" id="t-parcels"> Parcel buildable-upside <span class="muted">(z≥13)</span></label>
+  <div class="muted" id="zoomNote" style="margin-top:8px"></div>
+</div>
+
+<div id="legend" class="panel">
+  <strong>Commune attractiveness</strong>
+  <div class="ramp"></div>
+  <div class="muted">0 — 50 — 75 — 100 &nbsp;(grey = not scored)</div>
+  <div style="margin-top:8px">
+    <span class="swatch" style="background:#7a0177"></span>Parcel upside (darker = higher)<br>
+    <span class="swatch" style="background:#e6550d"></span>GPE / transport project<br>
+    <span class="swatch" style="background:#3182bd"></span>Transit stop
+  </div>
+</div>
+
+<script>
+const API = location.origin.includes("file") ? "http://localhost:8000" : location.origin;
+const tiles = (layer) => [`${API}/tiles/${layer}/{z}/{x}/{y}.pbf`];
+
+const map = new maplibregl.Map({
+  container: "map",
+  style: {
+    version: 8,
+    sources: {
+      carto: {
+        type: "raster",
+        tiles: ["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+                "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],
+        tileSize: 256,
+        attribution: "© OpenStreetMap, © CARTO"
+      }
+    },
+    layers: [{ id: "carto", type: "raster", source: "carto" }]
+  },
+  center: [2.35, 48.86],
+  zoom: 9
+});
+map.addControl(new maplibregl.NavigationControl(), "top-right");
+map.addControl(new maplibregl.ScaleControl());
+
+const scoreColor = [
+  "interpolate", ["linear"], ["coalesce", ["get", "score"], -1],
+  -1, "#cccccc", 0, "#d73027", 50, "#fee08b", 75, "#1a9850", 100, "#006837"
+];
+const upsideColor = [
+  "interpolate", ["linear"], ["coalesce", ["get", "upside_m2"], 0],
+  0, "#fde0dd", 500, "#fa9fb5", 2000, "#dd3497", 8000, "#7a0177"
+];
+const zoningColor = [
+  "match", ["slice", ["coalesce", ["get", "typezone"], ""], 0, 2],
+  "U", "#fb9a99", "AU", "#e31a1c", "A", "#a6d96a", "N", "#1a9850",
+  /* other */ "#bdbdbd"
+];
+
+map.on("load", () => {
+  for (const l of ["communes", "parcels", "zoning", "transit", "projects"]) {
+    map.addSource(l, { type: "vector", tiles: tiles(l), minzoom: 0, maxzoom: 22 });
+  }
+
+  map.addLayer({ id: "communes-fill", type: "fill", source: "communes", "source-layer": "communes",
+    paint: { "fill-color": scoreColor, "fill-opacity": 0.6 } });
+  map.addLayer({ id: "communes-line", type: "line", source: "communes", "source-layer": "communes",
+    paint: { "line-color": "#555", "line-width": 0.4 } });
+
+  map.addLayer({ id: "zoning-fill", type: "fill", source: "zoning", "source-layer": "zoning",
+    layout: { visibility: "none" },
+    paint: { "fill-color": zoningColor, "fill-opacity": 0.35, "fill-outline-color": "#888" } });
+
+  map.addLayer({ id: "parcels-fill", type: "fill", source: "parcels", "source-layer": "parcels",
+    layout: { visibility: "none" },
+    paint: { "fill-color": upsideColor, "fill-opacity": 0.75, "fill-outline-color": "#7a0177" } });
+
+  map.addLayer({ id: "transit-pt", type: "circle", source: "transit", "source-layer": "transit",
+    layout: { visibility: "none" },
+    paint: { "circle-radius": 3, "circle-color": "#3182bd", "circle-stroke-width": 0.5, "circle-stroke-color": "#fff" } });
+
+  map.addLayer({ id: "projects-pt", type: "circle", source: "projects", "source-layer": "projects",
+    paint: { "circle-radius": 6, "circle-color": "#e6550d", "circle-stroke-width": 1.5, "circle-stroke-color": "#fff" } });
+
+  wireToggles();
+  updateZoomNote();
+});
+
+map.on("zoomend", updateZoomNote);
+function updateZoomNote(){ document.getElementById("zoomNote").textContent = "Zoom " + map.getZoom().toFixed(1); }
+
+function wireToggles(){
+  const pairs = [["t-communes",["communes-fill","communes-line"]],["t-projects",["projects-pt"]],
+                 ["t-transit",["transit-pt"]],["t-zoning",["zoning-fill"]],["t-parcels",["parcels-fill"]]];
+  for (const [id, lyrs] of pairs){
+    const el = document.getElementById(id);
+    el.addEventListener("change", () => {
+      const v = el.checked ? "visible" : "none";
+      lyrs.forEach(L => map.getLayer(L) && map.setLayoutProperty(L, "visibility", v));
+    });
+  }
+}
+
+map.on("click", "communes-fill", async (e) => {
+  const p = e.features[0].properties;
+  let extra = "";
+  try {
+    const r = await fetch(`${API}/api/commune/${p.code_commune}`);
+    if (r.ok){ const d = await r.json();
+      extra = Object.keys(d).filter(k=>k.startsWith("score_"))
+        .map(k=>`<tr><td>${k.replace("score_","")}</td><td>${Number(d[k]).toFixed(0)}</td></tr>`).join("");
+    }
+  } catch(_){}
+  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+    `<h3>${p.name||p.code_commune}</h3>
+     <table class="kv"><tr><td>INSEE</td><td>${p.code_commune}</td></tr>
+     <tr><td>Score</td><td><b>${p.score!=null?Number(p.score).toFixed(1):"n/a"}</b></td></tr>
+     <tr><td>Rank</td><td>${p.rank??"n/a"}</td></tr>${extra}</table>`
+  ).addTo(map);
+});
+
+map.on("click", "projects-pt", (e) => {
+  const p = e.features[0].properties;
+  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+    `<h3>${p.project||"Transport project"}</h3>
+     <table class="kv"><tr><td>Line</td><td>${p.line??""}</td></tr>
+     <tr><td>Mode</td><td>${p.mode??""}</td></tr>
+     <tr><td>Station</td><td>${p.station??""}</td></tr>
+     <tr><td>Opening</td><td>${p.opening??""}</td></tr>
+     <tr><td>Status</td><td>${p.status??""}</td></tr></table>`
+  ).addTo(map);
+});
+
+map.on("click", "parcels-fill", (e) => {
+  const p = e.features[0].properties;
+  new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+    `<h3>Parcel ${p.id_parcelle||""}</h3>
+     <table class="kv"><tr><td>Buildable upside</td><td><b>${p.upside_m2!=null?Math.round(p.upside_m2):"n/a"} m²</b></td></tr>
+     <tr><td>Zone</td><td>${p.zone_family??""}</td></tr></table>`
+  ).addTo(map);
+});
+
+for (const L of ["communes-fill","projects-pt","parcels-fill"])
+  map.on("mouseenter", L, () => map.getCanvas().style.cursor = "pointer"),
+  map.on("mouseleave", L, () => map.getCanvas().style.cursor = "");
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# Attractiveness weights (sum to 1.0 per profile).
+
+profiles:
+
+  core_plus:          # income/yield stability, lower risk
+    population_growth:         {weight: 0.10, direction: 1, transform: percentile, source: pop_cagr}
+    income_growth:             {weight: 0.10, direction: 1, transform: percentile, source: revenu_median}
+    employment_growth:         {weight: 0.10, direction: 1, transform: percentile, source: emp_proxy}
+    business_growth:           {weight: 0.05, direction: 1, transform: percentile, source: biz_proxy}
+    infrastructure_investment: {weight: 0.10, direction: 1, transform: percentile, source: transport_score}
+    housing_supply_constraint: {weight: 0.15, direction: 1, transform: percentile, source: tightness}
+    rental_growth:             {weight: 0.10, direction: 1, transform: percentile, source: loyer_m2}
+    price_growth:              {weight: 0.10, direction: 1, transform: percentile, source: price_cagr_5y}
+    liquidity:                 {weight: 0.08, direction: 1, transform: percentile, source: n_sales_total}
+    development_potential:     {weight: 0.07, direction: 1, transform: percentile, source: buildable_upside}
+    future_zoning_upside:      {weight: 0.05, direction: 1, transform: percentile, source: density_change_score}
+
+  value_add_opportunistic:   # development & repricing upside, higher risk tolerance
+    population_growth:         {weight: 0.08, direction: 1, transform: percentile, source: pop_cagr}
+    income_growth:             {weight: 0.07, direction: 1, transform: percentile, source: revenu_median}
+    employment_growth:         {weight: 0.10, direction: 1, transform: percentile, source: emp_proxy}
+    business_growth:           {weight: 0.07, direction: 1, transform: percentile, source: biz_proxy}
+    infrastructure_investment: {weight: 0.15, direction: 1, transform: percentile, source: transport_score}
+    housing_supply_constraint: {weight: 0.10, direction: 1, transform: percentile, source: tightness}
+    rental_growth:             {weight: 0.08, direction: 1, transform: percentile, source: loyer_m2}
+    price_growth:              {weight: 0.05, direction: 1, transform: percentile, source: price_cagr_5y}
+    liquidity:                 {weight: 0.05, direction: 1, transform: percentile, source: n_sales_total}
+    development_potential:     {weight: 0.13, direction: 1, transform: percentile, source: buildable_upside}
+    future_zoning_upside:      {weight: 0.12, direction: 1, transform: percentile, source: density_change_score}
+
+# Risk overlay applied multiplicatively AFTER weighting.
+# heavy flood/clay exposure caps the score regardless of opportunity.
+risk_overlay:
+  source: n_risques
+  full_penalty_at: 6
+  min_multiplier: 0.7
+# (>=6 distinct hazards caps the multiplier at 0.7x)
+# end of file
+
