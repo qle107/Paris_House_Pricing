@@ -6,6 +6,14 @@ import argparse
 from rei.ingestion.registry import all_sources, get_collector
 
 
+def _apply_storage(args) -> None:
+    """Optional per-run backend override (e.g. `--storage files` with no Postgres)."""
+    backend = getattr(args, "storage", None)
+    if backend:
+        from config.settings import settings
+        settings.storage = backend
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(prog="rei.cli")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -21,6 +29,20 @@ def main() -> None:
 
     ps = sub.add_parser("score")
     ps.add_argument("--profile", default="value_add_opportunistic")
+
+    pt = sub.add_parser("train")
+    pt.add_argument("--horizon", type=int, default=5)
+    pt.add_argument("--storage", choices=["postgres", "files"], default=None,
+                    help="backend for this run (default: REI_STORAGE, else postgres)")
+
+    pp = sub.add_parser("predict")
+    pp.add_argument("--storage", choices=["postgres", "files"], default=None,
+                    help="backend for this run (default: REI_STORAGE, else postgres)")
+
+    pb = sub.add_parser("backtest")
+    pb.add_argument("--horizon", type=int, default=5)
+    pb.add_argument("--storage", choices=["postgres", "files"], default=None,
+                    help="backend for this run (default: REI_STORAGE, else postgres)")
 
     args = ap.parse_args()
     if args.cmd == "init-db":
@@ -43,6 +65,18 @@ def main() -> None:
     elif args.cmd == "score":
         from rei.scoring.engine import score
         print(score(args.profile).head(25).to_string(index=False))
+    elif args.cmd == "train":
+        _apply_storage(args)
+        from rei.ml.train import train
+        print(train(horizon=args.horizon))
+    elif args.cmd == "predict":
+        _apply_storage(args)
+        from rei.ml.predict import predict_all
+        print(predict_all().head(25).to_string(index=False))
+    elif args.cmd == "backtest":
+        _apply_storage(args)
+        from rei.ml.backtest import walk_forward
+        print(walk_forward(horizon=args.horizon).to_string(index=False))
 
 
 if __name__ == "__main__":

@@ -34,11 +34,27 @@ def export_geojson(out_dir: str | Path) -> list[str]:
             communes = communes.merge(scores, on="code_commune", how="left", suffixes=("", "_s"))
             if "attractiveness_score" in communes:
                 communes = communes.rename(columns={"attractiveness_score": "score"})
+        fc = store.read_table("ml_forecast")
+        if fc is not None and not fc.empty:
+            keep = [c for c in ["code_commune", "expected_price_cagr", "cagr_p10",
+                                "cagr_p90", "top_drivers", "horizon"] if c in fc.columns]
+            fc = fc[keep].copy()
+            fc["code_commune"] = fc["code_commune"].astype(str)
+            communes["code_commune"] = communes["code_commune"].astype(str)
+            communes = communes.merge(fc, on="code_commune", how="left")
         if _write(communes, out / "communes.geojson"):
             written.append("communes")
 
     iris = store.read_geo("iris_scored")
     if iris is not None and not iris.empty:
+        fc = store.read_table("ml_forecast")
+        if fc is not None and not fc.empty:
+            keep = [c for c in ["code_commune", "expected_price_cagr", "cagr_p10",
+                                "cagr_p90", "top_drivers", "horizon"] if c in fc.columns]
+            fc = fc[keep].copy()
+            fc["code_commune"] = fc["code_commune"].astype(str)
+            iris["code_commune"] = iris["code_commune"].astype(str)
+            iris = iris.merge(fc, on="code_commune", how="left")
         iris = iris.to_crs(CRS_METRIC)
         iris["geometry"] = iris.geometry.simplify(10)
         if _write(iris, out / "iris.geojson"):

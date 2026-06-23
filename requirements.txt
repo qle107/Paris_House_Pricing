@@ -39,6 +39,7 @@ scikit-learn==1.5.1
 xgboost==2.1.1
 lightgbm==4.5.0
 joblib==1.4.2
+shap==0.46.0            # per-area model attributions (optional; degrades to gain importances)
 
 # AI / RAG (manual mode needs embeddings only)
 ollama==0.3.3                       # free local LLM client (optional auto mode)

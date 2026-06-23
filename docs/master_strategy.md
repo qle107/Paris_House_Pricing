@@ -1,4 +1,4 @@
-# France RE Intelligence — Master Strategy
+# France RE intelligence: master strategy
 
 Strategy and data inventory for the `real-estate-intelligence` repository. Source list: `config/sources.yaml`.
 
@@ -20,35 +20,35 @@ Strategy and data inventory for the `real-estate-intelligence` repository. Sourc
 
 ---
 
-# PART 1 — Analytical lenses
+# Part 1: analytical lenses
 
 Location value follows demand vs supply. Ten lenses, each with leading and lagging indicators:
 
-**1. Demographics.** Population level matters less than growth and age mix. Leading: migration, household size. Lagging: census counts, vacancy.
+**1. Demographics:** population level matters less than growth and age mix. Leading: migration, household size. Lagging: census counts, vacancy.
 
-**2. Employment.** Jobs set affordability. Leading: FDI, business creation (SIRENE). Lagging: unemployment.
+**2. Employment:** jobs set affordability. Leading: FDI, business creation (SIRENE). Lagging: unemployment.
 
-**3. Migration.** Inflows tighten supply before prices adjust. Leading: INSEE mobility flows. Lagging: population change.
+**3. Migration:** inflows tighten supply before prices adjust. Leading: INSEE mobility flows. Lagging: population change.
 
-**4. Infrastructure.** Public investment capitalises into land. Leading: budgets, ZAC creation. Lagging: completed-project premia.
+**4. Infrastructure:** public investment capitalises into land. Leading: budgets, ZAC creation. Lagging: completed-project premia.
 
-**5. Transport.** Fixed rail access affects values within ~800 m–2 km. Leading: DUP, opening dates. Lagging: ridership, post-opening comps. (Part 6.)
+**5. Transport:** fixed rail access affects values within ~800 m–2 km. Leading: DUP, opening dates. Lagging: ridership, post-opening comps. (Part 6.)
 
-**6. Housing supply.** Demand becomes rent growth where supply is inelastic. Leading: permits/capita (Sit@del). Lagging: completions.
+**6. Housing supply:** demand becomes rent growth where supply is inelastic. Leading: permits/capita (Sit@del). Lagging: completions.
 
-**7. Zoning.** Buildable rights set land option value. Leading: PLU revision, OAP. Lagging: approved PLU, permits under new rules. (Parts 4–5.)
+**7. Zoning:** buildable rights set land option value. Leading: PLU revision, OAP. Lagging: approved PLU, permits under new rules. (Parts 4–5.)
 
-**8. Politics.** Mayoral stance on growth affects approvals. Leading: election platforms, council votes. Lagging: permit issuance.
+**8. Politics:** mayoral stance on growth affects approvals. Leading: election platforms, council votes. Lagging: permit issuance.
 
-**9. Economic development.** Anchors (universities, hospitals, clusters) support long-run demand. Leading: announced programmes. Lagging: employment catch-up.
+**9. Economic development:** anchors (universities, hospitals, clusters) support long-run demand. Leading: announced programmes. Lagging: employment catch-up.
 
-**10. Liquidity.** Transaction depth affects exit risk. Leading: sales volume trend. Lagging: time-on-market.
+**10. Liquidity:** transaction depth affects exit risk. Leading: sales volume trend. Lagging: time-on-market.
 
 Lenses 1–5 and 9 → demand; 6–8 → supply and option value; 10 → exit risk. Part 3 scores communes; Parts 4–6 add zoning and transport signals.
 
 ---
 
-# PART 2 — France Data Sources (inventory)
+# Part 2: France data sources (inventory)
 
 From `config/sources.yaml`. `tier=runnable` = working collector; `scaffold` = stub to finish.
 
@@ -130,7 +130,7 @@ From `config/sources.yaml`. `tier=runnable` = working collector; `scaffold` = st
 
 ---
 
-# PART 3 — City scoring model
+# Part 3: city scoring model
 
 The model converts the Part 1 lenses into a single **City Attractiveness Score, 0–100**, computed for every commune (and, where data allows, arrondissement and IRIS). It is implemented in `rei/scoring/` (`engine.py`, `indicators.py`, `weights.yaml`).
 
@@ -195,21 +195,21 @@ High demand growth *per unit of new supply* = pricing power. `database/queries/s
 | 35–49 | Weak | Avoid unless special situation |
 | 0–34 | Structurally challenged | Pass |
 
-**Caveat.** The score ranks *attractiveness of the location's trajectory*, not entry price. A high score at a rich cap rate can be a worse trade than a 65 at a dislocated price. Always pair the score with the entry-yield and the ML forward-return forecast (`rei/ml/predict.py`).
+**Caveat:** the score ranks *attractiveness of the location's trajectory*, not entry price. A high score at a rich cap rate can be a worse trade than a 65 at a dislocated price. Always pair the score with the entry-yield and the ML forward-return forecast (`rei/ml/predict.py`).
 
 ---
 
-# PART 4 — Zoning and density signals
+# Part 4: zoning and density signals
 
 Reclassification (e.g. AU→U) or height/COS changes can move land values before comps reflect it. Signal is slow because it sits in municipal documents.
 
 ### Mechanism (France)
 
-1. **The PLU/PLUi is the instrument.** The *Plan Local d'Urbanisme* (communal) or *intercommunal* (PLUi) fixes zones (U urban, AU to-urbanise, A agricultural, N natural) and, per zone, the rules that set buildable rights (heights, emprise/COS, setbacks, mix). Density rises when these are revised.
-2. **Who decides.** The mayor and municipal (or EPCI) council initiate and approve. The state (DDT), région (SRADDET/SDRIF) and SCoT set a hierarchy the PLU must comply with — so regional housing targets *push down* into local density.
+1. **The PLU/PLUi is the instrument:** the *Plan Local d'Urbanisme* (communal) or *intercommunal* (PLUi) fixes zones (U urban, AU to-urbanise, A agricultural, N natural) and, per zone, the rules that set buildable rights (heights, emprise/COS, setbacks, mix). Density rises when these are revised.
+2. **Who decides:** the mayor and municipal (or EPCI) council initiate and approve. The state (DDT), région (SRADDET/SDRIF) and SCoT set a hierarchy the PLU must comply with, so regional housing targets *push down* into local density.
 3. **The revision pathway** (each step is a public, datable signal):
    `délibération de prescription` (launch) → `PADD` debate (the political vision) → drafting of zoning + `OAP` (orientations d'aménagement) → `arrêt du projet` → `consultation/enquête publique` → `commissaire-enquêteur` report → `approbation`. Elapsed time is typically 3–6 years for a full PLU, 12–24 months for a `modification`/`déclaration de projet`.
-4. **What forces it.** Housing shortage + SRU social-housing penalties + a transport project + a pro-growth majority + developer pressure. When several coincide, density change is near-certain; the only question is timing.
+4. **What forces it:** housing shortage + SRU social-housing penalties + a transport project + a pro-growth majority + developer pressure. When several coincide, density change is near-certain; the only question is timing.
 
 ### Density-change score
 
@@ -235,27 +235,27 @@ The platform recomputes this each time GPU zoning, permits, or the document corp
 
 ---
 
-# PART 5 — Municipal Document Intelligence
+# Part 5: municipal document intelligence
 
 Document types the AI agent extracts (`rei/ai_agent/prompts.py`):
 
-**PLU / PLUi** — *Where:* Géoportail de l'Urbanisme (GPU) for the zoning vector + the full document set (rapport de présentation, PADD, règlement, OAP, annexes); commune/EPCI websites for revisions in progress. *Sections that matter:* the **PADD** (political vision — densification corridors, where growth is steered), the **règlement** per zone (heights, emprise au sol, COS where retained, stationnement), the **OAP** (sector-specific programmes, often the clearest pre-development signal), the zoning plan itself. *Keywords:* `densification, intensification, hauteur, gabarit, emprise au sol, COS, ouverture à l'urbanisation, zone AU, secteur de projet, OAP, mixité`. *Indicators of future density:* new/expanded AU zones, raised heights, reduced parking minimums, OAP sectors over transport nodes, suppression of COS caps.
+**PLU / PLUi.** *Where:* Géoportail de l'Urbanisme (GPU) for the zoning vector + the full document set (rapport de présentation, PADD, règlement, OAP, annexes); commune/EPCI websites for revisions in progress. *Sections that matter:* the **PADD** (political vision: densification corridors, where growth is steered), the **règlement** per zone (heights, emprise au sol, COS where retained, stationnement), the **OAP** (sector-specific programmes, often the clearest pre-development signal), the zoning plan itself. *Keywords:* `densification, intensification, hauteur, gabarit, emprise au sol, COS, ouverture à l'urbanisation, zone AU, secteur de projet, OAP, mixité`. *Indicators of future density:* new/expanded AU zones, raised heights, reduced parking minimums, OAP sectors over transport nodes, suppression of COS caps.
 
-**SCoT** — *Where:* GPU + the syndicat mixte/EPCI site. *Sections:* the **DOO** (document d'orientation et d'objectifs — binding), armature urbaine (which towns absorb growth), housing production targets, density floors near transit. *Keywords:* `armature urbaine, polarités, objectifs de production de logements, densité minimale, TOD`. *Indicators:* a commune named a growth pole; minimum-density rules near stations; greenfield-limiting "ZAN" (zéro artificialisation nette) pushing density into existing fabric.
+**SCoT.** *Where:* GPU + the syndicat mixte/EPCI site. *Sections:* the **DOO** (document d'orientation et d'objectifs, binding), armature urbaine (which towns absorb growth), housing production targets, density floors near transit. *Keywords:* `armature urbaine, polarités, objectifs de production de logements, densité minimale, TOD`. *Indicators:* a commune named a growth pole; minimum-density rules near stations; greenfield-limiting "ZAN" (zéro artificialisation nette) pushing density into existing fabric.
 
-**Municipal council minutes (délibérations / comptes-rendus)** — *Where:* mairie website "conseil municipal" pages (PDFs); legally must be published. *Sections:* agenda items on PLU revision, ZAC creation, land acquisition/preemption (DPU), public-land disposals, partnerships with aménageurs/bailleurs. *Keywords:* `révision du PLU, modification, ZAC, concession d'aménagement, cession de terrain, droit de préemption, ZAD, convention`. *Indicators:* prescription of a PLU revision; ZAC dossier de création/réalisation; land bought or preempted by the commune/EPF; developer consultation launched.
+**Municipal council minutes (délibérations / comptes-rendus).** *Where:* mairie website "conseil municipal" pages (PDFs); legally must be published. *Sections:* agenda items on PLU revision, ZAC creation, land acquisition/preemption (DPU), public-land disposals, partnerships with aménageurs/bailleurs. *Keywords:* `révision du PLU, modification, ZAC, concession d'aménagement, cession de terrain, droit de préemption, ZAD, convention`. *Indicators:* prescription of a PLU revision; ZAC dossier de création/réalisation; land bought or preempted by the commune/EPF; developer consultation launched.
 
-**Urban-planning committee / commission reports** — *Where:* EPCI and métropole sites; ZAC review committees. *Sections:* programme, phasing, dwelling counts, public-equipment plans. *Indicators:* dwelling-count targets, phasing dates, infrastructure commitments.
+**Urban-planning committee / commission reports.** *Where:* EPCI and métropole sites; ZAC review committees. *Sections:* programme, phasing, dwelling counts, public-equipment plans. *Indicators:* dwelling-count targets, phasing dates, infrastructure commitments.
 
-**Public consultations / enquêtes publiques** — *Where:* dedicated registres (often `registre-numerique.fr`, `jecoteliris…`), préfecture sites, GPU. *Sections:* objet of the operation, perimeter, the commissaire-enquêteur's *avis* and reservations. *Indicators:* a named perimeter (geolocatable land), a favourable avis (de-risks approval), reservations that may delay.
+**Public consultations / enquêtes publiques.** *Where:* dedicated registres (often `registre-numerique.fr`, `jecoteliris…`), préfecture sites, GPU. *Sections:* objet of the operation, perimeter, the commissaire-enquêteur's *avis* and reservations. *Indicators:* a named perimeter (geolocatable land), a favourable avis (de-risks approval), reservations that may delay.
 
-**Mayor speeches / municipal strategic plans / press** — *Where:* commune site, local press, municipal magazine. *Indicators:* stated ambitions ("X new homes by 20YY", "éco-quartier", "renouvellement urbain"), naming of specific sectors. Lower reliability — treat as `s4`, corroborate with hard documents.
+**Mayor speeches / municipal strategic plans / press.** *Where:* commune site, local press, municipal magazine. *Indicators:* stated ambitions ("X new homes by 20YY", "éco-quartier", "renouvellement urbain"), naming of specific sectors. Lower reliability; treat as `s4`, corroborate with hard documents.
 
-**Regional development plans (SRADDET / SDRIF-E)** — *Where:* région/Île-de-France `iledefrance.fr`, GPU. *Sections:* housing objectives by territory, transport priorities, density and ZAN rules. *Indicators:* per-territory housing quotas pushed down to local PLUs; corridors prioritised for intensification.
+**Regional development plans (SRADDET / SDRIF-E).** *Where:* région/Île-de-France `iledefrance.fr`, GPU. *Sections:* housing objectives by territory, transport priorities, density and ZAN rules. *Indicators:* per-territory housing quotas pushed down to local PLUs; corridors prioritised for intensification.
 
-**Infrastructure plans (SGP/GPE, SNCF Réseau, region)** — *Where:* `societedugrandparis.fr`, regional mobility authorities, transport.data.gouv.fr. *Indicators:* confirmed opening dates, station-area development perimeters, contrats de développement territorial (CDT).
+**Infrastructure plans (SGP/GPE, SNCF Réseau, region).** *Where:* `societedugrandparis.fr`, regional mobility authorities, transport.data.gouv.fr. *Indicators:* confirmed opening dates, station-area development perimeters, contrats de développement territorial (CDT).
 
-## Checklist — 100+ indicators of future density / redevelopment
+## Checklist: 100+ indicators of future density / redevelopment
 
 Score a commune/sector: each YES is a positive signal; clusters across themes A–H carry more weight. (The agent emits these as structured facts; analysts confirm.)
 
@@ -263,7 +263,7 @@ Score a commune/sector: each YES is a positive signal; clusters across themes A�
 1. PLU/PLUi revision prescribed (délibération). 2. Modification/déclaration de projet underway. 3. New AU (à urbaniser) zone created. 4. AU→U reclassification. 5. A or N land reclassified to AU/U. 6. Maximum height raised in a zone. 7. Emprise au sol coefficient raised. 8. COS cap removed or raised (where retained). 9. Parking minimums reduced/removed. 10. New OAP sector defined. 11. OAP located over/near a transit node. 12. Mixité-sociale obligations added (signals new programmes). 13. "Secteur de projet" or "périmètre d'attente" delimited. 14. Emplacements réservés for housing/equipment added. 15. Change-of-use enabled (office→resi, industrial→mixed). 16. Densité minimale imposed near stations. 17. ZAN-driven intensification of existing fabric. 18. PADD explicitly targets densification corridors.
 
 **B. Permits & construction (19–30)**
-19. Authorised-dwelling 12m count accelerating vs prior year. 20. Large (>50-unit) permit issued. 21. Cluster of permits in one IRIS. 22. Non-residential permit (office/lab/logistics) — jobs signal. 23. Demolition permits (site assembly). 24. Permits on former industrial parcels. 25. Rising share of collective (vs individual) housing. 26. Permit pipeline > regional average per capita. 27. VEFA (off-plan) programmes launched by national developers. 28. Social-housing (bailleur) programmes permitted. 29. Building-height of new permits trending up. 30. Permits adjacent to a planned station.
+19. Authorised-dwelling 12m count accelerating vs prior year. 20. Large (>50-unit) permit issued. 21. Cluster of permits in one IRIS. 22. Non-residential permit (office/lab/logistics), a jobs signal. 23. Demolition permits (site assembly). 24. Permits on former industrial parcels. 25. Rising share of collective (vs individual) housing. 26. Permit pipeline > regional average per capita. 27. VEFA (off-plan) programmes launched by national developers. 28. Social-housing (bailleur) programmes permitted. 29. Building-height of new permits trending up. 30. Permits adjacent to a planned station.
 
 **C. Land & cadastre (31–42)**
 31. Large underused parcels (low emprise) in U/AU zones. 32. Public/municipal land identified for disposal. 33. EPF (établissement public foncier) acquisition in commune. 34. Commune exercising droit de préemption (DPU). 35. ZAD (deferred-development zone) created. 36. Surface parking lots in central/transit locations. 37. Single-storey retail/big-box on large plots near transit. 38. Brownfield/friches inventoried (Cartofriches). 39. Fragmented ownership being assembled. 40. Religious/institutional landholdings coming to market. 41. Rail/port/utility land released. 42. Agricultural land inside the urban envelope.
@@ -275,25 +275,25 @@ Score a commune/sector: each YES is a positive signal; clusters across themes A�
 55. University campus creation/expansion. 56. Hospital/CHU expansion or relocation. 57. Research lab / grand équipement (e.g., cluster) announced. 58. Corporate HQ relocation/large pre-let. 59. FDI project landed in the territory. 60. Pôle de compétitivité / cluster funding. 61. Logistics/data-centre investment (jobs + land use). 62. Cultural/sport anchor (museum, stadium, Olympic legacy). 63. Tech/start-up incubator established. 64. Large public-sector employer arriving. 65. Tourism/leisure investment. 66. Special economic/innovation zone designation.
 
 **F. Political & fiscal (67–78)**
-67. Pro-development municipal majority (election platform). 68. Mayor public statements favouring growth/housing. 69. SRU social-housing deficit + penalties (forces production). 70. Municipal fiscal pressure (incentive to grow tax base). 71. Strong investment capacity (OFGL: épargne brute, low debt). 72. PLH (programme local de l'habitat) with high targets. 73. Contrat with state/region tying funding to housing. 74. EPCI taking planning competence (PLUi). 75. Public-land company (SPL/SEM) created for projects. 76. Political stability (low turnover) reduces execution risk. 77. Opposition to growth (NIMBY) — negative flag. 78. Referendum/consultation outcomes on projects.
+67. Pro-development municipal majority (election platform). 68. Mayor public statements favouring growth/housing. 69. SRU social-housing deficit + penalties (forces production). 70. Municipal fiscal pressure (incentive to grow tax base). 71. Strong investment capacity (OFGL: épargne brute, low debt). 72. PLH (programme local de l'habitat) with high targets. 73. Contrat with state/region tying funding to housing. 74. EPCI taking planning competence (PLUi). 75. Public-land company (SPL/SEM) created for projects. 76. Political stability (low turnover) reduces execution risk. 77. Opposition to growth (NIMBY), a negative flag. 78. Referendum/consultation outcomes on projects.
 
 **G. Public consultations & projects (79–90)**
 79. Concertation préalable launched (named perimeter). 80. Enquête publique open. 81. Favourable commissaire-enquêteur avis. 82. ZAC dossier de création approved. 83. ZAC dossier de réalisation approved. 84. Concession d'aménagement awarded to a developer. 85. Éco-quartier label/process. 86. NPNRU (renouvellement urbain) programme. 87. Appel à projets urbains innovants (e.g., "Inventons…"). 88. Master-developer (aménageur) appointed. 89. Public-equipment programme (schools) signalling new population. 90. Phasing calendar published.
 
 **H. Demand & market corroboration (91–104)**
-91. Net in-migration of 25–39 cohort. 92. Household-size decline. 93. School-enrolment rising. 94. Rents accelerating vs metro. 95. Transaction volume rising (liquidity). 96. New-build absorption fast (low unsold stock). 97. Price/m² gap vs adjacent better-served commune (catch-up potential). 98. Falling crime (gentrification turn). 99. School-quality (IPS) rising. 100. DPE-poor stock share (value-add renovation pool). 101. Vacancy falling. 102. Commercial vacancy falling on high street. 103. Café/retail openings (SIRENE) — amenity momentum. 104. Search/rental-listing demand indices rising.
+91. Net in-migration of 25–39 cohort. 92. Household-size decline. 93. School-enrolment rising. 94. Rents accelerating vs metro. 95. Transaction volume rising (liquidity). 96. New-build absorption fast (low unsold stock). 97. Price/m² gap vs adjacent better-served commune (catch-up potential). 98. Falling crime (gentrification turn). 99. School-quality (IPS) rising. 100. DPE-poor stock share (value-add renovation pool). 101. Vacancy falling. 102. Commercial vacancy falling on high street. 103. Café/retail openings (SIRENE), amenity momentum. 104. Search/rental-listing demand indices rising.
 
 A sector lighting up across **A+C+D** (rezoning + assemblable land + committed transport) is the textbook pre-repricing setup of Part 7.
 
 ---
 
-# PART 6 — Transport analysis
+# Part 6: transport analysis
 
-New fixed-rail access is the most reliable, most quantifiable value catalyst in French residential real estate. The model (in `rei/transport/impact.py`) attributes an expected uplift to every parcel within a project's catchment, then ranks projects.
+New fixed-rail access is the most reliable and measurable value catalyst in French residential real estate. The model (in `rei/transport/impact.py`) attributes an expected uplift to every parcel within a project's catchment, then ranks projects.
 
 ### Mode profiles (catchment, peak uplift, time-to-peak)
 
-These are *priors* — calibrate per metro against your own DVF event studies around past openings; the ML layer then learns the realised effect.
+These are *priors*: calibrate per metro against your own DVF event studies around past openings; the ML layer then learns the realised effect.
 
 | Mode | Primary catchment | Secondary | Peak value uplift | Years to peak |
 |---|:--:|:--:|:--:|:--:|
@@ -330,13 +330,13 @@ extended in practice by `× catchment_population × (1 / years_to_open)`. GPE ad
 
 ### Transit-oriented development (TOD) screen
 
-Parcels that are (a) inside an 800 m GPE catchment, (b) currently low-density (low emprise/FAR), and (c) in a U/AU zone with a pro-density PLU signal are flagged as TOD targets — the intersection computed by `rei/gis/density.buildable_upside` × `rei/transport/impact.project_parcel_impact` × `rei/zoning/detectors`.
+Parcels that are (a) inside an 800 m GPE catchment, (b) currently low-density (low emprise/FAR), and (c) in a U/AU zone with a pro-density PLU signal are flagged as TOD targets: the intersection computed by `rei/gis/density.buildable_upside` × `rei/transport/impact.project_parcel_impact` × `rei/zoning/detectors`.
 
 ---
 
-# PART 7 — Land acquisition patterns
+# Part 7: land acquisition patterns
 
-Residual land value = (value of what can be built) − (construction + fees + developer margin). Land re-rates when buildable floor area or €/m² rises — from zoning (more/denser rights) or from accessibility and amenities. Buy before that re-rating where Parts 4–6 show it is likely.
+Residual land value = (value of what can be built) − (construction + fees + developer margin). Land re-rates when buildable floor area or €/m² rises, from zoning (more/denser rights) or from accessibility and amenities. Buy before that re-rating where Parts 4–6 show it is likely.
 
 ### Target typologies
 
@@ -344,7 +344,7 @@ Residual land value = (value of what can be built) − (construction + fees + de
 - **Industrial / activity land:** ripe for office/resi/mixed conversion as cities push ZAN-driven intensification; often single-owner (easier assembly).
 - **Surface parking lots:** central or station-adjacent, near-zero current built value, maximal upside; frequently institutionally or municipally owned.
 - **Retail sites (big-box, declining high street):** large footprints, transit-adjacent, strong rezoning candidates to mixed-use.
-- **Office conversion opportunities:** structurally vacant/obsolete offices (post-hybrid-work) in resi-demand locations — value-add via change-of-use (watch the règlement and DPE).
+- **Office conversion opportunities:** structurally vacant/obsolete offices (post-hybrid-work) in resi-demand locations; value-add via change-of-use (watch the règlement and DPE).
 - **Brownfield (friches):** Cartofriches-listed; remediation cost offset by public subsidy and ZAN priority.
 - **Transit-oriented sites:** inside GPE/tram catchments before opening.
 - **Future development corridors:** sectors named in PADD/OAP/SCoT for intensification.
@@ -367,7 +367,7 @@ Rank by `buildable_upside_m2 × expected_value_per_m2 × probability_of_rezoning
 
 ### Capturing the upside without development risk
 
-- **Land options / promesses de vente** conditioned on PLU change or permit — pay a small premium for the option, exercise only if the rezoning lands.
+- **Land options / promesses de vente** conditioned on PLU change or permit; pay a small premium for the option, exercise only if the rezoning lands.
 - **Off-market assembly** of fragmented parcels ahead of an OAP.
 - **Partner with the aménageur** once a ZAC concession is awarded.
 - **Buy the standing income** (e.g., a let big-box or car park) at its current-use yield, holding the rezoning option for free.
@@ -376,28 +376,28 @@ The discipline: only pay for option value where the *leading* signals (Parts 4�
 
 ---
 
-# PART 8 — Platform architecture (5 layers)
+# Part 8: platform architecture (5 layers)
 
 The full implementation is the `real-estate-intelligence/` repository. Architecture, by layer:
 
-### Layer 1 — Raw data collection (`rei/ingestion/`, `config/sources.yaml`)
+### Layer 1: raw data collection (`rei/ingestion/`, `config/sources.yaml`)
 One `Collector` per source (`ingestion/base.py`, `meta.ingestion_log`). HTTP client: retries, rate limits. Runnable: INSEE, DVF, Cadastre, BAN, Sit@del, GTFS, GPU. Registry: `python -m rei.cli ingest <source_id>`.
 
-### Layer 2 — Data warehouse (`database/`, `rei/etl/`)
+### Layer 2: data warehouse (`database/`, `rei/etl/`)
 PostgreSQL + **PostGIS** + **pgvector**. Schemas: `core` (tabular feeds), `gis` (spatial layers), `docs` (planning documents + RAG), `scores` (computed), `meta` (run log). Key design choices: DVF is **range-partitioned by mutation year** (`03_partitions.sql`) because every query filters by year and each biannual refresh can replace a whole year cheaply; GiST indexes on all geometries (`04_indexes.sql`); **materialized views** (`05_materialized_views.sql`) precompute commune features (`scores.mv_commune_features`), price trends and supply intensity. Loading is idempotent **upsert via staging table + `ON CONFLICT`** (`common/db.upsert_dataframe`), so re-runs never duplicate. High-volume national cleaning uses **Polars + DuckDB** off Parquet (`etl/dvf_transform.py`).
 
-### Layer 3 — GIS processing (`rei/gis/`)
+### Layer 3: GIS processing (`rei/gis/`)
 GeoPandas/Shapely in EPSG:2154 (Lambert-93, metric). `density.py` computes footprint, CES (emprise), estimated FAR and **buildable upside** per parcel; `accessibility.py` uses PostGIS KNN (`<->`) for nearest-transit distance and catchment counts (school/employment access); `parcels.py`/`zoning.py` join parcels to dominant zoning. These produce the `development_potential` and `transport_score` features.
 
-### Layer 4 — Automated intelligence (`rei/zoning/`, `rei/transport/`)
+### Layer 4: automated intelligence (`rei/zoning/`, `rei/transport/`)
 `zoning/plu_diff.py` diffs successive GPU snapshots to detect reclassifications (the `s1` signal); `zoning/detectors.py` blends the five signals into `density_change_score`; `transport/impact.py` computes parcel-level uplift and ranks projects. Alerts fire when a commune crosses threshold or a new hard signal lands.
 
-### Layer 5 — Scoring + ML + AI (`rei/scoring/`, `rei/ml/`, `rei/ai_agent/`)
-`scoring/engine.py` produces the 0–100 attractiveness score per commune (Part 3). `ml/` trains a **LightGBM/XGBoost** forward-price-growth model on a time-split panel (`features.py`, `train.py`) and writes `scores.ml_forecast`. The AI agent (Part 9) keeps the document-derived signals current. Orchestration: Airflow DAGs (`airflow/dags/`) — daily for fast feeds, monthly check for DVF/cadastre/zoning, weekly for the AI agent — each with retries and a post-load validation task (`etl/validate.py`: pandera contracts + robust-z anomaly flags). Everything ships in Docker (`docker/`, PostGIS+pgvector image + app + dashboard + Airflow).
+### Layer 5: scoring + ML + AI (`rei/scoring/`, `rei/ml/`, `rei/ai_agent/`)
+`scoring/engine.py` produces the 0–100 attractiveness score per commune (Part 3). `ml/` trains a **LightGBM/XGBoost** forward-price-growth model on a time-split panel (`features.py`, `train.py`) and writes `scores.ml_forecast`. The AI agent (Part 9) keeps the document-derived signals current. Orchestration: Airflow DAGs (`airflow/dags/`): daily for fast feeds, monthly check for DVF/cadastre/zoning, weekly for the AI agent, each with retries and a post-load validation task (`etl/validate.py`: pandera contracts + robust-z anomaly flags). Everything ships in Docker (`docker/`, PostGIS+pgvector image + app + dashboard + Airflow).
 
 ---
 
-# PART 9 — AI Research Agent
+# Part 9: AI research agent
 
 Goal: continuously turn the unstructured municipal-document universe into the structured `s1/s4/s5` signals of Part 4. Pipeline (`rei/ai_agent/`):
 
@@ -421,7 +421,7 @@ All three land identical JSON in `docs.extraction`, which feeds the density dete
 
 ---
 
-# PART 10 — Due-diligence checklist
+# Part 10: due-diligence checklist
 
 **Screening order:** Grand Paris inner belt, then regional metros (Bordeaux, Nantes, Rennes, Lyon, Montpellier, Toulouse), then selective Paris sectors.
 
@@ -467,9 +467,9 @@ Grouped A–J (20 each). Use as an IC gating document; every "no/unknown" is a r
 
 ---
 
-# PART 11 — Worked examples
+# Part 11: worked examples
 
-> Indicative — refresh with live platform data.
+> Indicative; refresh with live platform data.
 
 ## Five Grand Paris Express cities
 
@@ -489,7 +489,7 @@ Inner suburbs gaining GPE access and rezoning. Platform ranks communes and track
 - **Transport:** L14 (Mairie de Saint-Ouen, 2020); Docks eco-district; CHU Grand Paris Nord campus.
 - **Demand:** fast price/rent re-rating in 93; deepening liquidity.
 - **Supply:** former-industrial conversion largely done; remaining pipeline partly priced in.
-- **Take:** high attractiveness, later cycle — core-plus over deep value-add.
+- **Take:** high attractiveness, later cycle; core-plus over deep value-add.
 - **Sites:** build-to-rent on delivered infrastructure; strict on entry price.
 
 ### 3. Villejuif (94076)
@@ -538,21 +538,21 @@ Inner suburbs gaining GPE access and rezoning. Platform ranks communes and track
 - **Take:** long-horizon mixed-use; stage by lot against absorption (checklist B 33, H 155).
 - **Sites:** build-to-rent on delivered infrastructure.
 
-**Contrast:** Bercy-Charenton — intra-muros upside but access-controlled and appeal-prone. Bordeaux Euratlantique — OIN + LGV offers larger entitled density at lower entry; compare absorption and phasing before sizing exposure.
+**Contrast:** Bercy-Charenton offers intra-muros upside but is access-controlled and appeal-prone. Bordeaux Euratlantique pairs an OIN with the LGV for larger entitled density at lower entry; compare absorption and phasing before sizing exposure.
 
 ---
 
 # Repository deliverables
 
 1. Analytical lenses (Part 1)
-2. Dataset inventory — Part 2 + `config/sources.yaml`
-3. Zoning signals — Parts 4–5 + `rei/zoning/`
-4. Transport model — Part 6 + `rei/transport/`
-5. Scoring — Part 3 + `rei/scoring/`
-6. Parcel metrics — Part 7 + `rei/gis/`
-7. AI agent — Parts 8–9 + `rei/ai_agent/`
-8. Checklist — Part 10
-9. City examples — Part 11
+2. Dataset inventory: Part 2 + `config/sources.yaml`
+3. Zoning signals: Parts 4–5 + `rei/zoning/`
+4. Transport model: Part 6 + `rei/transport/`
+5. Scoring: Part 3 + `rei/scoring/`
+6. Parcel metrics: Part 7 + `rei/gis/`
+7. AI agent: Parts 8–9 + `rei/ai_agent/`
+8. Checklist: Part 10
+9. City examples: Part 11
 
 Run from README: ingest, score, map, optional agent pipeline.
 

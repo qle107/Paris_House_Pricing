@@ -28,7 +28,7 @@ fields:     iris_code, iris_name, code_commune, geometry
 ## Why the map was blank
 
 1. `export_geojson` reads `iris_scored`.
-2. `iris_scored` was never written — scoring failed.
+2. `iris_scored` was never written; scoring failed.
 3. `HEAD ./iris.geojson` → 404 → map skips IRIS layers.
 
 ## Join check
@@ -51,7 +51,7 @@ Scores and geometry share `iris_code` from the same pipeline. No separate join s
 
 | Area | Gap |
 |------|-----|
-| Growth | Single-year population/income — no CAGR yet |
+| Growth | Single-year population/income, no CAGR yet |
 | Accessibility | GTFS/GPE opt-in; distance fields are stubs |
 | Development | Parcel FAR not computed in file mode |
 | Supply | Sitadel collector needs DiDo filter verification |

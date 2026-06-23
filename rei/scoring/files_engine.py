@@ -118,7 +118,10 @@ def assemble_features(min_population: int = 0) -> pd.DataFrame:
         f = f.merge(agg, on="code_commune", how="left")
 
     if {"pop_cagr", "price_cagr_5y", "permits_per_1000"} <= set(f.columns):
-        f["tightness"] = (f["pop_cagr"].fillna(0) + f["price_cagr_5y"].fillna(0)) / f["permits_per_1000"].replace(0, pd.NA)
+        _pop = pd.to_numeric(f["pop_cagr"], errors="coerce").fillna(0.0)
+        _pcg = pd.to_numeric(f["price_cagr_5y"], errors="coerce").fillna(0.0)
+        _perm = pd.to_numeric(f["permits_per_1000"], errors="coerce").replace(0, float("nan"))
+        f["tightness"] = (_pop + _pcg) / _perm
     f["emp_proxy"] = f.get("pop_cagr")
     f["transport_score"] = f.get("transport_score")
     if "population" in f and min_population:

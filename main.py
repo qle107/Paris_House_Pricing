@@ -37,15 +37,41 @@ def _run(source_id: str, **kwargs):
         print(f"  [warn] {source_id}: {exc}")
 
 
-def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, score_level):
+def _choose_horizon(years, requested, min_base_years=3):
+    """Largest horizon <= requested with >= min_base_years base years (so the model
+    has several rows to learn from); else the largest feasible; None if < 2 years."""
+    if len(years) < 2:
+        return None
+    yset = set(years)
+    fallback = None
+    for h in range(min(requested, years[-1] - years[0]), 0, -1):
+        n_base = sum((y + h) in yset for y in years)
+        if n_base >= 1 and fallback is None:
+            fallback = h
+        if n_base >= min_base_years:
+            return h
+    return fallback
+
+
+def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, score_level,
+                 with_forecast=False, forecast_horizon=5, dvf_years=None,
+                 refresh=False, retrain=False):
     from rei.api.export import export_geojson
-    from rei.common.store import using_files
+    from rei.common.store import geo_exists, table_exists, using_files
     from rei.scoring.files_engine import score
 
-    if not skip_ingest:
+    data_present = (table_exists("dvf_transactions") and geo_exists("communes")
+                    and (score_level != "iris" or geo_exists("iris")))
+    do_ingest = (not skip_ingest) and (refresh or bool(dvf_years) or not data_present)
+    if not do_ingest:
+        print("== Skipping ingest (%s) ==" % ("--skip-ingest" if skip_ingest else "data present; use --refresh to refetch"))
+    if do_ingest:
         print("== Ingesting ==")
         for sid in GEO_SOURCES:
-            _run(sid, communes=communes)
+            if sid == "dvf_transactions" and dvf_years:
+                _run(sid, communes=communes, years=dvf_years)
+            else:
+                _run(sid, communes=communes)
         if score_level == "iris":
             _run("iris_contours", communes=communes)
         if with_parcels:
@@ -86,6 +112,35 @@ def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, sco
         except Exception as exc:
             print(f"  [warn] iris scoring: {exc}")
 
+    if with_forecast:
+        from rei.ml.predict import predict_all
+        from rei.ml.train import MODEL_PATH, train
+        should_train = retrain or do_ingest or not MODEL_PATH.exists()
+        ok = True
+        try:
+            if should_train:
+                from rei.ml.features import load_price_long
+                years = sorted(load_price_long()["year"].unique().tolist())
+                h = _choose_horizon(years, forecast_horizon)
+                if h is None:
+                    print(f"== Forecast skipped: need >= 2 years of DVF (found {years or 'none'}); "
+                          "re-run with --dvf-years 2020,2021,2022,2023,2024,2025 --refresh ==")
+                    ok = False
+                else:
+                    n_base = sum((y + h) in set(years) for y in years)
+                    note = "" if n_base >= 3 else "  [thin history -> forecast may be near-uniform; add --dvf-years]"
+                    print(f"== Training price-growth model (DVF {years[0]}-{years[-1]}, horizon={h}y, {n_base} base year(s)){note} ==")
+                    metrics = train(horizon=h)
+                    print(f"  model: MAE={metrics.get('mae'):.4f}  80%-coverage={metrics.get('interval_coverage_80'):.2f}  n_train={metrics.get('n_train')}")
+            else:
+                print("== Forecasting (reusing saved model; --retrain to refit) ==")
+            if ok:
+                fc = predict_all(with_shap=True)
+                if not fc.empty:
+                    print(fc.head(10)[["code_commune", "expected_price_cagr", "cagr_p10", "cagr_p90"]].to_string(index=False))
+        except Exception as exc:
+            print(f"  [warn] forecast: {exc}")
+
     print("== Exporting GeoJSON for the map ==")
     webmap = ROOT / "webmap"
     webmap.mkdir(exist_ok=True)
@@ -115,6 +170,14 @@ def main():
     ap.add_argument("--skip-ingest", action="store_true", help="reuse files already in ./data")
     ap.add_argument("--with-parcels", action="store_true", help="also ingest cadastre+zoning and compute parcel upside (heavy)")
     ap.add_argument("--with-transit", action="store_true", help="also download GTFS (large)")
+    ap.add_argument("--with-forecast", action="store_true",
+                    help="train/reuse a price-growth model and show the forecast in the map popups")
+    ap.add_argument("--forecast-horizon", type=int, default=5,
+                    help="max years ahead; auto-reduced to fit the available DVF history")
+    ap.add_argument("--dvf-years", default=None,
+                    help="comma-separated DVF years to ingest, e.g. 2020,2021,2022,2023,2024,2025 (default: last 2)")
+    ap.add_argument("--refresh", action="store_true", help="re-fetch sources even if local data already exists")
+    ap.add_argument("--retrain", action="store_true", help="refit the forecast model even if a saved one exists")
     ap.add_argument("--no-serve", action="store_true", help="build files only, don't serve")
     ap.add_argument("--port", type=int, default=8000)
     a = ap.parse_args()
@@ -122,7 +185,10 @@ def main():
 
     print(f"Storage = files  |  data dir = {os.environ['REI_DATA_DIR']}")
     print(f"Watchlist = {communes}\n")
-    webmap, written = run_pipeline(communes, a.skip_ingest, a.profile, a.with_transit, a.with_parcels, a.score_level)
+    dvf_years = [int(y) for y in a.dvf_years.split(",")] if a.dvf_years else None
+    webmap, written = run_pipeline(communes, a.skip_ingest, a.profile, a.with_transit, a.with_parcels,
+                                   a.score_level, a.with_forecast, a.forecast_horizon, dvf_years,
+                                   a.refresh, a.retrain)
     print(f"\nWrote map layers {written} -> {webmap}")
     print(f"Scores CSV -> {Path(os.environ['REI_DATA_DIR']) / 'tables' / 'commune_score.csv'}")
     if not a.no_serve:

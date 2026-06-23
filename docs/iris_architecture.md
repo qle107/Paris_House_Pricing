@@ -2,7 +2,7 @@
 
 Primary spatial unit: **IRIS** (~2,000 residents). Commune scoring remains as fallback.
 
-**File mode (current):** `python main.py` — Parquet/GeoParquet + GeoJSON + MapLibre.
+**File mode (current):** `python main.py`, producing Parquet/GeoParquet + GeoJSON + MapLibre.
 
 **PostGIS mode:** materialized views + MVT tiles for scale and parcel detail.
 
@@ -62,7 +62,7 @@ File equivalents: `data/geo/iris.parquet`, `data/geo/iris_scored.parquet`, `data
 
 ## Scoring
 
-`rei/scoring/iris_engine.py` — six components, percentile 0–100, missing → 50:
+`rei/scoring/iris_engine.py` blends six components, percentile 0–100, missing → 50:
 
 ```
 IRIS_SCORE = 0.15*demographics + 0.20*economics + 0.20*housing

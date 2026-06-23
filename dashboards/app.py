@@ -17,7 +17,7 @@ def q(sql: str) -> pd.DataFrame:
 
 st.title("France Residential & Mixed-Use Intelligence")
 
-tab1, tab2, tab3 = st.tabs(["City scores", "Alert feed", "Commune deep-dive"])
+tab1, tab2, tab3, tab4 = st.tabs(["City scores", "Alert feed", "Commune deep-dive", "Price forecast"])
 
 with tab1:
     try:
@@ -48,3 +48,13 @@ with tab3:
             st.line_chart(trend)
         except Exception as e:
             st.info(f"No data yet for {code}. ({e})")
+
+with tab4:
+    try:
+        f = q("SELECT * FROM scores.ml_forecast ORDER BY expected_price_cagr DESC")
+        st.caption("Forward price-growth forecast (rei.ml): expected CAGR with a p10-p90 band and top drivers.")
+        st.dataframe(f, use_container_width=True)
+        label = f["name"].fillna(f["code_commune"]) if "name" in f.columns else f["code_commune"]
+        st.bar_chart(f.head(20).assign(label=label).set_index("label")["expected_price_cagr"])
+    except Exception as e:
+        st.info(f"Run `python -m rei.cli train` then `python -m rei.cli predict` first. ({e})")
