@@ -23,9 +23,11 @@ WATCHLIST = [
     "92012", "92044", "92051", "92040", "93048", "93055", "94041", "94080",
 ]
 
-GEO_SOURCES = ["admin_communes", "dvf_transactions"]
+# Geometry + scoring feeds are fetched IDF-wide (8 departments) so the map fills and
+# scores vary across all of Ile-de-France. Parcels/zoning stay on WATCHLIST (heavy).
+IDF_DEPARTEMENTS = ["75", "77", "78", "91", "92", "93", "94", "95"]
+DVF_YEARS_DEFAULT = [2021, 2022, 2023, 2024, 2025]
 PARCEL_SOURCES = ["cadastre_parcels", "gpu_zoning"]
-TABULAR_SOURCES = ["insee_population", "insee_income", "sitadel_permits", "rental_observatoires"]
 
 
 def _run(source_id: str, **kwargs):
@@ -66,19 +68,20 @@ def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, sco
     if not do_ingest:
         print("== Skipping ingest (%s) ==" % ("--skip-ingest" if skip_ingest else "data present; use --refresh to refetch"))
     if do_ingest:
-        print("== Ingesting ==")
-        for sid in GEO_SOURCES:
-            if sid == "dvf_transactions" and dvf_years:
-                _run(sid, communes=communes, years=dvf_years)
-            else:
-                _run(sid, communes=communes)
+        print("== Ingesting (Ile-de-France) ==")
+        _run("admin_communes", departements=IDF_DEPARTEMENTS)
+        _run("dvf_transactions", departements=IDF_DEPARTEMENTS, years=(dvf_years or DVF_YEARS_DEFAULT))
         if score_level == "iris":
-            _run("iris_contours", communes=communes)
+            _run("iris_contours", departements=IDF_DEPARTEMENTS)
         if with_parcels:
             for sid in PARCEL_SOURCES:
                 _run(sid, communes=communes)
-        for sid in TABULAR_SOURCES:
-            _run(sid, communes=communes)
+        # Scoring feeds, IDF-wide: income/population via bulk Melodi sweep, rents from
+        # the national carte-des-loyers filtered to IDF. Permits stay commune-level.
+        _run("insee_population", departements=IDF_DEPARTEMENTS)
+        _run("insee_income", departements=IDF_DEPARTEMENTS)
+        _run("rental_observatoires", departements=IDF_DEPARTEMENTS)
+        _run("sitadel_permits", communes=communes)
         if with_transit:
             _run("transit_gtfs", area_query="Ile-de-France")
         if with_parcels:

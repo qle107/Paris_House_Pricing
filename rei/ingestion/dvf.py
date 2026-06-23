@@ -20,6 +20,8 @@ KEEP = [
     "longitude", "latitude",
 ]
 
+CONFLICT = ("mutation_year", "id_mutation", "id_parcelle", "type_local")
+
 
 class DvfCollector(Collector):
     source_id = "dvf_transactions"
@@ -28,6 +30,9 @@ class DvfCollector(Collector):
     def commune_url(self, year: int, insee: str) -> str:
         dep = insee[:3] if insee[:2] in ("97", "98") else insee[:2]
         return f"{BASE}/{year}/communes/{dep}/{insee}.csv"
+
+    def dept_url(self, year: int, dep: str) -> str:
+        return f"{BASE}/{year}/departements/{dep}.csv.gz"
 
     def fetch_commune_year(self, insee: str, year: int) -> pd.DataFrame:
         url = self.commune_url(year, insee)
@@ -50,6 +55,19 @@ class DvfCollector(Collector):
         cols = [c for c in KEEP if c in df.columns]
         return df[cols]
 
+    def fetch_dept_year(self, dep: str, year: int) -> pd.DataFrame:
+        """One gzipped department file (covers every commune in the department)."""
+        url = self.dept_url(year, dep)
+        try:
+            resp = self.http.get(url)
+        except Exception:
+            self.log.warning("No DVF dept file for %s %s", dep, year)
+            return pd.DataFrame()
+        cache_path(self.source_id, f"dept_{dep}_{year}.csv.gz").write_bytes(resp.content)
+        df = pd.read_csv(io.BytesIO(resp.content), compression="gzip", low_memory=False)
+        cols = [c for c in KEEP if c in df.columns]
+        return df[cols]
+
     def clean(self, df: pd.DataFrame) -> pd.DataFrame:
         if df.empty:
             return df
@@ -65,12 +83,26 @@ class DvfCollector(Collector):
         df = df.drop_duplicates(subset=["id_mutation", "id_parcelle", "type_local"])
         return df
 
-    def collect(self, communes: list[str] | None = None, years: list[int] | None = None) -> int:
-        if not communes:
-            raise ValueError("DvfCollector requires a `communes` list of INSEE codes")
+    def collect(self, communes: list[str] | None = None, years: list[int] | None = None,
+                departements: list[str] | None = None) -> int:
         if not years:
             y = dt.date.today().year
             years = [y - 1, y - 2]  # newest fully published millesimes
+        # Department mode: one gzipped file per (dep, year) covers all its communes.
+        if departements:
+            frames = []
+            for dep in departements:
+                for year in years:
+                    cleaned = self.clean(self.fetch_dept_year(dep, year))
+                    self.log.info("DVF dept %s %s: %d rows", dep, year, len(cleaned))
+                    if not cleaned.empty:
+                        frames.append(cleaned)
+            out = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+            if out.empty:
+                return 0
+            return upsert_dataframe(out, "dvf_transactions", conflict_cols=CONFLICT)
+        if not communes:
+            raise ValueError("DvfCollector requires a `communes` list or `departements` list")
         frames = []
         for insee in communes:
             for year in years:
@@ -79,10 +111,7 @@ class DvfCollector(Collector):
         clean = self.clean(raw)
         if clean.empty:
             return 0
-        return upsert_dataframe(
-            clean, "dvf_transactions",
-            conflict_cols=("mutation_year", "id_mutation", "id_parcelle", "type_local"),
-        )
+        return upsert_dataframe(clean, "dvf_transactions", conflict_cols=CONFLICT)
 
 
 class DvfPlusCollector(DvfCollector):

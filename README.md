@@ -8,7 +8,7 @@ The pipeline ingests free public data, scores communes, IRIS units, and parcels 
 
 Scoring runs at the IRIS level, about 1,300 neighbourhoods across the Grand Paris watchlist, not just whole communes. Each area gets separate Appreciation, Rental, Value (€/m² discount), Development, Risk, and Toxicity scores. These blend into a composite Institutional score and an Acquisition Alpha signal that looks for underpriced areas with future catalysts.
 
-Factors with no data feed are weighted out and renormalised rather than faked, and every IRIS reports how much of its score is data-backed. The whole pipeline runs on local Parquet/GeoParquet (`REI_STORAGE=files`) with no database, or scales to PostgreSQL + PostGIS in production. Every feed is a free public source: INSEE Melodi, DVF, Cadastre, BAN, Sit@del (SDES/DiDo), GTFS, GPU/PLU zoning, and geo.api.gouv.fr. On the map you can colour by any score, read a live top-10 leaderboard per metric, click an area to highlight it, and open a per-IRIS detail panel.
+Factors with no data gfeed are weighted out and renormalised rather than faked, and every IRIS reports how much of its score is data-backed. The whole pipeline runs on local Parquet/GeoParquet (`REI_STORAGE=files`) with no database, or scales to PostgreSQL + PostGIS in production. Every feed is a free public source: INSEE Melodi, DVF, Cadastre, BAN, Sit@del (SDES/DiDo), GTFS, GPU/PLU zoning, and geo.api.gouv.fr. On the map you can colour by any score, read a live top-10 leaderboard per metric, click an area to highlight it, and open a per-IRIS detail panel.
 
 ## Contents
 

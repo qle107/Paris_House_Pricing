@@ -73,10 +73,24 @@ class _MelodiBase(Collector):
     def normalize(self, df: pd.DataFrame) -> pd.DataFrame:  # pragma: no cover
         raise NotImplementedError
 
-    def collect(self, communes: list[str] | None = None, dataset_id: str | None = None, **_) -> int:
+    def collect(self, communes: list[str] | None = None, dataset_id: str | None = None,
+                departements: list[str] | None = None, **_) -> int:
         ds_id = dataset_id or self.discover_dataset_id()
         if not ds_id:
             return 0
+        # Department mode: one bulk sweep of the dataset, filtered to commune rows in
+        # the requested departments. Far fewer requests than per-commune for all of IDF.
+        if departements:
+            raw = self.fetch_observations(ds_id, dict(self.query_filters))
+            tidy = self.normalize(raw) if not raw.empty else pd.DataFrame()
+            if not tidy.empty:
+                tidy = tidy[tidy["geo_code"].str.len() == 5]
+                tidy = tidy[tidy["geo_code"].str[:2].isin(set(departements))]
+            if tidy is not None and not tidy.empty:
+                return upsert_dataframe(tidy, self.target_table, self.conflict_cols)
+            self.log.warning("Bulk fetch returned no commune rows for %s; "
+                             "falling back to per-commune", departements)
+            communes = _communes_in_departements(departements)
         frames = []
         for insee in communes or []:
             df = self.fetch_observations(ds_id, {"GEO": _geo_value(insee), **self.query_filters})
@@ -100,7 +114,7 @@ class InseePopulationCollector(_MelodiBase):
         geo = _first_col(df, ["GEO", "geo", "REF_AREA", "CODGEO"])
         time = _first_col(df, ["TIME_PERIOD", "TIME", "ANNEE"])
         out = pd.DataFrame({
-            "geo_code": df[geo].astype(str),
+            "geo_code": _clean_geo(df[geo]),
             "year": pd.to_numeric(df[time], errors="coerce").astype("Int64"),
             "indicator": "population",
             "value": pd.to_numeric(df["value"], errors="coerce"),
@@ -148,7 +162,7 @@ class InseeIncomeCollector(_MelodiBase):
                                  sorted(set(tag))[:30])
             df = df[mask]
         out = pd.DataFrame({
-            "geo_code": df[geo].astype(str),
+            "geo_code": _clean_geo(df[geo]),
             "year": pd.to_numeric(df[time], errors="coerce").astype("Int64"),
             "indicator": "revenu_median_uc",
             "value": pd.to_numeric(df["value"], errors="coerce"),
@@ -196,6 +210,26 @@ def _first_col(df: pd.DataFrame, candidates: list[str]) -> str:
     if not others:
         raise KeyError(f"None of {candidates} present and no dimension columns found")
     return others[0]
+
+
+def _clean_geo(s: pd.Series) -> pd.Series:
+    """Melodi GEO values arrive like '2025-ARM-75101' or 'COM-92012'; reduce to the
+    bare INSEE code ('75101', '92012') so it joins to code_commune downstream."""
+    return (s.astype(str)
+            .str.replace(r"^\d{4}-", "", regex=True)
+            .str.replace(r"^(ARM|COM|DEP|REG)-", "", regex=True)
+            .str.strip())
+
+
+def _communes_in_departements(departements: list[str]) -> list[str]:
+    """Commune codes for the given departments, read from the ingested boundaries."""
+    from rei.common.store import read_geo
+    g = read_geo("communes")
+    if g is None or g.empty or "code_commune" not in g.columns:
+        return []
+    codes = g["code_commune"].astype(str)
+    deps = set(departements)
+    return sorted(codes[codes.str[:2].isin(deps)].unique().tolist())
 
 
 def _geo_value(insee: str) -> str:

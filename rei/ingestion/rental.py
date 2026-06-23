@@ -34,7 +34,8 @@ class RentObservatoryCollector(Collector):
         self.log.info("Latest carte-des-loyers dataset: %s", slug)
         return slug
 
-    def collect(self, communes: list[str] | None = None) -> int:
+    def collect(self, communes: list[str] | None = None,
+                departements: list[str] | None = None) -> int:
         meta = self.http.get_json(f"{DATAGOUV}/datasets/{self._latest_slug()}/")
         csvs = [r for r in meta.get("resources", []) if (r.get("format") or "").lower().startswith("csv")]
         if not csvs:
@@ -49,7 +50,9 @@ class RentObservatoryCollector(Collector):
             return 0
         df = df.rename(columns={comm: "code_commune"})
         df["code_commune"] = df["code_commune"].astype(str)
-        if communes:
+        if departements:
+            df = df[df["code_commune"].str[:2].isin(set(departements))]
+        elif communes:
             df = df[df["code_commune"].isin(communes)]
         keep = [c for c in df.columns if c in ("code_commune",) or "loyer" in c or "loypredm2" in c]
         return upsert_dataframe(df[keep].drop_duplicates("code_commune"), "rents", conflict_cols=("code_commune",))
