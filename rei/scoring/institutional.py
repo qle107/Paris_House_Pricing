@@ -10,7 +10,7 @@ import pandas as pd
 
 from rei.common import store
 from rei.common.logging import get_logger
-from rei.scoring.indicators import percentile_score
+from rei.scoring.indicators import percentile_score, risk_multiplier
 
 log = get_logger(__name__)
 CRS_METRIC = 2154  # Lambert-93 (metres) for areas / spatial joins
@@ -34,7 +34,15 @@ def _discount_to_score(pct: pd.Series) -> pd.Series:
 
 
 def _hedonic_discount(j: pd.DataFrame) -> pd.DataFrame:
-    """Hedonic discount per IRIS (no location term in the model)."""
+    """Location-aware hedonic discount per IRIS.
+
+    Expected price is conditioned on location (commune price level, plus income when
+    present) as well as structure, so the discount measures mispricing *given
+    location* rather than raw cheapness. Controlling at commune grain - coarser than
+    the IRIS unit of analysis - keeps cross-IRIS-within-commune mispricing as signal
+    while removing the between-commune price-level differences that made the old
+    location-blind model collapse to an inverse-price ranking (r = -0.85 vs price;
+    see RANKING_METHODOLOGY_REVIEW.md follow-up item 1)."""
     d = j.copy()
     d["prix_m2"] = pd.to_numeric(d.get("prix_m2"), errors="coerce")
     d["surface_reelle_bati"] = pd.to_numeric(d.get("surface_reelle_bati"), errors="coerce")
@@ -48,6 +56,12 @@ def _hedonic_discount(j: pd.DataFrame) -> pd.DataFrame:
         "is_appt": (d.get("type_local") == "Appartement").astype(float),
         "yr": pd.to_numeric(d.get("mutation_year"), errors="coerce").fillna(0).astype(float),
     }, index=d.index)
+    # Location control (the fix): commune price level as a fixed-effect proxy. A
+    # commune with a single IRIS collapses to ~0 discount (no within-commune peer to
+    # be mispriced against) instead of the old saturated 0/100, which also defuses
+    # the whole-commune "non irisee" unit bias.
+    if "code_commune" in d:
+        feat["commune_loc"] = d.groupby(d["code_commune"].astype(str))["log_p"].transform("mean")
     if "revenu_median" in d:
         rev = pd.to_numeric(d["revenu_median"], errors="coerce")
         feat["rev"] = rev.fillna(rev.median())
@@ -142,6 +156,18 @@ def apply_gates(score, appreciation, rental, toxicity, risk, liquidity, trap) ->
     return s.round(1)
 
 
+def climate_multiplier(n_risques) -> pd.Series | None:
+    """Georisques natural-hazard haircut at IRIS grain (blueprint Phase 3.6).
+
+    Reuses the commune ``risk_multiplier`` so the IRIS climate overlay and the commune
+    overlay agree: >= 6 distinct hazards cap the multiplier at 0.70, fewer scale
+    linearly, and a missing count stays neutral (1.0). Returns None when no hazard
+    series is available, so a run without the Georisques feed is unchanged."""
+    if n_risques is None:
+        return None
+    return n_risques.apply(lambda v: risk_multiplier(v, full_at=6, min_mult=0.7))
+
+
 def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
     """Institutional sub-scores, value-trap score and gated composites per iris_code."""
     f = base.copy()
@@ -159,7 +185,8 @@ def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
             f = f.merge(fc, on="code_commune", how="left")
 
     idx = f.index
-    liq = f["n_sales"] if "n_sales" in f else f.get("liquidity")
+    liq = (f["sales_per_km2"] if "sales_per_km2" in f
+           else f["n_sales"] if "n_sales" in f else f.get("liquidity"))
     mom = f.get("price_cagr")
     supply = f.get("zoning_share_au")
     fwd = f.get("expected_price_cagr")
@@ -167,7 +194,7 @@ def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
 
     liq_pct = percentile_score(liq, 1) if liq is not None else pd.Series(50.0, index=idx)
 
-    # VALUE: hedonic discount (still location-blind — see refactor note) used only trap-adjusted.
+    # VALUE: location-aware hedonic discount (commune fixed-effect proxy) used trap-adjusted.
     value = _discount_to_score(f["discount_pct"]) if "discount_pct" in f else None
     development = percentile_score(1 - f["coverage_ratio"], 1) if "coverage_ratio" in f and f["coverage_ratio"].notna().any() else None
 
@@ -208,6 +235,7 @@ def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
     out["inst_risk"] = risk
     out["inst_rental"] = rental
     out["inst_toxicity"] = toxicity
+    out["inst_liquidity"] = g_liq
     out["value_trap_score"] = trap
     out["expected_prix_m2"] = f.get("expected_prix_m2")
     out["observed_prix_m2"] = f.get("observed_prix_m2")
@@ -218,10 +246,17 @@ def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
             "value_adj": value_adj, "development": development, "liquidity": g_liq}
     inst_base, inst_cov = _wavg({k: (comp[k], INSTITUTIONAL_W[k]) for k in INSTITUTIONAL_W}, idx)
     out["institutional_score"] = apply_gates(inst_base, g_appr, g_rent, g_tox, g_risk, g_liq, trap)
-    out["institutional_rank"] = out["institutional_score"].rank(ascending=False, method="min").astype("Int64")
-
     alpha_base, _ = _wavg({k: (comp[k], ALPHA_W[k]) for k in ALPHA_W}, idx)
     out["alpha_score"] = apply_gates(alpha_base, g_appr, g_rent, g_tox, g_risk, g_liq, trap)
+
+    # Climate/ESG haircut (blueprint Phase 3.6): activate the Georisques hazard overlay
+    # at IRIS grain. No-op when the risk feed is absent, so existing runs are unchanged.
+    cm = climate_multiplier(f.get("n_risques"))
+    if cm is not None:
+        out["climate_multiplier"] = cm.round(2)
+        out["institutional_score"] = (out["institutional_score"] * cm).round(1)
+        out["alpha_score"] = (out["alpha_score"] * cm).round(1)
+    out["institutional_rank"] = out["institutional_score"].rank(ascending=False, method="min").astype("Int64")
     out["data_coverage"] = inst_cov
     log.info("Institutional scoring (trap-aware): %d IRIS | mean trap=%.1f | mean coverage=%.2f",
              len(out), float(trap.mean()), float(inst_cov.mean()))

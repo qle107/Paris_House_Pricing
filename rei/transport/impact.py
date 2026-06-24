@@ -34,6 +34,24 @@ def expected_uplift(mode: str, dist_m: float, years_to_open: float) -> float:
     return peak * decay * ramp
 
 
+def project_impact_score(mode: str, years_to_open: float, hub_bonus: float = 0.0) -> float:
+    """A 0-100 impact score for a single project node, for ranking/enrichment.
+
+    Reuses the same peak-uplift and ramp logic as ``expected_uplift`` (evaluated at
+    the primary catchment, decay=1) so the data layer and the parcel model agree.
+    Metro at full ramp normalises to ~100; slower modes and distant openings score
+    lower. ``hub_bonus`` adds points for interconnection nodes (suggested: 8 for an
+    interchange, 15 for a multi-line super-hub).
+    """
+    prof = MODE_PROFILE.get(mode)
+    if not prof:
+        return 0.0
+    _, _, peak, yrs_peak = prof
+    ramp = max(0.4, min(1.0, 1.0 - years_to_open / (yrs_peak + 6)))
+    base = peak * ramp * 100.0 / MODE_PROFILE["metro"][2]  # metro peak -> 100
+    return round(max(0.0, min(100.0, base + hub_bonus)), 1)
+
+
 def project_parcel_impact(commune: str, today_year: int) -> pd.DataFrame:
     """For each parcel in a commune, expected uplift from the nearest pipeline node."""
     sql = text(

@@ -7,7 +7,7 @@ import pandas as pd
 from rei.common import store
 from rei.common.logging import get_logger
 from rei.scoring import files_engine as commune_engine
-from rei.scoring.indicators import percentile_score
+from rei.scoring.indicators import liquidity_density, percentile_score
 
 log = get_logger(__name__)
 CRS_METRIC = 2154
@@ -78,16 +78,24 @@ def assemble_iris_features() -> gpd.GeoDataFrame:
     iris["code_commune"] = iris["code_commune"].astype(str)
     f = iris[["iris_code", "iris_name", "code_commune", "geometry"]].drop_duplicates("iris_code")
     f = f.reset_index(drop=True)
+    f["area_km2"] = f.to_crs(CRS_METRIC).geometry.area / 1e6   # for per-area liquidity
 
     dvf = store.read_table("dvf_transactions")
     if not dvf.empty:
         f = f.merge(_iris_dvf(iris, dvf), on="iris_code", how="left")
+        f["sales_per_km2"] = liquidity_density(f["n_sales"], f["area_km2"])
 
     com = commune_engine.assemble_features()
     if not com.empty:
         com["code_commune"] = com["code_commune"].astype(str)
         keep = [c for c in ["code_commune", "pop_cagr", "revenu_median", "loyer_m2"] if c in com.columns]
         f = f.merge(com[keep], on="code_commune", how="left")
+
+    risk = store.read_table("risk")
+    if not risk.empty and "n_risques" in risk:
+        risk = risk[["code_commune", "n_risques"]].copy()
+        risk["code_commune"] = risk["code_commune"].astype(str)
+        f = f.merge(risk, on="code_commune", how="left")
 
     f = f.merge(_iris_zoning(iris), on="iris_code", how="left")
     return gpd.GeoDataFrame(f, geometry="geometry", crs=iris.crs)

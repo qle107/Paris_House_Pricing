@@ -246,13 +246,26 @@ sources:
   transport_projects:
     name: "Grands projets de transport (SGP/GPE, SNCF Reseau, regions)"
     collector: rei.ingestion.transport.ProjectCollector
-    tier: scaffold
-    portal: "https://www.societedugrandparis.fr/"
-    auth: scrape
+    tier: runnable        # ships a verified Grand Paris core seed (rei/transport/projects.py); pass a GeoJSON path to override
+    portal: "https://www.societedesgrandsprojets.fr/"
+    api: "https://data.iledefrance-mobilites.fr/explore/dataset/point-de-localisation-des-gares-du-grand-paris-express/"
+    auth: none
     cadence: irregular
     granularity: station
-    variables: [ligne, station, mise_en_service, statut]
+    variables: [ligne, station, mise_en_service, statut, impact_score]
     score: 9
+
+  development_projects:
+    name: "Grands projets d'amenagement urbain (ZAC, quartiers, equipements publics)"
+    collector: rei.ingestion.development.DevelopmentProjectsCollector
+    tier: runnable        # ships a verified Grand Paris core seed (rei/development/projects.py); pass a GeoJSON path to override
+    portal: "https://www.grandparisamenagement.fr/"
+    api: "https://apicarto.ign.fr/api/gpu"          # ZAC/operation perimeters via GPU prescription-surf
+    auth: none
+    cadence: irregular
+    granularity: operation
+    variables: [project, project_type, status, completion, impact_score]
+    score: 8
 
   # Risk / environment
   georisques:

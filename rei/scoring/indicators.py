@@ -28,3 +28,15 @@ def risk_multiplier(n_risques: float, full_at: int, min_mult: float) -> float:
         return 1.0
     frac = min(n_risques / full_at, 1.0)
     return 1.0 - frac * (1.0 - min_mult)
+
+
+def liquidity_density(n_sales, area_km2) -> pd.Series:
+    """Transactions per km2: a MAUP-robust liquidity proxy. A large whole-commune
+    ("commune non irisee") unit no longer out-ranks a small dense IRIS on raw count
+    alone. NaN where area is missing or non-positive (scored neutral downstream).
+
+    Per-area is the team-endorsed fix (see RANKING_METHODOLOGY_REVIEW.md); per-dwelling
+    turnover is the ideal but needs an IRIS housing-stock count that is not yet wired."""
+    n = pd.to_numeric(n_sales, errors="coerce")
+    a = pd.to_numeric(area_km2, errors="coerce")
+    return (n / a.where(a > 0)).round(2)

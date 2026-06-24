@@ -62,13 +62,18 @@ class GtfsCollector(Collector):
 
 
 class ProjectCollector(Collector):
-    """Curated transport projects from a GeoJSON/CSV file."""
+    """Forward-looking transport projects (Grand Paris Express, tram, etc.).
+
+    With no path, loads the verified Grand Paris core seed
+    (``rei.transport.projects.seed_frame``). A GeoJSON/CSV path overrides it.
+    """
     source_id = "transport_projects"
 
     def collect(self, geojson_path: str | None = None) -> int:
-        if not geojson_path:
-            raise ValueError("Provide a curated transport_projects GeoJSON/CSV path")
-        gdf = gpd.read_file(geojson_path).to_crs(4326)
+        if geojson_path:
+            gdf = gpd.read_file(geojson_path).to_crs(4326)
+        else:
+            from rei.transport.projects import seed_frame
+            gdf = seed_frame()
         from rei.common.store import write_geo
-        write_geo(gdf, "transport_projects", schema="gis")
-        return len(gdf)
+        return write_geo(gdf, "transport_projects", schema="gis", key="station")

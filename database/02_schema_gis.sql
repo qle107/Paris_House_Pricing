@@ -38,13 +38,18 @@ CREATE TABLE IF NOT EXISTS gis.transit_stops (
 
 -- Forward-looking transport projects (stations/lines + opening date).
 CREATE TABLE IF NOT EXISTS gis.transport_projects (
-    project   text,
-    line      text,
-    station   text,
-    mode      text,
-    opening   date,
-    status    text,               -- planned / under_construction / commissioning
-    geometry  geometry(Geometry, 4326)
+    project      text,
+    line         text,
+    station      text,
+    mode         text,
+    opening      date,
+    status       text,               -- planned / under_construction / commissioning
+    code_dept    text,
+    commune      text,
+    description  text,
+    impact_score double precision,    -- 0-100 (rei.transport.impact.project_impact_score)
+    source       text,
+    geometry     geometry(Geometry, 4326)
 );
 
 CREATE TABLE IF NOT EXISTS gis.scot (
@@ -58,5 +63,19 @@ CREATE TABLE IF NOT EXISTS gis.zac (
     code_commune text,
     libelle      text,
     captured_at  timestamptz,
+    geometry     geometry(Geometry, 4326)
+);
+
+-- Forward-looking urban-development operations (ZAC, districts, facilities).
+CREATE TABLE IF NOT EXISTS gis.development_projects (
+    project      text,
+    project_type text,               -- business_district / mixed_use_district / hospital / university / ...
+    status       text,               -- planned / approved / under_construction / completed
+    completion   date,
+    code_dept    text,
+    commune      text,
+    description  text,
+    impact_score double precision,    -- 0-100 (rei.development.projects.dev_impact_score)
+    source       text,
     geometry     geometry(Geometry, 4326)
 );

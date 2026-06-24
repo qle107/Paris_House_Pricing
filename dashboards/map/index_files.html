@@ -6,20 +6,38 @@
 <link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
 <style>
-  html,body{margin:0;height:100%;font-family:system-ui,Segoe UI,Roboto,sans-serif}
+  html,body{margin:0;height:100%;font-family:system-ui,Segoe UI,Roboto,sans-serif;color:#1f2733}
   #map{position:absolute;inset:0}
-  .panel{position:absolute;z-index:1;background:#fff;border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.3);padding:12px 14px;font-size:13px}
-  #controls{top:12px;left:12px;width:250px}#legend{bottom:24px;left:12px;width:250px}
-  #ranking{bottom:24px;right:12px;width:224px;max-height:50vh;overflow:auto}
-  #analyst{top:60px;right:12px;width:340px;max-height:80vh;overflow:auto;display:none}
-  #analyst textarea{width:100%;box-sizing:border-box;border:1px solid #ccc;border-radius:5px;padding:6px}
-  #analyst button,#analyst-toggle{cursor:pointer;border:1px solid #c7008f;background:#fff;color:#c0008f;border-radius:5px;padding:5px}
-  .rank-row:hover{background:#eef3f8;border-radius:3px}
-  #controls h1{font-size:14px;margin:0 0 8px}#controls label{display:block;margin:4px 0;cursor:pointer}
-  .swatch{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
-  .ramp{height:10px;border-radius:3px;margin:6px 0;background:linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)}
-  .muted{color:#666;font-size:11px}.maplibregl-popup-content{font-size:12px;max-width:280px}
-  .maplibregl-popup-content h3{margin:0 0 4px;font-size:13px}table.kv td{padding:1px 6px 1px 0}
+  .panel{position:absolute;z-index:1;background:#fff;border-radius:10px;box-shadow:0 2px 14px rgba(15,23,42,.18);padding:13px 15px;font-size:13px}
+  #controls{top:12px;left:12px;width:252px}#legend{bottom:24px;left:12px;width:252px}
+  #ranking{bottom:24px;right:12px;width:236px;max-height:52vh;overflow:auto}
+  #analyst{top:58px;right:12px;width:360px;max-height:82vh;overflow:auto;display:none}
+  #analyst button,#analyst-toggle{cursor:pointer;border:1px solid #c7008f;background:#fff;color:#c0008f;border-radius:6px;padding:6px}
+  #analyst-toggle{font-weight:600}
+  .rank-row:hover{background:#eef3f8;border-radius:4px}
+  #controls h1{font-size:14px;margin:0 0 9px;letter-spacing:.2px}
+  #controls label{display:block;margin:4px 0;cursor:pointer}
+  select{border:1px solid #d3d8e0;border-radius:6px;padding:3px 5px;font-size:12px}
+  .swatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .ramp{height:10px;border-radius:4px;margin:6px 0;background:linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)}
+  .muted{color:#6b7280;font-size:11px}
+  .maplibregl-popup-content{font-size:12px;max-width:300px;border-radius:10px;padding:12px 14px}
+  .maplibregl-popup-content h3{margin:0 0 2px;font-size:14px}
+  table.kv{width:100%;border-collapse:collapse}table.kv td{padding:1px 6px 1px 0;vertical-align:top}
+  .sec{margin-top:8px;border-top:1px solid #eef0f3;padding-top:6px}
+  .sec-h{font-weight:600;font-size:12px;margin-bottom:3px}
+  .scorechip{display:inline-block;padding:1px 8px;border-radius:10px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+  .db{display:flex;align-items:center;gap:6px;margin:3px 0;font-size:11px}
+  .db-l{width:80px;color:#374151}
+  .db-bar{flex:1;background:#f1f3f5;border-radius:3px;height:9px;position:relative;overflow:hidden}
+  .db-bar i{position:absolute;top:0;height:100%;border-radius:3px}
+  .db-v{width:36px;text-align:right;font-variant-numeric:tabular-nums}
+  .chip{display:inline-block;font-size:10px;padding:1px 7px;border-radius:10px;margin:2px 4px 0 0;white-space:nowrap}
+  .chip-r{background:#fde0dd;color:#b30000}.chip-y{background:#fff3cd;color:#8a6d00}
+  .memo p{margin:6px 0;line-height:1.45}.memo-h{font-size:15px;font-weight:600}
+  .memo-score{font-size:12px;color:#374151;margin:3px 0 7px}
+  .memo-rec{border-top:1px solid #eef0f3;padding-top:6px}
+  .verdict{font-weight:700}
 </style></head>
 <body>
 <div id="map"></div>
@@ -33,13 +51,16 @@
   <label><input type="checkbox" id="t-zoning"> PLU zoning</label>
   <label><input type="checkbox" id="t-parcels"> Parcel buildable-upside</label>
   <label><input type="checkbox" id="t-listings" checked> Property listings</label>
-  <label style="margin-top:8px;display:block">Colour IRIS by:
+  <label style="margin-top:9px;display:block">Colour IRIS by:
     <select id="iris-metric" style="width:100%;margin-top:3px">
       <option value="score_total">Attractiveness (base)</option>
       <option value="institutional_score">Institutional score</option>
       <option value="alpha_score">Acquisition Alpha</option>
       <option value="inst_value_adj">Best buy (trap-adjusted)</option>
+      <option value="value_trap_score">Value-trap risk</option>
+      <option value="climate_multiplier">Climate / ESG</option>
       <option value="expected_price_cagr">Expected growth (forecast)</option>
+      <option value="future_development_score">Future development</option>
       <option value="inst_appreciation">Appreciation</option>
       <option value="inst_development">Development</option>
       <option value="inst_risk">Risk</option>
@@ -52,8 +73,8 @@
       <option value="outside">Outside Paris</option>
     </select>
   </label>
-  <div id="metric-desc" class="muted" style="margin-top:5px;line-height:1.35"></div>
-  <button id="analyst-toggle" style="width:100%;margin-top:8px">🧠 AI Analyst</button>
+  <div id="metric-desc" class="muted" style="margin-top:6px;line-height:1.35"></div>
+  <button id="analyst-toggle" style="width:100%;margin-top:9px">📄 Investment memo</button>
   <div class="muted" id="status" style="margin-top:8px"></div>
 </div>
 <div id="legend" class="panel">
@@ -73,15 +94,11 @@
   <div id="rank-list" style="margin-top:6px"></div>
 </div>
 <div id="analyst" class="panel">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <strong>🧠 AI Analyst</strong><span id="analyst-close" style="cursor:pointer;color:#888">✕</span>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <strong>📄 Investment memo</strong><span id="analyst-close" style="cursor:pointer;color:#888">✕</span>
   </div>
-  <div id="analyst-iris" class="muted" style="margin:4px 0">Click a zone (on the map or the Top-10) to build a prompt.</div>
-  <button id="analyst-copy" style="width:100%;margin-bottom:4px">📋 Copy prompt</button>
-  <textarea id="analyst-prompt" readonly style="height:150px;font-size:11px;font-family:ui-monospace,Consolas,monospace;resize:vertical"></textarea>
-  <div class="muted" style="margin:7px 0 3px">Paste it into ChatGPT/Claude, then paste the answer back here:</div>
-  <textarea id="analyst-answer" placeholder="Paste the analysis…" style="height:90px;font-size:12px;resize:vertical"></textarea>
-  <div id="analyst-out" style="margin-top:7px;font-size:12px;line-height:1.45;white-space:pre-wrap"></div>
+  <div id="memo-body"><div class="muted">Click a zone (on the map or the Top-10) to generate its memo.</div></div>
+  <button id="analyst-copy" style="width:100%;margin-top:8px">📋 Copy prompt for a deeper LLM take</button>
 </div>
 <script>
 const RAMP=[-1,"#cccccc",0,"#d73027",50,"#fee08b",75,"#1a9850",100,"#006837"];
@@ -105,6 +122,7 @@ const fmtPct=v=>v!=null&&!isNaN(v)?((+v>=0?"+":"")+(+v).toFixed(1)+"%"):"n/a";
 const fmtCagr=v=>v!=null&&!isNaN(v)?((+v>=0?"+":"")+(+v*100).toFixed(1)+"%/yr"):"n/a";
 const cagrVerdict=v=>v==null||isNaN(v)?"n/a":(+v>=0.03?"strong growth":+v>=0.01?"modest growth":+v>-0.01?"roughly flat":+v>=-0.03?"modest decline":"decline");
 const outlook=v=>v==null||isNaN(v)?"n/a":(v>=75?"Strong":v>=60?"Moderate":v>=45?"Average":"Weak");
+const scoreHue=v=>v==null||isNaN(v)?"#9aa0a6":(v>=70?"#1a9850":v>=55?"#66bd63":v>=40?"#f6c343":"#e35043");
 function panForPopup(e){            // pan a low click into the upper area so a tall popup fits below it
   const h=map.getCanvas().clientHeight;
   if(e.point && e.point.y > h*0.2) map.easeTo({center:e.lngLat, offset:[0,-Math.round(h*0.30)], duration:300});
@@ -115,9 +133,21 @@ let listingsFeatures=[];
 let selectedIris=null;
 const METRICS={
   score_total:        {t:"Attractiveness",    d:"Weighted blend of six components (0–100)."},
-  institutional_score:{t:"Institutional",     d:"Composite: appreciation, rental, value, development, risk (trap-gated)."},
+  institutional_score:{t:"Institutional",     d:"Composite: appreciation, rental, value, development, risk (trap-gated, climate-haircut)."},
   alpha_score:        {t:"Alpha",             d:"Risk-adjusted appreciation: forward forecast + demand + value, trap-penalised."},
-  inst_value_adj:     {t:"Best buy",          d:"Genuine value: the €/m² discount with the value-trap penalty applied — high = cheap for good reasons, not a trap."},
+  inst_value_adj:     {t:"Best buy",          d:"Genuine value: the location-aware €/m² discount with the value-trap penalty applied — high = cheap for good reasons, not a trap."},
+  value_trap_score:   {t:"Value-trap risk",   d:"0 = cheap for sound reasons, 100 = cheap because growth, demand or liquidity is weak. Low = good.",
+                       fmt:v=>Math.round(v), lowerBetter:true,
+                       colorExpr:["case",["==",["coalesce",["get","value_trap_score"],-999],-999],"#cccccc",
+                         ["interpolate",["linear"],["get","value_trap_score"],0,"#006837",40,"#1a9850",60,"#fee08b",80,"#fc8d59",100,"#d73027"]],
+                       legendGrad:"linear-gradient(90deg,#006837,#1a9850,#fee08b,#fc8d59,#d73027)",
+                       legendScale:"0 clean — 100 trap"},
+  climate_multiplier: {t:"Climate / ESG",     d:"Géorisques natural-hazard haircut. Green = low hazard, red = heavy flood/clay exposure. Only where the hazard feed is loaded.",
+                       fmt:v=>v!=null&&!isNaN(v)?("−"+Math.round((1-v)*100)+"%"):"n/a",
+                       colorExpr:["case",["==",["coalesce",["get","climate_multiplier"],-999],-999],"#cccccc",
+                         ["interpolate",["linear"],["get","climate_multiplier"],0.7,"#d73027",0.85,"#fee08b",1.0,"#1a9850"]],
+                       legendGrad:"linear-gradient(90deg,#d73027,#fee08b,#1a9850)",
+                       legendScale:"−30% — 0 (haircut)"},
   expected_price_cagr:{t:"Expected growth",   d:"Forecast price CAGR (commune, next ~2y). Green = appreciation, red = decline.",
                        fmt:fmtCagr,
                        colorExpr:["case",["==",["coalesce",["get","expected_price_cagr"],-999],-999],"#cccccc",
@@ -125,13 +155,75 @@ const METRICS={
                           -0.06,"#d73027",-0.03,"#fc8d59",-0.01,"#fee08b",0.01,"#d9ef8b",0.03,"#1a9850",0.06,"#006837"]],
                        legendGrad:"linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)",
                        legendScale:"−6%/yr — 0 — +6%/yr"},
+  future_development_score:{t:"Future development", d:"Planned transport + development catalysts in catchment (0–100; 0 = none nearby)."},
   inst_appreciation:  {t:"Appreciation",      d:"Price momentum and supply constraint."},
   inst_development:   {t:"Development",       d:"Underbuilt land (low footprint coverage)."},
   inst_risk:          {t:"Risk",              d:"Low volatility and adequate sales volume."},
 };
 
-// ---- AI Analyst: build a copy-ready prompt from the selected IRIS ----
+// ---- Score decomposition (ported from rei.reporting.decompose) ----
+const INST_W={appreciation:0.28,rental:0.22,risk:0.15,value_adj:0.15,development:0.10,liquidity:0.10};
+const COMP_COL={appreciation:"inst_appreciation",rental:"inst_rental",risk:"inst_risk",value_adj:"inst_value_adj",development:"inst_development",liquidity:"inst_liquidity"};
+const COMP_LABEL={appreciation:"Appreciation",rental:"Rental",risk:"Risk",value_adj:"Value",development:"Development",liquidity:"Liquidity"};
+const num=(p,k,d)=>{const v=p[k];return v==null||isNaN(v)?d:+v;};
+
+function decompose(p){
+  const contrib={}; for(const k in INST_W) contrib[k]=+(INST_W[k]*(num(p,COMP_COL[k],50)-50)).toFixed(1);
+  const ranked=Object.entries(contrib).sort((a,b)=>b[1]-a[1]);
+  const pos=ranked.filter(x=>x[1]>0), neg=ranked.filter(x=>x[1]<0).reverse();
+  const trap=num(p,"value_trap_score",0), climate=num(p,"climate_multiplier",1);
+  const gates=[];
+  if(num(p,"inst_appreciation",50)<40) gates.push("appreciation < 40");
+  if(num(p,"inst_rental",50)<40) gates.push("rental < 40");
+  if(num(p,"inst_toxicity",50)>70) gates.push("toxicity > 70");
+  if(num(p,"inst_risk",50)<30) gates.push("risk < 30");
+  if(num(p,"inst_liquidity",50)<15) gates.push("liquidity < 15");
+  const base=+(50+ranked.reduce((s,x)=>s+x[1],0)).toFixed(1);
+  return {contrib,pos,neg,trap,trapHaircut:Math.round(0.4*trap),climate,climateHaircut:Math.round((1-climate)*100),gates,base};
+}
+function decompBar(label,val){const w=Math.min(100,Math.abs(val)*4),col=val>=0?"#1a9850":"#d73027";
+  return `<div class="db"><span class="db-l">${label}</span><span class="db-bar"><i style="${val>=0?"left:50%":"right:50%"};width:${w/2}%;background:${col}"></i></span>`+
+    `<span class="db-v" style="color:${col}">${val>=0?"+":""}${val}</span></div>`;}
+function decompBlock(p){
+  if(p.institutional_score==null) return "";
+  const d=decompose(p);
+  let h=`<div class="sec"><div class="sec-h">Why it scored ${s1(p.institutional_score)}</div>`+
+    `<div class="muted" style="margin:1px 0 5px">Base ${d.base} before gates · contribution vs a neutral 50</div>`;
+  d.pos.forEach(x=>h+=decompBar(COMP_LABEL[x[0]],x[1]));
+  d.neg.forEach(x=>h+=decompBar(COMP_LABEL[x[0]],x[1]));
+  if(d.gates.length) h+=`<div style="margin-top:5px">${d.gates.map(g=>`<span class="chip chip-r">gate: ${g}</span>`).join("")}</div>`;
+  const hc=[]; if(d.trapHaircut>0) hc.push(`trap −${d.trapHaircut}%`); if(d.climateHaircut>0) hc.push(`climate −${d.climateHaircut}%`);
+  if(hc.length) h+=`<div style="margin-top:4px">${hc.map(x=>`<span class="chip chip-y">${x}</span>`).join("")}</div>`;
+  return h+`</div>`;
+}
+
+// ---- Investment memo (ported from rei.reporting.memo) ----
+function verdict(score,trap){ if(score==null||isNaN(score)) return "Insufficient data";
+  const t=score>=70?"Shortlist for acquisition":score>=55?"Investigate further":score>=40?"Watch":"Pass";
+  return t+(trap>=60?" — elevated value-trap risk":""); }
+function memoHTML(p){
+  if(p.institutional_score==null) return '<div class="muted">No institutional score for this zone — re-run scoring with <code>--score-level iris</code>.</div>';
+  const d=decompose(p), score=+p.institutional_score, v=verdict(score,d.trap);
+  const top=d.pos.length?COMP_LABEL[d.pos[0][0]]:"no standout strength";
+  const drag=d.neg.length?COMP_LABEL[d.neg[0][0]]:"no material weakness";
+  const cov=p.data_coverage!=null?` · data-backed ${Math.round(p.data_coverage*100)}%`:"";
+  let h=`<div class="memo"><div class="memo-h">${p.iris_name||p.iris_code} <span class="muted">(${p.iris_code})</span></div>`;
+  h+=`<div class="memo-score"><span class="scorechip" style="background:${scoreHue(score)}">${s1(score)}/100</span>${cov} · value-trap ${s1(d.trap)}/100</div>`;
+  h+=`<p><b>Thesis.</b> Carried by ${top}, held back by ${drag}. Verdict: <span class="verdict" style="color:${scoreHue(score)}">${v}</span>.</p>`;
+  h+=`<p><b>Drivers.</b> ${d.pos.map(x=>`${COMP_LABEL[x[0]]} (+${x[1]})`).join(", ")||"none material"}.</p>`;
+  h+=`<p><b>Risks &amp; penalties.</b> ${d.neg.map(x=>`${COMP_LABEL[x[0]]} (${x[1]})`).join(", ")||"none material"}. `+
+     `Gates: ${d.gates.join("; ")||"none"}. Trap −${d.trapHaircut}%, climate −${d.climateHaircut}%.</p>`;
+  if(p.expected_price_cagr!=null&&!isNaN(p.expected_price_cagr)){
+    const band=(p.cagr_p10!=null&&p.cagr_p90!=null)?` (${fmtCagr(p.cagr_p10)} to ${fmtCagr(p.cagr_p90)})`:"";
+    h+=`<p><b>Forward outlook.</b> Expected price CAGR ${fmtCagr(p.expected_price_cagr)}${band}. <span class="muted">Region-wide cooling in this dataset — read as a relative screen.</span></p>`;}
+  if(p.observed_prix_m2!=null&&p.expected_prix_m2!=null){
+    const ds=(p.discount_pct!=null&&!isNaN(p.discount_pct))?` (${fmtPct(p.discount_pct)} vs fair)`:"";
+    h+=`<p><b>Value.</b> Trades at ${fmtEur(p.observed_prix_m2)}/m² vs location-aware expected ${fmtEur(p.expected_prix_m2)}/m²${ds}.</p>`;}
+  h+=`<p class="memo-rec"><b>Recommendation:</b> <span class="verdict" style="color:${scoreHue(score)}">${v}</span>.</p></div>`;
+  return h;
+}
 function buildAnalystPrompt(p){
+  const d=p.institutional_score!=null?decompose(p):null;
   const L=[];
   L.push("You are an institutional real-estate investment analyst. Assess the following Paris-region IRIS (a ~2,000-resident neighbourhood) for a 5–15 year buy-to-hold. Use ONLY the figures below; where score data-coverage is low, treat that score with caution.");
   L.push("");
@@ -140,40 +232,32 @@ function buildAnalystPrompt(p){
   if(p.institutional_score!=null){
     L.push(`Institutional: ${s1(p.institutional_score)}/100  ·  Acquisition Alpha ${s1(p.alpha_score)}  ·  rank #${p.institutional_rank??"n/a"}`);
     L.push(`  Appreciation ${s1(p.inst_appreciation)} | Rental ${s1(p.inst_rental)} | Value ${s1(p.inst_value)} | Development ${s1(p.inst_development)} | Risk ${s1(p.inst_risk)} (higher=safer) | Toxicity ${s1(p.inst_toxicity)} (higher=worse)`);
-    L.push(`  Price: observed ${fmtEur(p.observed_prix_m2)}/m² vs hedonic-expected ${fmtEur(p.expected_prix_m2)}/m²  (discount ${fmtPct(p.discount_pct)})`);
-    if(p.coverage_ratio!=null) L.push(`  Building footprint coverage: ${Math.round(+p.coverage_ratio*100)}%`);
+    L.push(`  Value-trap ${s1(p.value_trap_score)}/100 (0=clean) | climate haircut ${d?d.climateHaircut:0}%`);
+    L.push(`  Decomposition — drivers: ${d.pos.map(x=>COMP_LABEL[x[0]]+" +"+x[1]).join(", ")||"none"}; penalties: ${d.neg.map(x=>COMP_LABEL[x[0]]+" "+x[1]).join(", ")||"none"}; gates: ${d.gates.join("; ")||"none"}`);
+    L.push(`  Price: observed ${fmtEur(p.observed_prix_m2)}/m² vs location-aware-expected ${fmtEur(p.expected_prix_m2)}/m²  (discount ${fmtPct(p.discount_pct)})`);
     if(p.data_coverage!=null)  L.push(`  Score data-coverage: ${Math.round(+p.data_coverage*100)}%  (missing feeds: employment, vacancy, transit/GPE, multi-year growth)`);
-  } else {
-    L.push("(Institutional sub-scores not available — re-run scoring with --score-level iris.)");
-  }
+  } else { L.push("(Institutional sub-scores not available — re-run scoring with --score-level iris.)"); }
   L.push("");
-  L.push("Deliver, concise and specific to these numbers:");
-  L.push("1) A 3-sentence verdict.");
-  L.push("2) Bull case (what makes this a buy).");
-  L.push("3) Bear case / key risks.");
-  L.push("4) A clear call — BUY / HOLD / AVOID — with conviction (low/med/high) and the single datapoint that would most change your mind.");
+  L.push("Deliver, concise and specific to these numbers: 1) a 3-sentence verdict; 2) bull case; 3) bear case / key risks; 4) a clear BUY / HOLD / AVOID with conviction and the single datapoint that would most change your mind.");
   return L.join("\n");
 }
 function setSelectedIris(p){
   selectedIris=p;
-  const pr=document.getElementById("analyst-prompt"); if(pr) pr.value=buildAnalystPrompt(p);
-  const lab=document.getElementById("analyst-iris"); if(lab) lab.textContent=(p.iris_name||p.iris_code)+" · commune "+p.code_commune;
+  const body=document.getElementById("memo-body"); if(body) body.innerHTML=memoHTML(p);
 }
 function wireAnalyst(){
   const panel=document.getElementById("analyst"), rk=document.getElementById("ranking");
   document.getElementById("analyst-toggle").addEventListener("click",()=>{
     const open=panel.style.display!=="block"; panel.style.display=open?"block":"none";
     if(rk) rk.style.display=open?"none":"block";
-    if(open&&!selectedIris){const l=document.getElementById("analyst-iris");if(l)l.textContent="Click a zone (on the map or the Top-10) to build a prompt.";}
+    if(open&&selectedIris) setSelectedIris(selectedIris);
   });
   document.getElementById("analyst-close").addEventListener("click",()=>{ panel.style.display="none"; if(rk) rk.style.display="block"; });
   document.getElementById("analyst-copy").addEventListener("click",()=>{
-    const t=document.getElementById("analyst-prompt"); if(!t.value) return; const b=document.getElementById("analyst-copy");
-    const done=()=>{b.textContent="✓ Copied";setTimeout(()=>b.textContent="📋 Copy prompt",1200);};
-    if(navigator.clipboard){navigator.clipboard.writeText(t.value).then(done,()=>{t.select();document.execCommand("copy");done();});}
-    else{t.select();document.execCommand("copy");done();}
+    if(!selectedIris) return; const b=document.getElementById("analyst-copy"), txt=buildAnalystPrompt(selectedIris);
+    const done=()=>{b.textContent="✓ Copied";setTimeout(()=>b.textContent="📋 Copy prompt for a deeper LLM take",1300);};
+    if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done,done);} else done();
   });
-  document.getElementById("analyst-answer").addEventListener("input",e=>{ document.getElementById("analyst-out").textContent=e.target.value; });
 }
 
 function scopeFilterExpr(){
@@ -199,13 +283,14 @@ function refreshMetric(){
   const lscale=document.getElementById("legend-scale"); if(lscale) lscale.textContent=(meta.legendScale||"0 — 50 — 75 — 100")+" (grey = not scored)";
   if(map.getLayer("iris-fill"))
     map.setPaintProperty("iris-fill","fill-color", meta.colorExpr||["interpolate",["linear"],["coalesce",["get",m],-1],...RAMP]);
-  const title=document.getElementById("rank-title"); if(title) title.textContent="Top 10 · "+meta.t;
+  const title=document.getElementById("rank-title"); if(title) title.textContent=(meta.lowerBetter?"Best 10 · ":"Top 10 · ")+meta.t;
   const list=document.getElementById("rank-list"); if(!list) return;
   const fmtVal=meta.fmt||(v=>Math.round(v));
   const scope=(document.getElementById("iris-scope")||{}).value||"all";
   const inScope=p=>{ if(scope==="all") return true; const is75=String(p.code_commune||"").slice(0,2)==="75"; return scope==="paris"?is75:!is75; };
   const ranked=irisFeatures.map(f=>({p:f.properties||{},g:f.geometry}))
-    .filter(o=>o.p[m]!=null&&!isNaN(o.p[m])&&inScope(o.p)).sort((a,b)=>b.p[m]-a.p[m]).slice(0,10);
+    .filter(o=>o.p[m]!=null&&!isNaN(o.p[m])&&inScope(o.p))
+    .sort((a,b)=>meta.lowerBetter?(a.p[m]-b.p[m]):(b.p[m]-a.p[m])).slice(0,10);
   if(!ranked.length){ list.innerHTML='<div class="muted">No scored IRIS in this scope.</div>'; return; }
   list.innerHTML=ranked.map((o,i)=>`<div class="rank-row" data-i="${i}" style="display:flex;justify-content:space-between;gap:8px;padding:2px 4px;cursor:pointer">`+
     `<span>${i+1}. ${o.p.iris_name||o.p.iris_code}</span><b>${fmtVal(o.p[m])}</b></div>`).join("");
@@ -269,7 +354,7 @@ map.on("load", async () => {
       const fj=await (await fetch("./iris.geojson")).json(); const fs=fj.features||[]; irisFeatures=fs;
       const scored=fs.filter(f=>f.properties&&f.properties.score_total!=null).length;
       const hot=fs.filter(f=>+((f.properties||{}).hotspot_tier||0)>0).length;
-      console.log(`IRIS loaded: ${fs.length}  IRIS scored: ${scored}  IRIS rendered: ${map.getLayer("iris-fill")?fs.length:0}  IRIS hotspots: ${hot}`);
+      console.log(`IRIS loaded: ${fs.length}  IRIS scored: ${scored}  IRIS hotspots: ${hot}`);
       refreshMetric();
     }catch(e){ console.warn("IRIS diag: failed to read iris.geojson", e); }
   } else {
@@ -311,14 +396,17 @@ function instBlock(p){
   if(p.institutional_score==null) return "";
   const cov=p.data_coverage!=null?` <span class="muted">(${Math.round(p.data_coverage*100)}% coverage)</span>`:"";
   const disc=p.discount_pct!=null&&!isNaN(p.discount_pct)?((+p.discount_pct>=0?"+":"")+(+p.discount_pct).toFixed(1)+"%"):"n/a";
+  const trap=p.value_trap_score!=null?`<tr><td>Value-trap</td><td><b>${s1(p.value_trap_score)}</b> <span class="muted">(0 clean–100 trap)</span></td></tr>`:"";
+  const clim=(p.climate_multiplier!=null&&!isNaN(p.climate_multiplier))?`<tr><td>Climate haircut</td><td>−${Math.round((1-p.climate_multiplier)*100)}% <span class="muted">(hazard)</span></td></tr>`:"";
   return `<tr><td colspan="2" style="padding-top:6px"><b>Institutional</b>${cov}</td></tr>`+
-    `<tr><td>Institutional</td><td><b>${s1(p.institutional_score)}</b> &middot; alpha ${s1(p.alpha_score)} &middot; #${p.institutional_rank??"n/a"}</td></tr>`+
+    `<tr><td>Institutional</td><td><span class="scorechip" style="background:${scoreHue(p.institutional_score)}">${s1(p.institutional_score)}</span> &middot; alpha ${s1(p.alpha_score)} &middot; #${p.institutional_rank??"n/a"}</td></tr>`+
     `<tr><td>Appreciation</td><td>${s1(p.inst_appreciation)}</td></tr>`+
     `<tr><td>Rental</td><td>${s1(p.inst_rental)}</td></tr>`+
     `<tr><td>Value</td><td>${s1(p.inst_value)}</td></tr>`+
     `<tr><td>Development</td><td>${s1(p.inst_development)}</td></tr>`+
     `<tr><td>Risk</td><td>${s1(p.inst_risk)}</td></tr>`+
     `<tr><td>Toxicity</td><td>${s1(p.inst_toxicity)}</td></tr>`+
+    trap+clim+
     `<tr><td>Price/m²</td><td>${fmtEur(p.observed_prix_m2)} vs exp ${fmtEur(p.expected_prix_m2)}</td></tr>`+
     `<tr><td>Discount</td><td><b>${disc}</b></td></tr>`+
     `<tr><td>Outlook</td><td>appr ${outlook(p.inst_appreciation)} &middot; rent ${outlook(p.inst_rental)}</td></tr>`;
@@ -339,6 +427,12 @@ function listingsBlock(irisCode, communeCode){
   const more=base.length>12?`<tr><td colspan="2" class="muted">+${base.length-12} more</td></tr>`:"";
   return `<tr><td colspan="2" style="padding-top:6px">${head}</td></tr>`+rows+more;
 }
+function futureDevBlock(p){
+  if(p.future_development_score==null||isNaN(p.future_development_score)) return "";
+  const top=p.fdev_top_project?` &middot; ${p.fdev_top_project}`:"";
+  return `<tr><td colspan="2" style="padding-top:6px"><b>Future development</b></td></tr>`+
+    `<tr><td>Pipeline score</td><td><b>${s1(p.future_development_score)}</b>${top}</td></tr>`;
+}
 map.on("click","iris-fill",(e)=>{const p=e.features[0].properties;
   setSelectedIris(p); panForPopup(e);
   const tier=(+p.hotspot_tier>0)?`<tr><td>Hotspot</td><td><b>top ${p.hotspot_tier}%</b></td></tr>`:"";
@@ -347,8 +441,9 @@ map.on("click","iris-fill",(e)=>{const p=e.features[0].properties;
     `<tr><td>IRIS</td><td>${p.iris_code}</td></tr>`+
     `<tr><td>Commune</td><td>${p.code_commune}</td></tr>`+
     `<tr><td>Attractiveness</td><td><b>${p.score_total!=null?(+p.score_total).toFixed(1):"n/a"}</b> &middot; #${p.rank??"n/a"}</td></tr>`+
-    `${tier}${instBlock(p)}${forecastBlock(p)}${listingsBlock(p.iris_code, p.code_commune)}</table>`+
-    `<div class="muted" style="margin-top:5px">🧠 Open <b>AI Analyst</b> for a copy-ready prompt on this zone.</div>`).addTo(map);});
+    `${tier}${instBlock(p)}${futureDevBlock(p)}${forecastBlock(p)}${listingsBlock(p.iris_code, p.code_commune)}</table>`+
+    `${decompBlock(p)}`+
+    `<div class="muted" style="margin-top:6px">📄 Open <b>Investment memo</b> for the full write-up on this zone.</div>`).addTo(map);});
 
 map.on("click","communes-fill",(e)=>{const p=e.features[0].properties; panForPopup(e);
   const comp=Object.keys(p).filter(k=>k.startsWith("score_")).map(k=>`<tr><td>${labelize(k)}</td><td>${Math.round(p[k])}</td></tr>`).join("");

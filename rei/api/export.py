@@ -55,6 +55,14 @@ def export_geojson(out_dir: str | Path) -> list[str]:
             fc["code_commune"] = fc["code_commune"].astype(str)
             iris["code_commune"] = iris["code_commune"].astype(str)
             iris = iris.merge(fc, on="code_commune", how="left")
+        fd = store.read_table("future_development")
+        if fd is not None and not fd.empty and "iris_code" in iris.columns:
+            keep = [c for c in ["iris_code", "future_development_score",
+                                "fdev_top_project", "fdev_n_projects"] if c in fd.columns]
+            fd = fd[keep].copy()
+            fd["iris_code"] = fd["iris_code"].astype(str)
+            iris["iris_code"] = iris["iris_code"].astype(str)
+            iris = iris.merge(fd, on="iris_code", how="left")
         iris = iris.to_crs(CRS_METRIC)
         iris["geometry"] = iris.geometry.simplify(10)
         if _write(iris, out / "iris.geojson"):

@@ -82,6 +82,10 @@ def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, sco
         _run("insee_income", departements=IDF_DEPARTEMENTS)
         _run("rental_observatoires", departements=IDF_DEPARTEMENTS)
         _run("sitadel_permits", communes=communes)
+        _run("georisques", communes=communes)   # natural-hazard overlay -> climate haircut
+        # Forward-looking project pipeline (verified Grand Paris core seed; light, keyless).
+        _run("transport_projects")
+        _run("development_projects")
         if with_transit:
             _run("transit_gtfs", area_query="Ile-de-France")
         if with_parcels:
@@ -114,6 +118,14 @@ def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, sco
                       [["iris_code", "iris_name", "score_total", "rank"]].head(10).to_string(index=False))
         except Exception as exc:
             print(f"  [warn] iris scoring: {exc}")
+
+        print("== Scoring future development (per-IRIS) ==")
+        try:
+            from rei.scoring.future_development import run_files as score_future_dev
+            n = score_future_dev()
+            print(f"  future_development: {n} IRIS scored")
+        except Exception as exc:
+            print(f"  [warn] future development: {exc}")
 
     if with_forecast:
         from rei.ml.predict import predict_all
