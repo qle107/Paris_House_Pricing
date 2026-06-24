@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" /><title>France RE Intelligence — IRIS Map (file mode)</title>
+<meta charset="utf-8" /><title>France RE Intelligence - IRIS Map (file mode)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
@@ -37,10 +37,18 @@
       <option value="score_total">Attractiveness (base)</option>
       <option value="institutional_score">Institutional score</option>
       <option value="alpha_score">Acquisition Alpha</option>
-      <option value="inst_value">Value (&euro;/m&sup2; discount)</option>
+      <option value="inst_value_adj">Best buy (trap-adjusted)</option>
+      <option value="expected_price_cagr">Expected growth (forecast)</option>
       <option value="inst_appreciation">Appreciation</option>
       <option value="inst_development">Development</option>
       <option value="inst_risk">Risk</option>
+    </select>
+  </label>
+  <label style="margin-top:6px;display:block">Area scope:
+    <select id="iris-scope" style="width:100%;margin-top:3px">
+      <option value="all">All &Icirc;le-de-France</option>
+      <option value="paris">Paris only (dept 75)</option>
+      <option value="outside">Outside Paris</option>
     </select>
   </label>
   <div id="metric-desc" class="muted" style="margin-top:5px;line-height:1.35"></div>
@@ -48,8 +56,8 @@
   <div class="muted" id="status" style="margin-top:8px"></div>
 </div>
 <div id="legend" class="panel">
-  <strong id="legend-title">IRIS attractiveness</strong><div class="ramp"></div>
-  <div class="muted">0 — 50 — 75 — 100 (grey = not scored)</div>
+  <strong id="legend-title">IRIS attractiveness</strong><div class="ramp" id="legend-ramp"></div>
+  <div class="muted" id="legend-scale">0 — 50 — 75 — 100 (grey = not scored)</div>
   <div style="margin-top:8px">
     <span class="swatch" style="background:#238b45"></span>Hotspot top 5% &nbsp;
     <span class="swatch" style="background:#74c476"></span>10% &nbsp;
@@ -103,9 +111,16 @@ let irisFeatures=[];
 let selectedIris=null;
 const METRICS={
   score_total:        {t:"Attractiveness",    d:"Weighted blend of six components (0–100)."},
-  institutional_score:{t:"Institutional",     d:"Composite: appreciation, rental, value, development, risk."},
-  alpha_score:        {t:"Alpha",             d:"Value + appreciation + development (transit term optional)."},
-  inst_value:         {t:"Value discount",    d:"Observed vs hedonic €/m² gap."},
+  institutional_score:{t:"Institutional",     d:"Composite: appreciation, rental, value, development, risk (trap-gated)."},
+  alpha_score:        {t:"Alpha",             d:"Risk-adjusted appreciation: forward forecast + demand + value, trap-penalised."},
+  inst_value_adj:     {t:"Best buy",          d:"Genuine value: the €/m² discount with the value-trap penalty applied — high = cheap for good reasons, not a trap."},
+  expected_price_cagr:{t:"Expected growth",   d:"Forecast price CAGR (commune, next ~2y). Green = appreciation, red = decline.",
+                       fmt:fmtCagr,
+                       colorExpr:["case",["==",["coalesce",["get","expected_price_cagr"],-999],-999],"#cccccc",
+                         ["interpolate",["linear"],["get","expected_price_cagr"],
+                          -0.06,"#d73027",-0.03,"#fc8d59",-0.01,"#fee08b",0.01,"#d9ef8b",0.03,"#1a9850",0.06,"#006837"]],
+                       legendGrad:"linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)",
+                       legendScale:"−6%/yr — 0 — +6%/yr"},
   inst_appreciation:  {t:"Appreciation",      d:"Price momentum and supply constraint."},
   inst_development:   {t:"Development",       d:"Underbuilt land (low footprint coverage)."},
   inst_risk:          {t:"Risk",              d:"Low volatility and adequate sales volume."},
@@ -157,20 +172,39 @@ function wireAnalyst(){
   document.getElementById("analyst-answer").addEventListener("input",e=>{ document.getElementById("analyst-out").textContent=e.target.value; });
 }
 
+function scopeFilterExpr(){
+  const v=(document.getElementById("iris-scope")||{}).value||"all";
+  if(v==="all") return null;
+  const dep=["slice",["to-string",["coalesce",["get","code_commune"],""]],0,2];
+  return v==="paris"?["==",dep,"75"]:["!=",dep,"75"];
+}
+function applyScope(){
+  const f=scopeFilterExpr();
+  if(map.getLayer("iris-fill")) map.setFilter("iris-fill", f);
+  if(map.getLayer("iris-line")) map.setFilter("iris-line", f);
+  if(map.getLayer("hotspots")){ const base=[">",["coalesce",["get","hotspot_tier"],0],0];
+    map.setFilter("hotspots", f?["all",base,f]:base); }
+  refreshMetric();
+}
 function refreshMetric(){
   const sel=document.getElementById("iris-metric"); if(!sel) return;
   const m=sel.value, meta=METRICS[m]||{t:m,d:""};
   const desc=document.getElementById("metric-desc"); if(desc) desc.textContent=meta.d;
   const lt=document.getElementById("legend-title"); if(lt) lt.textContent=meta.t;
+  const lr=document.getElementById("legend-ramp"); if(lr) lr.style.background=meta.legendGrad||"linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)";
+  const lscale=document.getElementById("legend-scale"); if(lscale) lscale.textContent=(meta.legendScale||"0 — 50 — 75 — 100")+" (grey = not scored)";
   if(map.getLayer("iris-fill"))
-    map.setPaintProperty("iris-fill","fill-color",["interpolate",["linear"],["coalesce",["get",m],-1],...RAMP]);
+    map.setPaintProperty("iris-fill","fill-color", meta.colorExpr||["interpolate",["linear"],["coalesce",["get",m],-1],...RAMP]);
   const title=document.getElementById("rank-title"); if(title) title.textContent="Top 10 · "+meta.t;
   const list=document.getElementById("rank-list"); if(!list) return;
+  const fmtVal=meta.fmt||(v=>Math.round(v));
+  const scope=(document.getElementById("iris-scope")||{}).value||"all";
+  const inScope=p=>{ if(scope==="all") return true; const is75=String(p.code_commune||"").slice(0,2)==="75"; return scope==="paris"?is75:!is75; };
   const ranked=irisFeatures.map(f=>({p:f.properties||{},g:f.geometry}))
-    .filter(o=>o.p[m]!=null&&!isNaN(o.p[m])).sort((a,b)=>b.p[m]-a.p[m]).slice(0,10);
-  if(!ranked.length){ list.innerHTML='<div class="muted">No scored IRIS yet — re-run with --score-level iris.</div>'; return; }
+    .filter(o=>o.p[m]!=null&&!isNaN(o.p[m])&&inScope(o.p)).sort((a,b)=>b.p[m]-a.p[m]).slice(0,10);
+  if(!ranked.length){ list.innerHTML='<div class="muted">No scored IRIS in this scope.</div>'; return; }
   list.innerHTML=ranked.map((o,i)=>`<div class="rank-row" data-i="${i}" style="display:flex;justify-content:space-between;gap:8px;padding:2px 4px;cursor:pointer">`+
-    `<span>${i+1}. ${o.p.iris_name||o.p.iris_code}</span><b>${Math.round(o.p[m])}</b></div>`).join("");
+    `<span>${i+1}. ${o.p.iris_name||o.p.iris_code}</span><b>${fmtVal(o.p[m])}</b></div>`).join("");
   [...list.querySelectorAll(".rank-row")].forEach(el=>el.addEventListener("click",()=>{
     const o=ranked[+el.dataset.i]; if(!o) return;
     if(map.getLayer("iris-highlight")) map.setFilter("iris-highlight",["==",["to-string",["get","iris_code"]],String(o.p.iris_code)]);
@@ -221,6 +255,8 @@ map.on("load", async () => {
 
   const sel=document.getElementById("iris-metric");
   if(sel) sel.addEventListener("change", refreshMetric);
+  const scopeSel=document.getElementById("iris-scope");
+  if(scopeSel) scopeSel.addEventListener("change", applyScope);
   document.getElementById("status").textContent = "Layers: " + Object.keys(present).filter(k=>present[k]).join(", ");
   if(present.iris){
     try{

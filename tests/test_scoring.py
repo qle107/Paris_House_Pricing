@@ -3,6 +3,7 @@ import pandas as pd
 
 from rei.scoring.files_engine import _price_features
 from rei.scoring.indicators import percentile_score, risk_multiplier, threshold_score
+from rei.scoring.institutional import apply_gates, value_trap_score
 from rei.transport.impact import expected_uplift
 from rei.zoning.detectors import _norm
 
@@ -63,3 +64,27 @@ def test_price_features_returns_str_key_for_int64_dvf():
     out = _price_features(dvf)
     assert out["code_commune"].dtype == object
     assert set(out["code_commune"]) == {"75101", "75102"}
+
+
+def test_value_trap_score_extremes_and_midpoint():
+    # row0 strong/clean -> 0; row1 cheap-but-weak -> 100; row2 neutral -> 50
+    appr = pd.Series([100.0, 0.0, 50.0])
+    rent = pd.Series([100.0, 0.0, 50.0])
+    tox = pd.Series([0.0, 100.0, 50.0])
+    liq = pd.Series([100.0, 0.0, 50.0])
+    risk = pd.Series([100.0, 0.0, 50.0])
+    trap = value_trap_score(appr, rent, tox, liq, risk)
+    assert list(trap) == [0.0, 100.0, 50.0]
+
+
+def test_apply_gates_caps_penalties_and_haircut():
+    score = pd.Series([80.0, 90.0, 80.0, 100.0, 90.0])
+    appr = pd.Series([90.0, 20.0, 90.0, 90.0, 30.0])   # rows 1,4 fail appreciation gate
+    rent = pd.Series([90.0, 90.0, 90.0, 90.0, 90.0])
+    tox = pd.Series([10.0, 10.0, 80.0, 10.0, 10.0])    # row 2 toxicity penalty
+    risk = pd.Series([90.0, 90.0, 90.0, 90.0, 90.0])
+    liq = pd.Series([90.0, 90.0, 90.0, 90.0, 90.0])
+    trap = pd.Series([0.0, 0.0, 0.0, 50.0, 50.0])      # rows 3,4 trap haircut
+    out = apply_gates(score, appr, rent, tox, risk, liq, trap)
+    # row0 untouched; row1 capped to 55; row2 *0.85; row3 100*(1-0.2); row4 cap 55 then *0.8
+    assert list(out) == [80.0, 55.0, 68.0, 80.0, 44.0]

@@ -1,0 +1,1195 @@
+iris_code,iris_name,zone,observed_prix_m2,value_trap_score,alpha_score
+775040000,Villemaréchal (commune non irisée),GrandeCouronne,2133.0,61.0,78.0
+785670000,Saint-Martin-la-Garenne (commune non irisée),GrandeCouronne,2746.0,61.7,77.2
+774900000,Vendrest (commune non irisée),GrandeCouronne,2176.5,65.9,76.5
+956560000,Vienne-en-Arthies (commune non irisée),GrandeCouronne,2818.5,64.0,76.3
+955410000,Saint-Clair-sur-Epte (commune non irisée),GrandeCouronne,2274.5,61.6,76.2
+771740000,Everly (commune non irisée),GrandeCouronne,1681.5,63.2,76.1
+780680000,Blaru (commune non irisée),GrandeCouronne,2461.5,60.2,76.0
+774340000,Saint-Sauveur-lès-Bray (commune non irisée),GrandeCouronne,2371.0,66.6,76.0
+773000000,Montceaux-lès-Meaux (commune non irisée),GrandeCouronne,2425.5,64.5,75.9
+774510000,Signy-Signets (commune non irisée),GrandeCouronne,2445.0,65.9,75.9
+785590000,Saint-Illiers-le-Bois (commune non irisée),GrandeCouronne,2592.5,60.2,75.8
+780090000,Allainville (commune non irisée),GrandeCouronne,2316.0,68.1,75.8
+774210000,Saint-Mars-Vieux-Maisons (commune non irisée),GrandeCouronne,1973.0,64.3,75.7
+770190000,Balloy (commune non irisée),GrandeCouronne,1906.0,64.9,75.7
+772530000,Lissy (commune non irisée),GrandeCouronne,2663.5,68.1,75.4
+783910000,Méricourt (commune non irisée),GrandeCouronne,2661.0,61.3,75.4
+953090000,Hodent (commune non irisée),GrandeCouronne,3146.5,67.5,75.3
+772300000,Ichy (commune non irisée),GrandeCouronne,1818.5,68.0,75.3
+772200000,Guercheville (commune non irisée),GrandeCouronne,1829.0,65.4,75.3
+775300000,Voulton (commune non irisée),GrandeCouronne,1766.0,70.1,75.2
+770680000,Cessoy-en-Montois (commune non irisée),GrandeCouronne,1892.0,66.9,75.1
+773640000,Le Plessis-aux-Bois (commune non irisée),GrandeCouronne,2397.5,62.2,75.1
+916290000,Valpuiseaux (commune non irisée),GrandeCouronne,2541.5,62.0,75.1
+950940000,Bouqueval (commune non irisée),GrandeCouronne,3125.0,63.6,75.1
+770080000,Armentières-en-Brie (commune non irisée),GrandeCouronne,2881.0,61.6,75.1
+783610113,Sainte-Anne,GrandeCouronne,2462.5,61.4,75.0
+953410000,Livilliers (commune non irisée),GrandeCouronne,3062.5,65.6,75.0
+774610000,Thénisy (commune non irisée),GrandeCouronne,1512.5,69.6,75.0
+775220000,Villiers-sur-Seine (commune non irisée),GrandeCouronne,1488.0,64.1,75.0
+783610103,Mozart Guynemer,GrandeCouronne,1575.0,63.5,75.0
+912470000,La Forêt-le-Roi (commune non irisée),GrandeCouronne,2626.5,64.0,75.0
+773660000,Le Plessis-l'Évêque (commune non irisée),GrandeCouronne,2597.0,69.5,74.9
+953790000,Maudétour-en-Vexin (commune non irisée),GrandeCouronne,2787.0,65.4,74.8
+771030000,Châtillon-la-Borde (commune non irisée),GrandeCouronne,2731.0,67.5,74.8
+951690000,Commeny (commune non irisée),GrandeCouronne,2747.0,67.5,74.8
+950230000,Arronville (commune non irisée),GrandeCouronne,2951.0,66.6,74.8
+772660000,Machault (commune non irisée),GrandeCouronne,2368.0,62.5,74.8
+782370000,Flins-Neuve-Église (commune non irisée),GrandeCouronne,2719.0,65.8,74.8
+773670000,Le Plessis-Placy (commune non irisée),GrandeCouronne,1672.0,70.4,74.7
+951190000,Buhy (commune non irisée),GrandeCouronne,2784.0,67.1,74.7
+782830000,Grandchamp (commune non irisée),GrandeCouronne,2830.0,67.5,74.6
+772280000,Hondevilliers (commune non irisée),GrandeCouronne,1991.5,66.9,74.5
+773370202,Ville Nouvelle Centre-Ouest,GrandeCouronne,2918.0,60.3,74.4
+784440000,Neauphlette (commune non irisée),GrandeCouronne,2468.5,65.2,74.4
+770210000,Barbey (commune non irisée),GrandeCouronne,1773.5,71.4,74.4
+774170000,Saint-Léger (commune non irisée),GrandeCouronne,1610.0,67.4,74.3
+956800113,D.L.M. Nord,GrandeCouronne,2885.0,61.2,74.3
+952950000,Guiry-en-Vexin (commune non irisée),GrandeCouronne,3054.0,62.4,74.2
+782340000,Flacourt (commune non irisée),GrandeCouronne,2897.0,70.0,74.2
+772310000,Isles-les-Meldeuses (commune non irisée),GrandeCouronne,2772.5,64.5,74.2
+783850000,Ménerville (commune non irisée),GrandeCouronne,3009.0,69.8,74.2
+772810000,Mauperthuis (commune non irisée),GrandeCouronne,2583.0,66.7,74.0
+785050000,Prunay-le-Temple (commune non irisée),GrandeCouronne,2613.0,65.1,74.0
+770940000,Charmentray (commune non irisée),GrandeCouronne,3199.0,62.5,74.0
+772040000,Germigny-sous-Coulombs (commune non irisée),GrandeCouronne,1803.5,61.0,73.9
+781470000,Chaufour-lès-Bonnières (commune non irisée),GrandeCouronne,2242.0,64.6,73.9
+953480000,Longuesse (commune non irisée),GrandeCouronne,3236.5,61.7,73.8
+771120000,Chevrainvilliers (commune non irisée),GrandeCouronne,2244.5,64.4,73.7
+770720000,Chalautre-la-Grande (commune non irisée),GrandeCouronne,1705.0,63.7,73.7
+950180603,La Bérionne,GrandeCouronne,1875.0,60.2,73.7
+771780000,Faÿ-lès-Nemours (commune non irisée),GrandeCouronne,2081.0,67.2,73.4
+771330000,Courcelles-en-Bassée (commune non irisée),GrandeCouronne,1743.0,71.0,73.3
+772890000,Melz-sur-Seine (commune non irisée),GrandeCouronne,1332.0,64.3,73.3
+770110000,Aufferville (commune non irisée),GrandeCouronne,1927.5,62.2,73.3
+913990000,Mespuits (commune non irisée),GrandeCouronne,2477.5,63.1,73.3
+912940000,Guillerval (commune non irisée),GrandeCouronne,2529.5,66.8,73.3
+785690000,Sainte-Mesme (commune non irisée),GrandeCouronne,2672.0,60.8,73.1
+771200000,Cocherel (commune non irisée),GrandeCouronne,2027.0,62.2,73.0
+786530000,Vicq (commune non irisée),GrandeCouronne,2763.0,62.8,72.9
+780820000,Boissy-Mauvoisin (commune non irisée),GrandeCouronne,2259.0,66.9,72.9
+774980000,Vignely (commune non irisée),GrandeCouronne,3181.0,65.6,72.8
+785160000,Raizeux (commune non irisée),GrandeCouronne,2885.0,66.7,72.8
+771440000,Crèvecœur-en-Brie (commune non irisée),GrandeCouronne,3023.0,68.3,72.7
+774150000,Saint-Jean-les-Deux-Jumeaux (commune non irisée),GrandeCouronne,2654.0,62.5,72.6
+771730000,Étrépilly (commune non irisée),GrandeCouronne,2505.0,62.3,72.6
+930481101,Montreau Ruffins Clos Arachis 1,PetiteCouronne,3190.5,61.2,72.4
+915260000,Roinvilliers (commune non irisée),GrandeCouronne,2765.0,73.4,72.4
+770070000,Argentières (commune non irisée),GrandeCouronne,2562.0,71.8,72.1
+771510000,Dagny (commune non irisée),GrandeCouronne,1990.0,71.7,72.1
+784720000,Orsonville (commune non irisée),GrandeCouronne,2437.5,72.7,72.0
+950120000,Amenucourt (commune non irisée),GrandeCouronne,2133.0,71.7,72.0
+914730000,Orveau (commune non irisée),GrandeCouronne,3335.0,71.0,71.9
+774390000,Salins (commune non irisée),GrandeCouronne,2297.0,67.4,71.7
+783170000,Jambville (commune non irisée),GrandeCouronne,3069.0,61.7,71.7
+782300000,La Falaise (commune non irisée),GrandeCouronne,3106.0,66.6,71.4
+783610111,Jacques Cartier,GrandeCouronne,1163.0,65.4,71.3
+784990000,Ponthévrard (commune non irisée),GrandeCouronne,2932.0,60.1,71.3
+775110000,Villeneuve-sous-Dammartin (commune non irisée),GrandeCouronne,2600.0,61.9,71.2
+915440000,Saint-Cyr-la-Rivière (commune non irisée),GrandeCouronne,2423.0,71.3,71.1
+774960000,Vieux-Champagne (commune non irisée),GrandeCouronne,1947.5,74.1,71.1
+912400000,Fontaine-la-Rivière (commune non irisée),GrandeCouronne,2545.0,73.2,70.9
+910690000,Boigneville (commune non irisée),GrandeCouronne,2186.5,70.5,70.9
+771300000,Coulommes (commune non irisée),GrandeCouronne,3182.0,65.4,70.9
+772360000,Jaulnes (commune non irisée),GrandeCouronne,1815.0,60.0,70.5
+783610101,Les Hautes Garennes,GrandeCouronne,1495.5,66.7,70.4
+911060000,Breux-Jouy (commune non irisée),GrandeCouronne,2987.0,63.2,70.4
+775340000,Yèbles (commune non irisée),GrandeCouronne,2989.0,60.5,70.1
+911450000,Chatignonville (commune non irisée),GrandeCouronne,1967.0,61.0,70.0
+911740401,Robinson-La Nacelle,GrandeCouronne,2773.0,65.3,69.9
+910670000,Blandy (commune non irisée),GrandeCouronne,1851.0,61.4,69.9
+771900000,Fontains (commune non irisée),GrandeCouronne,1655.0,69.1,69.6
+954590000,Nucourt (commune non irisée),GrandeCouronne,2879.0,70.9,69.6
+782360000,Flexanville (commune non irisée),GrandeCouronne,2982.0,66.3,69.3
+781940000,Dannemarie (commune non irisée),GrandeCouronne,3193.0,65.3,69.2
+774120000,Saint-Germain-sur-École (commune non irisée),GrandeCouronne,3140.0,69.1,69.2
+774160000,Saint-Just-en-Brie (commune non irisée),GrandeCouronne,2212.0,60.4,69.0
+772600000,Longueville (commune non irisée),GrandeCouronne,2058.0,63.8,68.8
+771570000,Dhuisy (commune non irisée),GrandeCouronne,1788.0,62.1,68.7
+910010000,Abbéville-la-Rivière (commune non irisée),GrandeCouronne,2105.5,73.0,68.6
+912280206,Z.A. Nord-Ouest,GrandeCouronne,3027.0,60.3,68.6
+772800000,Mary-sur-Marne (commune non irisée),GrandeCouronne,2538.0,60.7,68.4
+784070000,Mittainville (commune non irisée),GrandeCouronne,2817.0,60.0,68.4
+774280000,Saint-Ouen-en-Brie (commune non irisée),GrandeCouronne,2648.0,65.4,68.3
+784400109,Vigne Blanche 1,GrandeCouronne,2500.0,62.1,68.3
+773420000,Obsonville (commune non irisée),GrandeCouronne,1813.5,63.0,68.2
+950110000,Ambleville (commune non irisée),GrandeCouronne,2949.0,74.9,68.1
+785970000,Soindres (commune non irisée),GrandeCouronne,2804.0,72.5,68.0
+770710000,Chaintreaux (commune non irisée),GrandeCouronne,1916.0,63.9,68.0
+773870000,Remauville (commune non irisée),GrandeCouronne,1789.0,61.9,67.6
+775280000,Voisenon (commune non irisée),GrandeCouronne,3588.0,61.8,67.4
+955290000,Ronquerolles (commune non irisée),GrandeCouronne,3187.5,65.0,67.3
+956330000,Vaudherland (commune non irisée),GrandeCouronne,3004.0,69.6,67.1
+955430000,Saint-Cyr-en-Arthies (commune non irisée),GrandeCouronne,2631.0,63.6,67.1
+912280113,Parc aux Lièvres,GrandeCouronne,2171.5,62.0,67.1
+773650000,Le Plessis-Feu-Aussoux (commune non irisée),GrandeCouronne,2660.0,68.4,67.1
+772960105,Champs,GrandeCouronne,1739.0,60.6,67.0
+772840401,Les Allobroges Nord,GrandeCouronne,2363.0,64.4,67.0
+784400112,Bécheville-Apremont,GrandeCouronne,2546.0,67.0,66.9
+913930000,Mérobert (commune non irisée),GrandeCouronne,2096.5,62.2,66.6
+951270103,Plants-I.U.F.M.,GrandeCouronne,2800.0,61.2,66.5
+953310000,Lassy (commune non irisée),GrandeCouronne,3111.0,70.7,66.5
+770320000,Beton-Bazoches (commune non irisée),GrandeCouronne,1979.5,62.4,66.4
+930290801,L'Avenir Parisien 1,PetiteCouronne,3103.0,63.3,66.4
+930100102,La Terre Saint-Blaise,PetiteCouronne,2279.0,66.8,66.3
+953080000,Hérouville-en-Vexin (commune non irisée),GrandeCouronne,3333.0,73.5,66.2
+952870000,Grisy-les-Plâtres (commune non irisée),GrandeCouronne,3370.5,66.1,66.1
+950181002,Joliot-Curie,GrandeCouronne,2593.0,62.1,66.0
+781850000,Courgent (commune non irisée),GrandeCouronne,2734.0,61.8,65.9
+952770402,Centre Ville,GrandeCouronne,3133.5,60.6,65.9
+911800000,Courances (commune non irisée),GrandeCouronne,3241.0,62.1,65.9
+954830000,Le Perchay (commune non irisée),GrandeCouronne,3212.5,66.9,65.9
+770440000,Bombon (commune non irisée),GrandeCouronne,2528.0,68.7,65.8
+782090000,Émancé (commune non irisée),GrandeCouronne,3177.0,62.9,65.7
+915190000,Richarville (commune non irisée),GrandeCouronne,2457.0,61.5,65.7
+770490000,Boutigny (commune non irisée),GrandeCouronne,2704.0,64.1,65.7
+915700105,Debussy-Bellevue,GrandeCouronne,1988.5,66.6,65.4
+911030103,Rosière,GrandeCouronne,3286.5,62.8,65.3
+954270107,Barrage,GrandeCouronne,3339.5,60.2,65.3
+772880502,Saint-Liesne Nord,GrandeCouronne,2211.0,60.0,65.1
+930550501,Quatre Chemins-Diderot,PetiteCouronne,3750.0,70.3,65.0
+772010000,Gastins (commune non irisée),GrandeCouronne,2552.0,74.5,65.0
+773570000,Pécy (commune non irisée),GrandeCouronne,2500.0,68.1,65.0
+771720000,Esmans (commune non irisée),GrandeCouronne,2087.0,71.8,64.9
+780770000,La Boissière-École (commune non irisée),GrandeCouronne,2937.0,75.5,64.7
+773910000,Rouilly (commune non irisée),GrandeCouronne,2283.0,66.5,64.7
+930100403,Les Flèches,PetiteCouronne,3512.0,64.4,64.7
+770780000,Chamigny (commune non irisée),GrandeCouronne,2347.0,60.7,64.6
+785220000,Rochefort-en-Yvelines (commune non irisée),GrandeCouronne,2905.0,72.2,64.5
+783000000,Hargeville (commune non irisée),GrandeCouronne,3021.0,66.3,64.4
+930290403,Village Parisien 3,PetiteCouronne,3570.0,62.6,64.2
+772900000,Méry-sur-Marne (commune non irisée),GrandeCouronne,2273.0,73.6,64.1
+951270116,Verger-Belle Épine,GrandeCouronne,2956.0,61.5,64.1
+774030000,Saint-Brice (commune non irisée),GrandeCouronne,2062.5,71.3,63.6
+773260102,Est,GrandeCouronne,2904.0,60.4,63.6
+950180607,Le Coudray,GrandeCouronne,1831.0,68.3,63.6
+930270110,Braque Orme Seul,PetiteCouronne,2917.0,61.3,63.6
+771130000,Chevru (commune non irisée),GrandeCouronne,2064.0,62.6,63.6
+954380000,Moussy (commune non irisée),GrandeCouronne,2393.5,66.6,63.5
+770620000,Carnetin (commune non irisée),GrandeCouronne,3535.0,64.7,63.5
+920040706,Freycinet II,PetiteCouronne,4032.5,62.0,63.5
+930710107,Beaudottes Anciennes 2,PetiteCouronne,1700.0,62.7,63.5
+786680000,La Villeneuve-en-Chevrie (commune non irisée),GrandeCouronne,2609.0,66.0,63.5
+954620000,Omerville (commune non irisée),GrandeCouronne,2560.0,78.6,63.4
+773700000,Poligny (commune non irisée),GrandeCouronne,2219.5,60.8,63.4
+784400111,Perrons Bougimonts île-de-France,GrandeCouronne,3173.5,68.1,63.4
+956900000,Wy-dit-Joli-Village (commune non irisée),GrandeCouronne,2735.0,63.0,63.3
+774100000,Saint-Germain-Laxis (commune non irisée),GrandeCouronne,2965.5,63.4,63.2
+952130000,Épiais-Rhus (commune non irisée),GrandeCouronne,3111.0,67.7,63.2
+773480000,Ormesson (commune non irisée),GrandeCouronne,2116.0,69.6,63.2
+952800111,Grandes Bornes Nord,GrandeCouronne,3642.0,61.8,63.1
+911480000,Chauffour-lès-Étréchy (commune non irisée),GrandeCouronne,2607.0,69.0,63.0
+786470000,Vert (commune non irisée),GrandeCouronne,2774.5,66.8,63.0
+770020000,Amillis (commune non irisée),GrandeCouronne,1992.0,60.9,63.0
+930140109,Iris 8,PetiteCouronne,903.5,60.1,62.9
+772840504,Colbert Sud,GrandeCouronne,1835.5,64.8,62.9
+910270112,Quartier 12,GrandeCouronne,2618.0,62.1,62.9
+783490000,Longvilliers (commune non irisée),GrandeCouronne,3238.0,66.7,62.9
+784130000,Mondreville (commune non irisée),GrandeCouronne,2429.0,78.3,62.7
+786400105,Mozart Est,GrandeCouronne,4140.5,64.5,62.7
+950180503,Hôpital,GrandeCouronne,2750.0,63.9,62.6
+770130000,Aulnoy (commune non irisée),GrandeCouronne,2125.0,76.7,62.6
+772770000,Marles-en-Brie (commune non irisée),GrandeCouronne,3027.0,61.7,62.6
+771040000,Châtres (commune non irisée),GrandeCouronne,3150.5,63.5,62.6
+930050206,Nord 6,PetiteCouronne,3247.0,68.1,62.6
+780900000,Bouafle (commune non irisée),GrandeCouronne,3367.0,60.7,62.5
+771260000,Congis-sur-Thérouanne (commune non irisée),GrandeCouronne,2512.0,68.8,62.4
+940540106,Pierre au Prêtre,PetiteCouronne,3983.5,60.6,62.4
+916190000,Torfou (commune non irisée),GrandeCouronne,2879.0,66.2,62.3
+782610000,Gaillon-sur-Montcient (commune non irisée),GrandeCouronne,2822.0,66.6,62.3
+916390000,Vayres-sur-Essonne (commune non irisée),GrandeCouronne,3149.0,60.5,62.2
+780720000,Boinvilliers (commune non irisée),GrandeCouronne,2500.0,77.3,62.2
+773050201,Zone d'Activités,GrandeCouronne,1900.0,66.0,62.1
+771230000,Compans (commune non irisée),GrandeCouronne,3056.0,63.4,62.0
+773080000,Montgé-en-Goële (commune non irisée),GrandeCouronne,2680.0,67.8,61.8
+951440000,Châtenay-en-France (commune non irisée),GrandeCouronne,2957.0,70.2,61.8
+783610110,Jules Guesde,GrandeCouronne,2842.0,70.2,61.7
+785300000,Rosay (commune non irisée),GrandeCouronne,2858.5,63.7,61.7
+783620107,Merisiers Plaisances,GrandeCouronne,2726.5,69.7,61.6
+940280407,Arcos,PetiteCouronne,3015.0,62.1,61.6
+930790104,Quartier 4,PetiteCouronne,3469.5,62.7,61.5
+772420000,Jutigny (commune non irisée),GrandeCouronne,1731.0,62.3,61.5
+772440000,Larchant (commune non irisée),GrandeCouronne,2435.0,63.2,61.5
+771910000,Fontenailles (commune non irisée),GrandeCouronne,2542.0,69.3,61.5
+786550000,Vieille-Église-en-Yvelines (commune non irisée),GrandeCouronne,3552.0,62.6,61.4
+782960000,Guitrancourt (commune non irisée),GrandeCouronne,2941.5,64.9,61.3
+915700108,Montatons,GrandeCouronne,3051.0,60.1,61.2
+920040703,Nord III,PetiteCouronne,3613.0,62.6,61.2
+956800101,Plaine de France,GrandeCouronne,3074.0,74.3,61.0
+930660101,Semard Delaune Guynemer 01,PetiteCouronne,3558.5,64.1,61.0
+915490114,Louis Pergaud,GrandeCouronne,2595.0,73.5,61.0
+910270109,Quartier 9,GrandeCouronne,2915.0,63.1,61.0
+951510000,Chauvry (commune non irisée),GrandeCouronne,3672.0,65.8,60.8
+772480000,Lesches (commune non irisée),GrandeCouronne,3304.0,69.7,60.7
+915470000,Saint-Escobille (commune non irisée),GrandeCouronne,2017.0,65.4,60.6
+771220404,La Tour d'Aleron,GrandeCouronne,3126.0,64.9,60.6
+910380000,Auvers-Saint-Georges (commune non irisée),GrandeCouronne,2763.0,72.2,60.6
+784780000,Paray-Douaville (commune non irisée),GrandeCouronne,2571.0,73.8,60.5
+930300103,Iris 0103,PetiteCouronne,3535.5,65.3,60.4
+955920000,Seraincourt (commune non irisée),GrandeCouronne,3021.5,68.8,60.4
+773580000,Penchard (commune non irisée),GrandeCouronne,2936.0,61.7,60.3
+784010103,Coulée Verte,GrandeCouronne,2930.0,61.5,60.2
+952800110,Pont de la Brèche-Charles de Gaulle,GrandeCouronne,3336.5,60.4,60.1
+920020302,Parvis du Breuil et de la Bièvre,PetiteCouronne,2935.0,60.2,60.1
+772980000,Mons-en-Montois (commune non irisée),GrandeCouronne,1870.0,75.6,60.1
+771640000,Échouboulains (commune non irisée),GrandeCouronne,2435.0,74.0,60.0
+773370206,Ville Nouvelle Centre-Est,GrandeCouronne,3255.0,66.1,60.0
+773540000,Pamfou (commune non irisée),GrandeCouronne,2745.0,61.3,60.0
+772700000,Maisoncelles-en-Brie (commune non irisée),GrandeCouronne,2718.0,63.4,59.9
+781080000,Les Bréviaires (commune non irisée),GrandeCouronne,3587.0,63.7,59.9
+930050203,Nord 3,PetiteCouronne,3084.0,63.2,59.7
+912280202,Canal 2,GrandeCouronne,2232.0,70.2,59.7
+781260108,Domaine Saint-François d'Assise-Étang-Bois,GrandeCouronne,4299.0,60.0,59.6
+930100404,La Ferme,PetiteCouronne,2757.0,63.6,59.6
+916920106,Anjou,GrandeCouronne,2041.0,65.2,59.6
+930530113,Langevin 1,PetiteCouronne,4069.5,60.2,59.5
+956800109,Mont Giffard-Malassis,GrandeCouronne,2637.0,64.5,59.5
+940171202,Bois l'Abbé 2,PetiteCouronne,1997.5,66.0,59.4
+940410102,Monmousseau,PetiteCouronne,4047.0,63.9,59.4
+954290000,Montreuil-sur-Epte (commune non irisée),GrandeCouronne,2909.0,80.8,59.4
+771010000,Châtenay-sur-Seine (commune non irisée),GrandeCouronne,1990.0,63.0,59.4
+930660202,Peri Langevin Stalingrad Politzer 02,PetiteCouronne,3980.0,60.5,59.3
+774270000,Saint-Mesmes (commune non irisée),GrandeCouronne,3241.0,75.4,59.2
+774400000,Sammeron (commune non irisée),GrandeCouronne,2455.0,64.4,59.2
+940760117,Les Lozaits,PetiteCouronne,4273.5,70.9,59.1
+940810305,Solidarité,PetiteCouronne,3606.0,60.4,58.9
+770410000,Boissy-aux-Cailles (commune non irisée),GrandeCouronne,2500.0,68.1,58.9
+915070000,Prunay-sur-Essonne (commune non irisée),GrandeCouronne,2952.0,73.8,58.8
+773010000,Montceaux-lès-Provins (commune non irisée),GrandeCouronne,1348.0,69.1,58.8
+930100107,La Noue Caillet,PetiteCouronne,3562.0,64.2,58.7
+910950000,Bouray-sur-Juine (commune non irisée),GrandeCouronne,3043.0,61.2,58.6
+930550102,Courtillières Sud,PetiteCouronne,4778.0,72.3,58.6
+915490115,Les Bois Clairs,GrandeCouronne,2249.0,72.4,58.5
+916130000,Congerville-Thionville (commune non irisée),GrandeCouronne,2142.5,69.1,58.4
+915700107,Villagexpo-Fontaine de L'Orme,GrandeCouronne,2588.0,65.3,58.4
+772860000,Meigneux (commune non irisée),GrandeCouronne,1805.0,70.1,58.4
+950400000,Avernes (commune non irisée),GrandeCouronne,2787.0,79.2,58.4
+771790000,Féricy (commune non irisée),GrandeCouronne,2640.5,77.8,58.3
+772650000,Luzancy (commune non irisée),GrandeCouronne,2078.0,63.4,58.3
+940210109,La Guinet,PetiteCouronne,3676.0,64.8,58.2
+956250000,Us (commune non irisée),GrandeCouronne,3200.0,60.0,58.2
+782170101,Sud Épône,GrandeCouronne,3253.0,65.1,58.2
+774540000,Sognolles-en-Montois (commune non irisée),GrandeCouronne,1846.5,66.8,58.1
+951770000,Cormeilles-en-Vexin (commune non irisée),GrandeCouronne,3331.0,65.4,58.1
+786400106,Le Mail,GrandeCouronne,3958.0,63.4,58.0
+774660000,Tigeaux (commune non irisée),GrandeCouronne,2889.0,75.6,58.0
+770820000,Champeaux (commune non irisée),GrandeCouronne,2748.5,67.1,57.9
+940810207,Le Moulin Neuf,PetiteCouronne,3298.0,60.6,57.9
+954220000,Montgeroult (commune non irisée),GrandeCouronne,3358.0,61.4,57.9
+930270114,Verlaine,PetiteCouronne,2345.0,65.2,57.8
+954760105,La Ravinière,GrandeCouronne,2868.0,61.8,57.7
+912040000,Écharcon (commune non irisée),GrandeCouronne,2935.5,64.6,57.7
+770980000,Châteaubleau (commune non irisée),GrandeCouronne,1692.5,65.4,57.6
+953160000,Jagny-sous-Bois (commune non irisée),GrandeCouronne,2926.0,67.0,57.6
+954560000,Noisy-sur-Oise (commune non irisée),GrandeCouronne,3138.5,75.9,57.5
+774560000,Soisy-Bouy (commune non irisée),GrandeCouronne,1923.0,65.3,57.5
+772790000,Marolles-sur-Seine (commune non irisée),GrandeCouronne,2105.5,63.5,57.4
+920040705,Freycinet I,PetiteCouronne,5274.0,63.1,57.4
+770830303,Descartes,GrandeCouronne,4325.0,67.7,57.3
+911030101,La Fontaine Daumones,GrandeCouronne,2978.0,67.0,57.3
+770670102,Nord-Est,GrandeCouronne,2842.5,63.7,57.2
+784010102,Annonciades,GrandeCouronne,2582.5,71.0,57.1
+911350000,Champcueil (commune non irisée),GrandeCouronne,3082.0,70.5,57.1
+773800000,Puisieux (commune non irisée),GrandeCouronne,2296.0,72.4,57.1
+770030000,Amponville (commune non irisée),GrandeCouronne,2632.0,84.3,57.1
+950180302,Le Marais,GrandeCouronne,3906.5,60.4,57.0
+940810205,Paul Eluard,PetiteCouronne,3642.0,68.5,57.0
+930320107,Iris 0107,PetiteCouronne,2254.0,62.7,56.9
+951570000,Chérence (commune non irisée),GrandeCouronne,2773.0,71.8,56.9
+930290802,L'Avenir Parisien 2,PetiteCouronne,3404.0,65.1,56.9
+771160000,Choisy-en-Brie (commune non irisée),GrandeCouronne,1967.0,70.8,56.9
+940760114,Hautes Bruyères,PetiteCouronne,4321.0,66.1,56.8
+952800105,Grandes Bornes Sud,GrandeCouronne,3132.5,71.1,56.8
+783290000,Lainville-en-Vexin (commune non irisée),GrandeCouronne,2713.0,72.8,56.7
+920630602,Fouilleuse 2,PetiteCouronne,3621.5,73.3,56.7
+915990000,Soisy-sur-École (commune non irisée),GrandeCouronne,3444.0,66.3,56.7
+950550000,Bellefontaine (commune non irisée),GrandeCouronne,3382.5,63.5,56.6
+930481102,Montreau Ruffins Clos Arachis 2,PetiteCouronne,3787.0,75.7,56.6
+930080118,Préfecture 5,PetiteCouronne,3896.0,64.6,56.6
+783540103,Nord-Est,GrandeCouronne,2579.0,64.1,56.6
+772060000,Giremoutiers (commune non irisée),GrandeCouronne,2754.5,86.6,56.6
+953650000,Mareil-en-France (commune non irisée),GrandeCouronne,3314.0,61.9,56.6
+773330102,Mairie Centre-Nord,GrandeCouronne,1978.5,69.3,56.6
+785860901,Les Champs Thibaux,GrandeCouronne,3297.0,63.2,56.5
+773600000,Pézarches (commune non irisée),GrandeCouronne,2573.5,74.5,56.4
+955350000,Sagy (commune non irisée),GrandeCouronne,3119.5,64.1,56.4
+912280114,Mousseau-Bonhomme en Pierre,GrandeCouronne,2097.0,60.1,56.4
+912010107,S8,GrandeCouronne,3333.0,60.5,56.3
+770540000,La Brosse-Montceaux (commune non irisée),GrandeCouronne,2124.0,67.8,56.2
+771520202,L'Abbaye du Lys,GrandeCouronne,2619.0,70.5,56.2
+952980000,Haravilliers (commune non irisée),GrandeCouronne,2871.0,72.2,56.2
+911740203,Coquibus Art de Vivre,GrandeCouronne,3133.5,68.3,56.2
+772030000,Germigny-l'Évêque (commune non irisée),GrandeCouronne,3132.0,66.7,56.1
+930720112,Moulin Neuf 2,PetiteCouronne,3250.0,63.8,56.1
+773610000,Pierre-Levée (commune non irisée),GrandeCouronne,2550.5,83.6,55.9
+930660504,Mutuelle Champ de Courses 04,PetiteCouronne,3457.0,60.5,55.9
+952710000,Génicourt (commune non irisée),GrandeCouronne,3600.5,67.3,55.8
+920500303,Langevin,PetiteCouronne,5260.0,61.9,55.8
+930500103,Iris 3,PetiteCouronne,3143.0,65.2,55.8
+770390000,Boissise-la-Bertrand (commune non irisée),GrandeCouronne,3147.0,61.7,55.7
+952770501,Zone Industrielle,GrandeCouronne,3545.5,68.0,55.7
+784370000,Mousseaux-sur-Seine (commune non irisée),GrandeCouronne,2575.0,81.9,55.7
+930070101,Zone d'Activités Coudray Paris Nord,PetiteCouronne,3774.0,68.7,55.7
+912730000,Gironville-sur-Essonne (commune non irisée),GrandeCouronne,2606.0,70.6,55.6
+915490101,Le Perray,GrandeCouronne,2913.5,63.6,55.6
+783440000,Lommoye (commune non irisée),GrandeCouronne,2371.5,72.3,55.6
+772840301,Platanes Nord et Est et Sud,GrandeCouronne,1847.0,73.9,55.6
+774680205,Belvédère,GrandeCouronne,3154.0,68.1,55.6
+914080000,Moigny-sur-École (commune non irisée),GrandeCouronne,3342.5,65.9,55.6
+956800103,Carreaux Nord,GrandeCouronne,2914.0,75.4,55.4
+940220205,Gondoles Nord II,PetiteCouronne,3838.0,61.1,55.4
+930710114,Sablons 1,PetiteCouronne,2600.0,64.8,55.4
+920500704,Paquerettes Ouest,PetiteCouronne,4049.5,71.1,55.4
+940540104,Tilleuls,PetiteCouronne,3626.0,65.7,55.3
+950180303,Les Abattoirs,GrandeCouronne,3115.5,74.4,55.3
+950180201,Basilique,GrandeCouronne,3874.0,63.0,55.2
+940170702,Quatre Cités 2,PetiteCouronne,3700.0,66.8,55.2
+930500111,Iris 11,PetiteCouronne,2222.0,61.0,55.2
+940760120,Petits Ormes,PetiteCouronne,5398.0,65.1,55.2
+786400107,Fronval,GrandeCouronne,4032.0,66.2,55.1
+911840000,Courdimanche-sur-Essonne (commune non irisée),GrandeCouronne,2767.0,79.1,55.1
+774710000,Tousson (commune non irisée),GrandeCouronne,2154.5,71.2,55.0
+781720115,Culs Baillets,GrandeCouronne,3036.0,68.4,54.9
+780530000,Béhoust (commune non irisée),GrandeCouronne,3671.0,65.8,54.9
+916570103,Les Tours,GrandeCouronne,3235.5,71.4,54.8
+951270118,Bastide-Horloge,GrandeCouronne,3281.0,64.9,54.8
+774850000,Le Vaudoué (commune non irisée),GrandeCouronne,3225.0,63.4,54.7
+930660703,Franc-Moisin Bel-Air 03,PetiteCouronne,3345.0,60.3,54.7
+772390000,Jouy-le-Châtel (commune non irisée),GrandeCouronne,2290.0,63.8,54.7
+786430101,Bas,GrandeCouronne,4077.5,65.3,54.7
+930010802,Villette,PetiteCouronne,3688.5,62.8,54.6
+784230113,Sourderie 3,GrandeCouronne,3704.0,63.0,54.6
+911980000,D'Huison-Longueville (commune non irisée),GrandeCouronne,3062.0,77.3,54.5
+930710108,Beaudottes Anciennes 4,PetiteCouronne,2397.0,64.6,54.5
+916570101,Pasteur-Place Marx Dormoy-La Longueraie,GrandeCouronne,3635.0,60.7,54.4
+911740201,Tarterêts Pablo Picasso,GrandeCouronne,1305.0,83.6,54.4
+911740302,Ermitage,GrandeCouronne,2826.0,73.4,54.4
+951700000,Condécourt (commune non irisée),GrandeCouronne,2746.0,69.8,54.4
+786460102,Jussieu 2,GrandeCouronne,5274.0,70.4,54.4
+930481105,Montreau Ruffins Clos Arachis 5,PetiteCouronne,4175.0,75.4,54.4
+930570105,Stade,PetiteCouronne,3566.5,62.0,54.3
+940170701,Quatre Cités 1,PetiteCouronne,4202.5,72.0,54.3
+773370203,Ville Nouvelle Ouest,GrandeCouronne,2791.5,76.3,54.3
+771150000,Chevry-en-Sereine (commune non irisée),GrandeCouronne,1982.0,85.9,54.2
+771350000,Courpalay (commune non irisée),GrandeCouronne,2320.0,64.5,54.2
+950180203,Hôtel de Ville,GrandeCouronne,3512.5,65.1,54.1
+774740000,Trilbardou (commune non irisée),GrandeCouronne,2737.0,76.0,54.1
+914210103,Zone S4,GrandeCouronne,3659.0,62.2,54.0
+783610108,Bretonneaux,GrandeCouronne,1190.0,79.6,54.0
+770500000,Bransles (commune non irisée),GrandeCouronne,1670.0,85.8,53.9
+916570102,Le Lac-Briques Rouges,GrandeCouronne,3559.0,67.3,53.9
+773690000,Poincy (commune non irisée),GrandeCouronne,3021.0,75.4,53.9
+774260000,Saint-Méry (commune non irisée),GrandeCouronne,2453.5,69.4,53.9
+940790102,Les Ponceaux,PetiteCouronne,3740.0,61.1,53.9
+930310102,Iris 2,PetiteCouronne,2379.5,64.9,53.8
+781880000,Cravent (commune non irisée),GrandeCouronne,2361.0,72.7,53.8
+784980107,Fernand Lefebvre,GrandeCouronne,3333.0,69.0,53.7
+771560000,Darvault (commune non irisée),GrandeCouronne,2323.0,81.5,53.7
+772850202,Croix Blanche-Plein Ciel Nord-Est,GrandeCouronne,2020.0,67.5,53.6
+781230105,Le Port,GrandeCouronne,3566.0,60.4,53.6
+930290601,Drancy Centre 1,PetiteCouronne,4094.5,68.5,53.6
+772340000,Jablines (commune non irisée),GrandeCouronne,3480.0,63.1,53.6
+930660502,Mutuelle Champ de Courses 02,PetiteCouronne,3095.0,64.4,53.6
+940710102,La Fosse Rouge,PetiteCouronne,2258.5,66.6,53.5
+930480403,La Noue-Clos Français-Guilands 3,PetiteCouronne,4065.5,71.3,53.5
+915890113,Quartier 13,GrandeCouronne,3478.0,61.3,53.5
+913450103,Perle,GrandeCouronne,3220.5,69.8,53.4
+782170103,Nord-Est Épône,GrandeCouronne,3340.0,69.4,53.4
+771840000,Flagy (commune non irisée),GrandeCouronne,2352.5,80.3,53.3
+930660503,Mutuelle Champ de Courses 03,PetiteCouronne,2455.0,74.6,53.1
+772880401,Trois Moulins,GrandeCouronne,2490.0,66.1,53.0
+772050000,Gesvres-le-Chapitre (commune non irisée),GrandeCouronne,2492.0,74.9,53.0
+940780104,Bois Matar,PetiteCouronne,2016.0,66.2,53.0
+930140111,Iris 10,PetiteCouronne,1684.0,68.9,52.9
+772250000,La Haute-Maison (commune non irisée),GrandeCouronne,2963.5,85.7,52.9
+920360101,Luth 1,PetiteCouronne,3235.0,69.3,52.9
+773810000,Quiers (commune non irisée),GrandeCouronne,2021.5,73.4,52.9
+915490110,Les Mares Yvon,GrandeCouronne,3550.5,68.5,52.8
+780050105,Porte de Seine,GrandeCouronne,4042.0,65.7,52.7
+950080000,Aincourt (commune non irisée),GrandeCouronne,2449.0,69.3,52.7
+930720102,Clos Saint-Lazare 1,PetiteCouronne,3142.0,63.6,52.7
+911910102,Plaine Haute,GrandeCouronne,3365.0,60.1,52.7
+920140101,Les Bas Coquarts,PetiteCouronne,4286.0,65.6,52.6
+940440106,Les Candies,PetiteCouronne,3820.5,63.2,52.6
+783610114,ZAC Henry IV,GrandeCouronne,1786.0,74.5,52.6
+783110401,Léon Frapié,GrandeCouronne,3958.0,61.5,52.6
+773050105,Ville Haute Est,GrandeCouronne,2000.0,65.1,52.6
+912840000,Les Granges-le-Roi (commune non irisée),GrandeCouronne,2902.0,78.8,52.5
+916870106,Centre Ville 2,GrandeCouronne,3079.0,60.4,52.5
+920500702,Canibouts,PetiteCouronne,4929.0,61.2,52.5
+956800111,Cerisaie-Sorbier,GrandeCouronne,2183.5,69.5,52.5
+930100108,Le Parc du Château,PetiteCouronne,4350.0,64.1,52.4
+954280303,Haut Montmorency Ouest,GrandeCouronne,4131.0,62.4,52.4
+930080120,Les Vignes 5,PetiteCouronne,3971.0,73.5,52.4
+954930000,Le Plessis-Luzarches (commune non irisée),GrandeCouronne,2984.0,74.9,52.3
+773970000,Saâcy-sur-Marne (commune non irisée),GrandeCouronne,2400.0,73.9,52.3
+940410206,Plateau Nord,PetiteCouronne,4926.0,61.4,52.3
+930310304,Iris 11,PetiteCouronne,3201.0,63.1,52.2
+770520000,Bréau (commune non irisée),GrandeCouronne,2538.0,73.7,52.2
+952180102,Le Bois-La Danne-La Marne,GrandeCouronne,3264.0,61.1,52.1
+915890112,Quartier 12,GrandeCouronne,3827.0,60.0,52.1
+955540000,Saint-Gervais (commune non irisée),GrandeCouronne,2741.0,83.2,52.1
+772880103,Patton Sud-Ouest,GrandeCouronne,2707.0,65.5,52.0
+775250000,Vinantes (commune non irisée),GrandeCouronne,2863.0,73.1,52.0
+951270119,Parc Saint-Christophe,GrandeCouronne,3801.0,67.8,52.0
+770200000,Bannost-Villegagnon (commune non irisée),GrandeCouronne,2000.0,75.5,52.0
+930130105,L'Étang,PetiteCouronne,3850.0,60.8,52.0
+930590109,Sud 2,PetiteCouronne,3026.0,74.3,52.0
+773940000,Rubelles (commune non irisée),GrandeCouronne,2966.0,64.6,51.9
+772930000,Misy-sur-Yonne (commune non irisée),GrandeCouronne,2154.5,69.8,51.9
+955850107,Anatole France,GrandeCouronne,3327.0,70.4,51.9
+930530115,Léo Lagrange,PetiteCouronne,3756.0,63.2,51.9
+913400107,Zone Agricole et Paysagère,GrandeCouronne,3517.0,64.9,51.9
+953230104,Les Bruzacques,GrandeCouronne,3341.0,60.0,51.8
+930140106,Iris 5,PetiteCouronne,2337.0,65.8,51.8
+785360000,Sailly (commune non irisée),GrandeCouronne,2812.0,78.7,51.8
+780050101,Gare,GrandeCouronne,4250.0,71.0,51.8
+930270104,Convention,PetiteCouronne,2909.0,66.8,51.8
+774530000,Sivry-Courtry (commune non irisée),GrandeCouronne,2869.0,77.8,51.7
+783250000,Jumeauville (commune non irisée),GrandeCouronne,3065.0,79.7,51.7
+774860000,Vaudoy-en-Brie (commune non irisée),GrandeCouronne,2357.0,80.9,51.7
+940680801,Saint-Maur Créteil 1,PetiteCouronne,5611.0,70.9,51.7
+930010402,Valles,PetiteCouronne,3142.5,72.3,51.7
+784980112,Racine,GrandeCouronne,2411.0,69.3,51.7
+930270113,6 Routes,PetiteCouronne,2733.0,62.4,51.7
+774650000,Thoury-Férottes (commune non irisée),GrandeCouronne,2227.0,72.8,51.6
+770630000,La Celle-sur-Morin (commune non irisée),GrandeCouronne,2417.0,73.4,51.6
+956510000,Vétheuil (commune non irisée),GrandeCouronne,2980.5,75.0,51.6
+940590106,Gambetta,PetiteCouronne,4113.0,63.6,51.6
+774810000,Vanvillé (commune non irisée),GrandeCouronne,2286.0,77.5,51.5
+751187208,Chapelle 8,Paris,5397.0,63.6,51.5
+781130000,Brueil-en-Vexin (commune non irisée),GrandeCouronne,2672.0,82.1,51.5
+920730105,Cité Jardins 3,PetiteCouronne,4272.0,66.7,51.4
+770140101,Avon Nord,GrandeCouronne,1932.5,67.7,51.4
+940770106,Haut Pays,PetiteCouronne,3588.0,70.4,51.4
+950630106,Val Nord,GrandeCouronne,3184.0,69.6,51.4
+930530105,Centre Ville Gare 2,PetiteCouronne,3863.0,61.7,51.4
+915890103,Quartier 3,GrandeCouronne,2475.0,76.5,51.2
+956820000,Villiers-le-Sec (commune non irisée),GrandeCouronne,2718.5,73.5,51.2
+782810000,Goussonville (commune non irisée),GrandeCouronne,3104.0,78.6,51.2
+930010303,Long Sentier,PetiteCouronne,3738.0,71.9,51.2
+773370201,Ville Nouvelle Nord,GrandeCouronne,3448.0,76.5,51.1
+772140000,Gressy (commune non irisée),GrandeCouronne,3577.5,69.4,51.1
+913190000,Janvry (commune non irisée),GrandeCouronne,3480.5,76.4,51.1
+920780101,Charles de Gaulle,PetiteCouronne,2500.0,66.7,51.0
+772940301,Champs,GrandeCouronne,3592.0,66.7,51.0
+774780000,Ussy-sur-Marne (commune non irisée),GrandeCouronne,2330.0,71.9,51.0
+951420000,Chars (commune non irisée),GrandeCouronne,2686.5,66.3,51.0
+770100000,Aubepierre-Ozouer-le-Repos (commune non irisée),GrandeCouronne,2656.0,85.4,51.0
+915560000,Saint-Hilaire (commune non irisée),GrandeCouronne,2593.0,85.5,50.9
+930590101,Nord,PetiteCouronne,2815.0,76.0,50.9
+951990102,Le Marché,GrandeCouronne,3090.0,66.3,50.9
+920320111,RER-Lombart,PetiteCouronne,4658.0,60.8,50.8
+952030107,Les Franchises,GrandeCouronne,3358.5,60.7,50.8
+772080000,Gouaix (commune non irisée),GrandeCouronne,1618.0,70.2,50.8
+773090000,Monthyon (commune non irisée),GrandeCouronne,2788.0,67.4,50.7
+940280402,Casalis,PetiteCouronne,4564.0,63.2,50.7
+773560000,Passy-sur-Seine (commune non irisée),GrandeCouronne,2063.0,78.2,50.7
+785650000,Saint-Martin-des-Champs (commune non irisée),GrandeCouronne,3279.5,68.8,50.6
+930590107,Joncherolles Fauvettes,PetiteCouronne,2783.0,82.8,50.5
+930590105,Centre Ville,PetiteCouronne,2867.0,77.6,50.5
+930780115,Sud-Est Mallet,PetiteCouronne,4473.0,63.6,50.5
+784040000,Millemont (commune non irisée),GrandeCouronne,3557.5,72.2,50.5
+773370204,Ville Nouvelle Sud-Ouest,GrandeCouronne,3284.0,76.0,50.5
+912920000,Guibeville (commune non irisée),GrandeCouronne,3421.0,65.7,50.5
+770910000,Les Chapelles-Bourbon (commune non irisée),GrandeCouronne,3409.0,84.1,50.5
+914210104,Zone S5,GrandeCouronne,3440.5,63.8,50.5
+940220102,Centre I,PetiteCouronne,2802.0,67.3,50.5
+930050101,Fontaine des Prés 1,PetiteCouronne,3645.0,74.0,50.4
+930590102,Maroc,PetiteCouronne,2899.0,78.4,50.4
+774420000,Samoreau (commune non irisée),GrandeCouronne,3141.0,67.5,50.4
+774240000,Saint-Martin-du-Boschet (commune non irisée),GrandeCouronne,1680.0,79.9,50.4
+951500000,Chaussy (commune non irisée),GrandeCouronne,2559.0,79.9,50.3
+940810309,Abbé Derry,PetiteCouronne,3430.0,71.8,50.3
+784400105,Grand Ouest 2,GrandeCouronne,2692.0,80.1,50.3
+951270125,Enclos-Bois Lapelote,GrandeCouronne,2887.0,74.4,50.3
+770810000,Champdeuil (commune non irisée),GrandeCouronne,3138.0,85.1,50.3
+784100000,Moisson (commune non irisée),GrandeCouronne,2408.0,81.1,50.2
+952770103,Square La Garenne,GrandeCouronne,3111.0,69.3,50.2
+911320000,Chamarande (commune non irisée),GrandeCouronne,3000.0,78.2,50.2
+930010201,Péri,PetiteCouronne,3787.5,69.6,50.1
+940160108,Prairie,PetiteCouronne,4210.0,64.8,50.1
+911360000,Champlan (commune non irisée),GrandeCouronne,3701.0,69.8,50.1
+930770103,Marnaudes,PetiteCouronne,3847.0,63.0,50.1
+772850102,Courtilleraies Centre,GrandeCouronne,2076.0,73.7,50.1
+956070111,Les Sarments,GrandeCouronne,3676.0,67.1,50.0
+920320102,Buffets-Fauvettes,PetiteCouronne,4398.0,71.3,50.0
+773470000,Les Ormes-sur-Voulzie (commune non irisée),GrandeCouronne,1765.0,80.1,49.9
+930070114,Iris 12,PetiteCouronne,3928.0,66.0,49.9
+773830000,Rampillon (commune non irisée),GrandeCouronne,2153.5,74.8,49.8
+781580113,Porte Saint-Antoine,GrandeCouronne,3000.5,78.9,49.8
+953060104,La Patte-d'Oie-Les Copistes,GrandeCouronne,3928.0,67.8,49.8
+930140105,Iris 4,PetiteCouronne,3227.0,71.3,49.8
+910270106,Quartier 6,GrandeCouronne,3050.0,73.1,49.8
+772720000,Maison-Rouge (commune non irisée),GrandeCouronne,1979.0,73.7,49.7
+930661001,Delaunay Belleville 01,PetiteCouronne,3330.0,76.9,49.7
+785450106,Quartier 6,GrandeCouronne,4200.0,66.0,49.7
+915730105,Iris 5,GrandeCouronne,3324.5,62.3,49.7
+771100000,Chenou (commune non irisée),GrandeCouronne,1931.5,90.5,49.7
+950880000,Bonneuil-en-France (commune non irisée),GrandeCouronne,3554.5,72.5,49.7
+771970000,Frétoy (commune non irisée),GrandeCouronne,1994.0,85.3,49.6
+911310000,Chalou-Moulineux (commune non irisée),GrandeCouronne,2394.0,75.1,49.6
+940220108,Centre II,PetiteCouronne,3706.0,69.0,49.6
+930480404,La Noue-Clos Français-Guilands 4,PetiteCouronne,4690.0,75.0,49.6
+955820102,Le Moulin,GrandeCouronne,3403.5,64.4,49.5
+774680203,Raimu-Hugo-Beaudelaire,GrandeCouronne,3491.0,71.5,49.4
+772240000,Hautefeuille (commune non irisée),GrandeCouronne,2886.0,76.2,49.4
+783200000,Notre-Dame-de-la-Mer (commune non irisée),GrandeCouronne,2448.0,75.8,49.4
+940040104,Savreau,PetiteCouronne,3530.5,71.4,49.3
+772560000,Lizines (commune non irisée),GrandeCouronne,1750.0,78.8,49.3
+912440000,Fontenay-le-Vicomte (commune non irisée),GrandeCouronne,3434.0,64.2,49.3
+781640000,Clairefontaine-en-Yvelines (commune non irisée),GrandeCouronne,3729.0,62.0,49.2
+954240303,Frances-Copistes 3,GrandeCouronne,4570.0,62.1,49.2
+771310102,Ville Haute Sud,GrandeCouronne,2844.0,85.9,49.2
+910790000,Boissy-la-Rivière (commune non irisée),GrandeCouronne,2399.0,86.1,49.2
+940710110,Berges-Noyers-Poil Vert,PetiteCouronne,3810.0,71.9,49.1
+786210112,Macé ZAC Trappes Élancourt,GrandeCouronne,3368.5,69.7,49.1
+930530110,Centre Ville Mairie 2,PetiteCouronne,2773.0,69.7,49.1
+956800104,Carreaux Sud,GrandeCouronne,2937.5,83.2,49.1
+773550000,Paroy (commune non irisée),GrandeCouronne,1855.0,78.7,49.0
+772020000,La Genevraye (commune non irisée),GrandeCouronne,2385.5,71.9,49.0
+950240000,Arthies (commune non irisée),GrandeCouronne,2593.0,75.6,49.0
+770120000,Augers-en-Brie (commune non irisée),GrandeCouronne,1636.5,77.4,49.0
+914410000,Nainville-les-Roches (commune non irisée),GrandeCouronne,3088.0,79.2,49.0
+781630000,Civry-la-Forêt (commune non irisée),GrandeCouronne,2552.5,77.3,49.0
+930300102,Iris 0102,PetiteCouronne,2110.5,78.5,49.0
+930100106,Les Merisiers,PetiteCouronne,3695.5,74.6,48.9
+916540000,Videlles (commune non irisée),GrandeCouronne,2531.0,89.5,48.9
+920360503,Village Chandon 3,PetiteCouronne,4736.5,63.4,48.9
+780700000,Boinville-en-Mantois (commune non irisée),GrandeCouronne,2744.0,77.1,48.9
+930790105,Quartier 5,PetiteCouronne,2572.5,69.5,48.8
+930290502,La Mare 2,PetiteCouronne,3971.0,63.8,48.8
+786440102,La Verrière,GrandeCouronne,3710.0,63.1,48.8
+930010501,Mélèzes,PetiteCouronne,3809.0,75.6,48.7
+930010101,Robespierre,PetiteCouronne,3202.0,74.4,48.7
+930780112,Sud-Est Europe,PetiteCouronne,2437.0,76.7,48.7
+950590000,Berville (commune non irisée),GrandeCouronne,2409.5,79.9,48.7
+920500701,Hôpital,PetiteCouronne,4355.0,67.6,48.6
+950181003,Vaucelle,GrandeCouronne,3667.0,69.1,48.5
+920020306,Lionel Terray,PetiteCouronne,3920.0,74.8,48.5
+952680104,Dame Blanche Nord 1,GrandeCouronne,3498.5,69.4,48.5
+910980000,Boutervilliers (commune non irisée),GrandeCouronne,2314.5,83.9,48.5
+956800107,P.L.M. Est,GrandeCouronne,2143.0,78.3,48.5
+930050208,Nord 8,PetiteCouronne,3810.5,78.1,48.4
+930080104,Les Vignes 3,PetiteCouronne,3055.5,71.5,48.3
+772470000,Lescherolles (commune non irisée),GrandeCouronne,1767.0,76.7,48.3
+771980000,Fromont (commune non irisée),GrandeCouronne,2108.5,80.0,48.3
+930011001,Lenine,PetiteCouronne,4463.0,73.9,48.3
+774670000,La Tombe (commune non irisée),GrandeCouronne,1803.0,94.2,48.2
+782910000,Guerville (commune non irisée),GrandeCouronne,2908.5,75.5,48.2
+940110106,Salvador Allende,PetiteCouronne,3438.0,67.3,48.2
+953030000,Le Heaulme (commune non irisée),GrandeCouronne,3112.0,78.5,48.2
+914340104,Le Bois Pommier,GrandeCouronne,2531.0,76.6,48.1
+772580103,Bois de la Grange-Village de Lognes,GrandeCouronne,3993.0,77.1,48.1
+773450000,Orly-sur-Morin (commune non irisée),GrandeCouronne,1837.5,89.1,48.1
+775200000,Villiers-sous-Grez (commune non irisée),GrandeCouronne,2758.0,86.7,48.1
+772780000,Marolles-en-Brie (commune non irisée),GrandeCouronne,2263.0,78.7,48.1
+781260101,Petit Beauregard,GrandeCouronne,3275.0,70.4,48.1
+930310302,Iris 9,PetiteCouronne,3835.0,70.4,48.1
+930730402,Centre Ville 2,PetiteCouronne,2688.0,73.5,48.0
+771520301,Plaine du Lys 1,GrandeCouronne,2982.0,78.2,47.9
+940780201,Gare Triage SNCF,PetiteCouronne,3167.0,69.2,47.9
+775240000,Vimpelles (commune non irisée),GrandeCouronne,1870.0,77.5,47.9
+930510403,Champy 3,PetiteCouronne,2943.0,72.0,47.8
+930640103,Bois Perrier 2,PetiteCouronne,3514.0,72.2,47.8
+773330103,Mairie Centre-Sud,GrandeCouronne,3630.5,74.1,47.8
+956270000,Vallangoujard (commune non irisée),GrandeCouronne,3346.0,72.8,47.8
+785450102,Quartier 2,GrandeCouronne,5149.0,63.3,47.8
+930790101,Quartier 1,PetiteCouronne,3055.5,72.7,47.8
+774430000,Sancy (commune non irisée),GrandeCouronne,3082.0,86.4,47.8
+774720000,La Trétoire (commune non irisée),GrandeCouronne,1647.0,75.7,47.8
+773680000,Poigny (commune non irisée),GrandeCouronne,1936.0,79.5,47.8
+774730000,Treuzy-Levelay (commune non irisée),GrandeCouronne,2211.5,76.4,47.8
+920500606,Berthelot Sud et Nord,PetiteCouronne,5063.0,68.6,47.7
+930310404,Iris 15,PetiteCouronne,3366.5,72.2,47.7
+930050604,Bourg 4,PetiteCouronne,3707.0,68.4,47.7
+783240000,Jouy-Mauvoisin (commune non irisée),GrandeCouronne,2917.0,87.8,47.6
+773310000,Nanteuil-sur-Marne (commune non irisée),GrandeCouronne,1765.0,77.1,47.5
+930290703,Petit Drancy 3,PetiteCouronne,3846.0,63.8,47.5
+930470101,Anatole France,PetiteCouronne,2344.0,76.2,47.5
+773900202,ZAC de la Vallée-Gare,GrandeCouronne,3361.0,72.9,47.5
+770310000,Bernay-Vilbert (commune non irisée),GrandeCouronne,2591.0,88.9,47.5
+774290000,Saint-Ouen-sur-Morin (commune non irisée),GrandeCouronne,1858.5,77.4,47.4
+772350000,Jaignes (commune non irisée),GrandeCouronne,2235.0,78.1,47.4
+781260104,Étang de Beauregard,GrandeCouronne,4232.0,71.7,47.4
+773320000,Nantouillet (commune non irisée),GrandeCouronne,2728.5,77.6,47.3
+956800112,D.L.M. Ouest,GrandeCouronne,1831.0,83.5,47.3
+940460111,Centre Vert de Maison 11,PetiteCouronne,4688.0,62.8,47.3
+930660302,Allende 02,PetiteCouronne,3894.0,69.6,47.3
+773400000,Nonville (commune non irisée),GrandeCouronne,2553.0,76.5,47.3
+786230000,Le Tremblay-sur-Mauldre (commune non irisée),GrandeCouronne,3491.0,66.9,47.2
+772330000,Iverny (commune non irisée),GrandeCouronne,2604.0,86.3,47.2
+772870000,Meilleray (commune non irisée),GrandeCouronne,1690.0,82.3,47.2
+940280406,La Habette,PetiteCouronne,3146.5,78.1,47.2
+930720105,Cité Jardin 1,PetiteCouronne,3030.0,79.0,47.1
+774080000,Saint-Fiacre (commune non irisée),GrandeCouronne,2884.0,84.6,47.1
+770970000,Chartronges (commune non irisée),GrandeCouronne,2030.5,88.4,47.1
+930790103,Quartier 3,PetiteCouronne,3018.5,74.1,47.0
+786210106,Carco Marot de Lurçat à Renoir,GrandeCouronne,2787.0,73.1,47.0
+915080000,Puiselet-le-Marais (commune non irisée),GrandeCouronne,2593.5,78.8,47.0
+930140102,Iris 1,PetiteCouronne,2976.0,78.6,47.0
+930780114,Sud-Ouest Centrale,PetiteCouronne,3466.0,64.2,46.9
+911740101,Z.I. Tarterêts,GrandeCouronne,2828.0,91.2,46.9
+770930000,La Chapelle-Moutils (commune non irisée),GrandeCouronne,1629.0,78.8,46.9
+952540000,Frémécourt (commune non irisée),GrandeCouronne,3041.0,80.0,46.9
+771870000,Fontaine-Fourches (commune non irisée),GrandeCouronne,1616.0,77.0,46.9
+930660501,Mutuelle Champ de Courses 01,PetiteCouronne,3739.0,67.4,46.9
+930010304,Maladrerie,PetiteCouronne,2306.0,80.9,46.8
+930530117,Zone Industrielle,PetiteCouronne,4591.0,66.9,46.8
+940280302,Les Bleuets,PetiteCouronne,3673.0,77.0,46.8
+910810000,Boissy-le-Sec (commune non irisée),GrandeCouronne,2187.5,92.0,46.8
+774110000,Saint-Germain-sous-Doue (commune non irisée),GrandeCouronne,2069.0,77.8,46.8
+782020000,Drocourt (commune non irisée),GrandeCouronne,2899.0,80.5,46.8
+770560000,Burcy (commune non irisée),GrandeCouronne,1738.0,95.4,46.8
+771520303,Plaine du Lys 3,GrandeCouronne,1742.5,78.1,46.7
+950740000,Boisemont (commune non irisée),GrandeCouronne,3100.0,85.9,46.7
+912480000,La Forêt-Sainte-Croix (commune non irisée),GrandeCouronne,1929.0,80.9,46.6
+930080107,Édouard Vaillant 2,PetiteCouronne,3473.0,65.2,46.6
+930270111,La Tour,PetiteCouronne,3342.5,73.6,46.6
+916710000,Villeneuve-sur-Auvers (commune non irisée),GrandeCouronne,2816.0,76.9,46.6
+772000000,Garentreville (commune non irisée),GrandeCouronne,1643.0,80.3,46.5
+771290000,Coulombs-en-Valois (commune non irisée),GrandeCouronne,1717.0,79.1,46.5
+770230000,Barcy (commune non irisée),GrandeCouronne,2721.0,91.4,46.4
+920040707,Argenteuil,PetiteCouronne,4421.0,69.5,46.4
+914950000,Plessis-Saint-Benoist (commune non irisée),GrandeCouronne,2220.5,95.5,46.4
+751187209,Chapelle 9,Paris,,74.5,46.4
+772710000,Maisoncelles-en-Gâtinais (commune non irisée),GrandeCouronne,1553.0,81.2,46.4
+951100000,Brignancourt (commune non irisée),GrandeCouronne,2933.0,94.1,46.4
+774140000,Saint-Hilliers (commune non irisée),GrandeCouronne,1725.5,79.5,46.3
+772120000,Gravon (commune non irisée),GrandeCouronne,2559.0,81.1,46.3
+956760000,Villers-en-Arthies (commune non irisée),GrandeCouronne,2528.0,79.4,46.3
+940760105,Monsivry,PetiteCouronne,4854.0,68.7,46.3
+773250000,Mouy-sur-Seine (commune non irisée),GrandeCouronne,1667.0,80.0,46.2
+930310405,Iris 16,PetiteCouronne,3554.5,74.3,46.2
+770730000,Chalautre-la-Petite (commune non irisée),GrandeCouronne,1761.0,79.2,46.1
+930310101,Iris 1,PetiteCouronne,2675.5,77.0,46.1
+775050000,Villemareuil (commune non irisée),GrandeCouronne,2630.5,78.8,46.1
+770150000,Baby (commune non irisée),GrandeCouronne,1647.5,82.3,46.0
+951390000,La Chapelle-en-Vexin (commune non irisée),GrandeCouronne,2922.0,92.9,46.0
+930100405,Fosse de la Régale,PetiteCouronne,3750.0,72.0,45.9
+952800109,Vallée du Crould-Village Talmouse,GrandeCouronne,3381.0,83.7,45.9
+771930000,Forfry (commune non irisée),GrandeCouronne,2603.0,93.1,45.9
+774020000,Saint-Barthélemy (commune non irisée),GrandeCouronne,1634.0,80.8,45.9
+773130000,Montmachoux (commune non irisée),GrandeCouronne,1692.0,83.7,45.8
+930290804,L'Avenir Parisien 4,PetiteCouronne,4111.0,80.1,45.8
+930100402,La Martraye,PetiteCouronne,3535.0,83.8,45.8
+951020000,Bréançon (commune non irisée),GrandeCouronne,2978.0,83.4,45.8
+770870000,La Chapelle-Iger (commune non irisée),GrandeCouronne,2560.0,95.0,45.8
+920500503,Fontenelles Decour,PetiteCouronne,5515.0,65.4,45.8
+771630000,Douy-la-Ramée (commune non irisée),GrandeCouronne,2925.0,81.7,45.8
+930010302,Émile Dubois,PetiteCouronne,4279.0,80.1,45.8
+772510104,Nord-Ouest,GrandeCouronne,3330.0,72.6,45.7
+784390000,Mulcent (commune non irisée),GrandeCouronne,2663.0,81.4,45.6
+940680703,La Pie 3,PetiteCouronne,5186.0,61.3,45.6
+783660000,Mareil-le-Guyon (commune non irisée),GrandeCouronne,3458.0,76.2,45.6
+940440103,Saint-Martin,PetiteCouronne,3643.0,76.8,45.6
+940760113,République,PetiteCouronne,4808.0,70.6,45.6
+770240000,Bassevelle (commune non irisée),GrandeCouronne,1962.0,81.7,45.5
+930080112,Préfecture 2,PetiteCouronne,2524.0,76.3,45.5
+770330000,Bezalles (commune non irisée),GrandeCouronne,1529.0,82.0,45.5
+774840000,Vaucourtois (commune non irisée),GrandeCouronne,2743.0,95.7,45.5
+916020000,Souzy-la-Briche (commune non irisée),GrandeCouronne,2463.5,80.7,45.5
+770670199,Ouest,GrandeCouronne,2857.0,85.6,45.4
+954470000,Neuilly-en-Vexin (commune non irisée),GrandeCouronne,2711.0,80.3,45.4
+950540000,Le Bellay-en-Vexin (commune non irisée),GrandeCouronne,2778.0,79.5,45.4
+915890105,Quartier 5,GrandeCouronne,3683.0,67.6,45.4
+773100000,Montigny-le-Guesdier (commune non irisée),GrandeCouronne,1727.5,80.9,45.3
+772180000,Grisy-sur-Seine (commune non irisée),GrandeCouronne,1770.0,82.6,45.3
+770290000,Beauvoir (commune non irisée),GrandeCouronne,2607.5,95.5,45.3
+940330105,Jean Zay,PetiteCouronne,3581.0,74.0,45.3
+772750000,Les Marêts (commune non irisée),GrandeCouronne,1945.0,82.2,45.3
+911740702,Montconseil Centre,GrandeCouronne,3243.5,94.2,45.2
+771190000,Clos-Fontaine (commune non irisée),GrandeCouronne,2571.5,85.6,45.2
+914140000,Monnerville (commune non irisée),GrandeCouronne,1956.0,83.4,45.2
+952110000,Ennery (commune non irisée),GrandeCouronne,3440.0,68.4,45.1
+955840000,Santeuil (commune non irisée),GrandeCouronne,3132.0,74.3,45.1
+770900000,La Chapelle-Saint-Sulpice (commune non irisée),GrandeCouronne,2243.0,97.3,45.1
+920020307,Fontaine Mouton,PetiteCouronne,3516.0,80.9,45.1
+951540000,Chennevières-lès-Louvres (commune non irisée),GrandeCouronne,2832.0,79.5,45.1
+952120000,Épiais-lès-Louvres (commune non irisée),GrandeCouronne,3030.0,94.1,45.1
+956070101,Forêt de Montmorency,GrandeCouronne,3917.0,78.6,45.1
+950181001,Cité Jardin d'Orgemont,GrandeCouronne,3688.0,73.4,45.0
+786080000,Le Tertre-Saint-Denis (commune non irisée),GrandeCouronne,2464.0,97.5,45.0
+950460000,Banthelu (commune non irisée),GrandeCouronne,2020.5,82.5,45.0
+772970000,Mondreville (commune non irisée),GrandeCouronne,1544.0,82.1,45.0
+773140000,Montolivet (commune non irisée),GrandeCouronne,1608.5,82.5,44.9
+781580111,Chesnay Village,GrandeCouronne,5174.0,61.7,44.9
+920320110,Renards,PetiteCouronne,4737.0,68.9,44.9
+930050805,Ambourget 5,PetiteCouronne,3413.0,80.4,44.8
+954870102,Village 1,GrandeCouronne,2498.0,81.8,44.8
+930720103,Clos Saint-Lazare 2,PetiteCouronne,3159.0,82.1,44.8
+773950000,Rumont (commune non irisée),GrandeCouronne,2036.0,82.5,44.8
+911120000,Brouy (commune non irisée),GrandeCouronne,2381.0,82.3,44.7
+772500000,Leudon-en-Brie (commune non irisée),GrandeCouronne,1988.0,83.1,44.7
+773190000,Mortery (commune non irisée),GrandeCouronne,1866.0,83.4,44.7
+910750000,Bois-Herpin (commune non irisée),GrandeCouronne,2424.0,98.0,44.6
+773030000,Montdauphin (commune non irisée),GrandeCouronne,1333.0,83.3,44.6
+783610109,Rabelais,GrandeCouronne,1172.0,91.4,44.6
+772840201,Zone d'Activités,GrandeCouronne,3571.0,87.0,44.6
+930080103,Les Vignes 2,PetiteCouronne,4267.0,78.3,44.5
+951270127,Le Bontemps,GrandeCouronne,3295.0,76.3,44.5
+940810206,Clos Langlois,PetiteCouronne,3536.0,81.2,44.5
+771020000,Châtenoy (commune non irisée),GrandeCouronne,2100.0,83.4,44.5
+930480803,Bel-Air Grands Pêchers 3,PetiteCouronne,5448.5,68.5,44.4
+930060109,Iris 9,PetiteCouronne,4603.0,78.6,44.4
+773960000,Rupéreux (commune non irisée),GrandeCouronne,1406.0,82.9,44.4
+940780208,Bernard de Palissy,PetiteCouronne,3514.0,72.5,44.3
+952140000,Épinay-Champlâtreux (commune non irisée),GrandeCouronne,1928.0,82.6,44.3
+773040000,Montenils (commune non irisée),GrandeCouronne,3178.5,96.5,44.3
+774520000,Sigy (commune non irisée),GrandeCouronne,2277.0,84.2,44.2
+954920000,Le Plessis-Gassot (commune non irisée),GrandeCouronne,2572.5,81.1,44.2
+940020205,Vert de Maison,PetiteCouronne,4904.0,67.9,44.1
+930050102,Fontaine des Prés 2,PetiteCouronne,3750.0,64.8,44.1
+955630105,Les Lutins,GrandeCouronne,3708.5,63.0,44.1
+916570108,L'Oly,GrandeCouronne,3419.0,82.3,44.1
+920220105,Iris 0105,PetiteCouronne,5033.0,69.5,44.1
+772430303,Clemenceau-Poincaré Sud,GrandeCouronne,3908.0,74.7,43.9
+930100401,Les Friches,PetiteCouronne,3956.0,71.6,43.9
+930320104,Iris 0104,PetiteCouronne,3611.0,73.3,43.6
+785180000,Rennemoulin (commune non irisée),GrandeCouronne,4258.0,63.3,43.5
+940810302,Auber,PetiteCouronne,4676.0,69.4,43.5
+940760118,Delaune,PetiteCouronne,5121.0,62.9,43.4
+954910105,Zone d'Activités Économiques,GrandeCouronne,5613.0,62.5,43.3
+930480901,Ramenas Fabien Lagrange 1,PetiteCouronne,5145.0,65.1,43.2
+920230501,Petit Clamart 1,PetiteCouronne,5541.5,60.6,43.1
+774350000,Saint-Sauveur-sur-École (commune non irisée),GrandeCouronne,3411.0,68.8,43.0
+940410104,Fort,PetiteCouronne,4760.0,75.0,43.0
+920500510,Central Park,PetiteCouronne,4815.0,68.7,43.0
+952530000,Frémainville (commune non irisée),GrandeCouronne,3283.0,80.2,42.9
+751208001,Charonne 1,Paris,8045.5,63.1,42.8
+771080102,Les Coudreaux Sud-Ouest,GrandeCouronne,3907.0,65.4,42.8
+955000301,Saint-Martin-Zone d'Activités,GrandeCouronne,3659.0,83.3,42.8
+781620000,Choisel (commune non irisée),GrandeCouronne,4473.0,63.8,42.7
+785510119,Iris 19,GrandeCouronne,4948.0,62.7,42.5
+911220101,Guyonnerie Vieux Parc,GrandeCouronne,4388.0,70.1,42.5
+771860108,Forêt de Fontainebleau,GrandeCouronne,3249.0,84.9,42.4
+940460105,Centre Vert de Maison 5,PetiteCouronne,4767.0,67.4,42.4
+920230507,Petit Clamart 7,PetiteCouronne,4886.0,64.4,42.3
+956370106,Le Village,GrandeCouronne,3467.5,74.4,42.2
+915730102,Iris 2,GrandeCouronne,3740.0,64.8,42.1
+956370103,Siaule-Le Boulingrin,GrandeCouronne,3696.0,71.3,42.1
+773840000,Réau (commune non irisée),GrandeCouronne,3800.0,81.1,42.0
+930660102,Semard Delaune Guynemer 02,PetiteCouronne,3985.5,69.2,41.6
+930290704,Petit Drancy 4,PetiteCouronne,4043.0,69.0,41.2
+770380000,Boissettes (commune non irisée),GrandeCouronne,4016.5,64.2,41.2
+920750109,Louis Vicat,PetiteCouronne,5943.0,68.6,41.2
+785500000,Saint-Germain-de-la-Grange (commune non irisée),GrandeCouronne,3623.0,67.9,41.2
+773900501,Sud-Champs-Forêt,GrandeCouronne,3925.5,79.4,41.2
+930320111,Iris 0111,PetiteCouronne,3938.0,61.5,41.1
+780360000,Autouillet (commune non irisée),GrandeCouronne,3741.0,67.5,41.1
+952770301,Saint-Blin,GrandeCouronne,,67.2,41.1
+940460106,Centre Vert de Maison 6,PetiteCouronne,,60.0,41.0
+954760106,La Chaussée,GrandeCouronne,,68.7,41.0
+920190103,Aulnay,PetiteCouronne,5077.0,62.6,41.0
+955720117,Vert Galant,GrandeCouronne,,64.5,41.0
+930100103,Les Confins d'Aulnay,PetiteCouronne,,75.5,41.0
+930050502,Émile Zola 2,PetiteCouronne,3966.5,66.8,40.9
+920260506,Dominos,PetiteCouronne,4615.0,74.5,40.9
+930050804,Ambourget 4,PetiteCouronne,3158.5,86.6,40.9
+952190101,Delacroix,GrandeCouronne,3824.0,69.1,40.9
+955850101,Mont de Gif-Haut du Roy,GrandeCouronne,3286.5,75.9,40.8
+940810111,Manouchian,PetiteCouronne,4812.5,62.1,40.8
+913120101,Nord,GrandeCouronne,4228.5,63.7,40.8
+950610000,Béthemont-la-Forêt (commune non irisée),GrandeCouronne,3251.5,73.6,40.7
+910860105,Zone d'Activités La Marinière,GrandeCouronne,3071.0,86.0,40.6
+930630106,Cachin,PetiteCouronne,5504.0,60.3,40.5
+950630107,Val Sud,GrandeCouronne,4367.0,65.4,40.5
+920040701,Nord I,PetiteCouronne,5485.0,61.1,40.4
+751135009,Gare 9,Paris,8298.0,60.3,40.3
+912720110,Forêt,GrandeCouronne,4035.0,61.9,40.3
+751010302,Palais Royal 2,Paris,15667.0,61.3,40.2
+954460000,Nesles-la-Vallée (commune non irisée),GrandeCouronne,3748.0,68.1,40.2
+920250402,Canibouts-Champy,PetiteCouronne,5116.0,61.9,40.1
+784230111,Sourderie 1,GrandeCouronne,3908.0,62.5,40.0
+785450104,Quartier 4,GrandeCouronne,5233.0,64.1,40.0
+780130000,Andelu (commune non irisée),GrandeCouronne,3228.0,77.2,39.9
+912160102,La Terrasse,GrandeCouronne,4025.0,63.4,39.9
+910410000,Avrainville (commune non irisée),GrandeCouronne,3492.0,81.2,39.8
+940160102,Cité Jardins,PetiteCouronne,5402.0,68.5,39.8
+940600102,Les Bordes Hôtel de Ville,PetiteCouronne,3649.0,67.1,39.8
+940760107,Zola,PetiteCouronne,5448.5,66.0,39.4
+930050602,Bourg 2,PetiteCouronne,4110.0,65.0,39.3
+915780000,Saint-Sulpice-de-Favières (commune non irisée),GrandeCouronne,3180.5,93.1,39.3
+920070113,Quartier 13,PetiteCouronne,5372.0,65.4,39.2
+784810103,Ermitage,GrandeCouronne,4724.0,67.3,39.2
+772370000,Jossigny (commune non irisée),GrandeCouronne,3584.5,78.9,39.2
+950180701,La Heurneuse,GrandeCouronne,4186.0,60.2,39.1
+751124702,Bercy 2,Paris,9443.0,60.4,39.1
+910270101,Quartier 1,GrandeCouronne,4181.0,70.7,39.1
+930590108,Sud 1,PetiteCouronne,3800.0,81.7,38.9
+920480107,Forêt Domaniale,PetiteCouronne,5880.5,64.9,38.9
+751135013,Gare 13,Paris,8534.0,60.7,38.7
+771080304,Sud-Est,GrandeCouronne,3802.0,76.8,38.7
+930140103,Iris 2,PetiteCouronne,4104.0,73.9,38.6
+914210107,Zone S8,GrandeCouronne,3743.0,64.1,38.5
+940380110,Jardin Parisien 2,PetiteCouronne,4632.0,63.7,38.4
+915890107,Quartier 7,GrandeCouronne,4178.5,60.2,38.4
+751134908,Salpêtrière 8,Paris,9432.0,60.2,38.3
+930700116,Secteur 16,PetiteCouronne,5907.0,62.1,38.1
+781580104,Nouvelle France,GrandeCouronne,4820.0,80.1,37.9
+940760104,Monts Cuchets,PetiteCouronne,5778.0,65.8,37.9
+912740000,Gometz-la-Ville (commune non irisée),GrandeCouronne,3785.0,71.4,37.9
+773370101,Ville Ancienne,GrandeCouronne,3938.5,72.4,37.9
+920500509,Champs Pierreux,PetiteCouronne,5682.0,65.4,37.7
+956110000,Theuville (commune non irisée),GrandeCouronne,21407.5,66.3,37.7
+920320101,Scarron,PetiteCouronne,5010.5,72.5,37.7
+930480402,La Noue-Clos Français-Guilands 2,PetiteCouronne,4952.0,76.2,37.6
+920320106,Pierrelais,PetiteCouronne,5089.0,75.3,37.6
+785510102,Iris 2,GrandeCouronne,5075.5,60.0,37.5
+783980000,Les Mesnuls (commune non irisée),GrandeCouronne,4194.0,63.6,37.4
+955100000,Puiseux-Pontoise (commune non irisée),GrandeCouronne,3854.0,76.0,37.1
+940410204,Cité Pierre et Marie Curie,PetiteCouronne,5400.0,69.6,37.0
+940220204,Gondoles Sud III,PetiteCouronne,4568.5,60.3,37.0
+940420104,Leclerc,PetiteCouronne,5523.0,68.7,36.8
+920330102,La Verboise,PetiteCouronne,5341.5,64.6,36.7
+956100000,Théméricourt (commune non irisée),GrandeCouronne,3512.0,90.8,36.7
+782780000,Goupillières (commune non irisée),GrandeCouronne,3247.5,78.1,36.4
+920020305,Grand l,PetiteCouronne,4847.5,65.2,36.4
+786460103,Jussieu 3,GrandeCouronne,6145.0,64.9,36.1
+920630601,Fouilleuse 1,PetiteCouronne,5298.0,64.2,36.0
+930481104,Montreau Ruffins Clos Arachis 4,PetiteCouronne,4976.0,74.2,35.9
+920040601,Renoir I,PetiteCouronne,5672.0,70.8,35.8
+920500508,Picasso Colombe,PetiteCouronne,8800.0,60.9,35.8
+920240301,Quartier Nord,PetiteCouronne,5814.0,82.2,35.7
+775180000,Villiers-en-Bière (commune non irisée),GrandeCouronne,3272.5,89.9,35.7
+930700112,Secteur 12,PetiteCouronne,6500.0,61.2,35.7
+920500501,Arlequin,PetiteCouronne,5902.0,61.1,35.7
+930050501,Émile Zola 1,PetiteCouronne,4329.0,72.7,35.7
+915490111,Croix Blanche,GrandeCouronne,7229.0,65.4,35.7
+772880201,Montaigu Nord-Ouest,GrandeCouronne,10623.0,61.7,35.7
+955390107,Vergers Sud,GrandeCouronne,4452.0,61.5,35.6
+751207813,Saint-Fargeau 13,Paris,7122.0,60.1,35.6
+910270114,Quartier 14,GrandeCouronne,3649.0,85.7,35.6
+784980102,Saint-Exupéry,GrandeCouronne,3837.0,68.0,35.6
+950180901,Belle Vue,GrandeCouronne,4228.0,70.2,35.6
+956780000,Villiers-Adam (commune non irisée),GrandeCouronne,3810.0,79.2,35.4
+952520103,Mare des Noues,GrandeCouronne,4403.0,60.2,35.3
+940810105,8 Mai,PetiteCouronne,4500.0,81.6,35.2
+784170000,Montchauvet (commune non irisée),GrandeCouronne,3383.5,83.6,35.2
+950600103,Brosses et Malais,GrandeCouronne,3584.5,80.1,34.9
+930480704,Paul Signac Murs à Pêches 4,PetiteCouronne,5855.0,64.1,34.9
+915600000,Saint-Jean-de-Beauregard (commune non irisée),GrandeCouronne,3435.5,86.1,34.9
+780100000,Les Alluets-le-Roi (commune non irisée),GrandeCouronne,3841.0,68.0,34.6
+930481002,Branly Boissière 2,PetiteCouronne,5312.0,71.9,34.5
+783840000,Médan (commune non irisée),GrandeCouronne,4408.0,60.1,34.4
+920260705,Sainte-Marie,PetiteCouronne,7800.0,60.4,34.3
+930070121,Iris 19,PetiteCouronne,3790.5,76.8,34.2
+920500511,Ravel Liberté Vallona,PetiteCouronne,5455.0,64.6,34.0
+930630102,ZAC,PetiteCouronne,5473.5,73.9,34.0
+770590000,Bussy-Saint-Martin (commune non irisée),GrandeCouronne,3988.0,70.4,33.7
+751187206,Chapelle 6,Paris,7000.0,64.6,33.4
+782640000,Gambaiseuil (commune non irisée),GrandeCouronne,4000.0,79.8,33.3
+930060116,Iris 16,PetiteCouronne,5534.0,60.0,33.2
+920320108,Val Content,PetiteCouronne,5802.0,67.5,33.0
+751124603,Picpus 3,Paris,8943.0,61.7,32.8
+751197509,Amérique 9,Paris,10104.0,64.3,32.7
+930550302,Rouvray,PetiteCouronne,5620.0,73.8,32.7
+940160107,La Plaine 2,PetiteCouronne,5628.0,62.9,32.6
+785480000,Saint-Forget (commune non irisée),GrandeCouronne,4024.0,65.3,32.5
+940760102,Guipons,PetiteCouronne,5750.0,68.9,32.1
+930320116,Iris 0116,PetiteCouronne,3730.0,85.9,32.0
+920200108,Ponceau,PetiteCouronne,5710.0,62.7,32.0
+781720110,Montaigne,GrandeCouronne,4324.0,65.4,31.8
+940160103,Coteau 1,PetiteCouronne,5241.5,62.4,31.8
+781580103,Saint-Germain,GrandeCouronne,5606.5,76.1,31.7
+751124701,Bercy 1,Paris,10847.0,67.8,31.6
+950510103,La Folie-Le Château,GrandeCouronne,4261.5,64.2,31.4
+780060000,Adainville (commune non irisée),GrandeCouronne,3758.0,74.9,31.3
+930450110,Les Bruyères,PetiteCouronne,6822.5,64.1,31.2
+771850000,Fleury-en-Bière (commune non irisée),GrandeCouronne,3753.0,75.2,31.0
+940430109,Petits Jardins-Bas de Bicêtre,PetiteCouronne,5851.0,64.2,31.0
+920200105,Stade,PetiteCouronne,6094.0,67.5,31.0
+784150000,Montainville (commune non irisée),GrandeCouronne,3650.0,79.5,30.9
+954880104,La Butte Rouge,GrandeCouronne,3662.5,84.8,30.9
+786460303,Chantiers 3,GrandeCouronne,6128.5,71.3,30.6
+920250301,Les Grèves,PetiteCouronne,6135.0,61.3,30.6
+786740104,Val Joyeux,GrandeCouronne,4000.0,64.9,30.6
+751155802,Necker 2,Paris,9833.0,61.5,30.5
+940020106,Micolon 14 Juillet,PetiteCouronne,5674.0,75.0,30.5
+940580112,Les Joncs Marins-Croix d'eau,PetiteCouronne,5732.5,60.4,30.5
+751197519,Amérique 19,Paris,5631.5,75.6,30.5
+940710107,Notre-Dame-Bruyères,PetiteCouronne,3971.0,63.3,30.2
+930480701,Paul Signac Murs à Pêches 1,PetiteCouronne,5650.0,63.7,30.2
+920620202,Bergère Nord,PetiteCouronne,5778.0,67.2,30.2
+751156010,Javel 10,Paris,9250.0,62.1,30.1
+751176505,Ternes 5,Paris,6375.0,65.5,29.9
+920720106,Europe Pierre Midrin,PetiteCouronne,5750.0,63.4,29.8
+930700105,Secteur 5,PetiteCouronne,6344.5,71.1,29.7
+786860101,Forêt,GrandeCouronne,6547.0,61.7,29.7
+910930000,Boullay-les-Troux (commune non irisée),GrandeCouronne,3812.5,86.1,29.6
+930700115,Secteur 15,PetiteCouronne,6695.0,64.2,29.6
+920770103,La Ronce,PetiteCouronne,5324.5,65.7,29.6
+940790104,Les Luats,PetiteCouronne,4860.0,65.1,29.4
+954880105,Ouest,GrandeCouronne,4308.5,85.3,29.4
+920320103,Paradis-Blagis,PetiteCouronne,5499.0,82.6,29.3
+751176817,Épinettes 17,Paris,9262.0,69.4,29.2
+920500605,Les Groues-Préfecture,PetiteCouronne,5500.0,73.6,29.2
+930550603,Auteurs Pommiers,PetiteCouronne,7955.5,73.1,29.2
+940030105,Jean-Macé 2,PetiteCouronne,5391.0,69.9,29.1
+751207814,Saint-Fargeau 14,Paris,8794.5,63.2,29.0
+785900000,Senlisse (commune non irisée),GrandeCouronne,3793.0,83.4,29.0
+916450101,Morte Rivière-Les Prés Bouchards,GrandeCouronne,4769.0,60.4,29.0
+954760103,L'Oseraie,GrandeCouronne,3988.0,83.6,28.8
+751207910,Père Lachaise 10,Paris,9333.0,66.2,28.8
+786400102,Vélizy Bas Centre Nord,GrandeCouronne,7037.0,60.3,28.8
+940810106,Ferme Sud,PetiteCouronne,5107.0,68.8,28.6
+920330103,Les Bures,PetiteCouronne,6419.0,63.2,28.6
+751135010,Gare 10,Paris,9522.0,60.1,28.6
+751145618,Plaisance 18,Paris,9242.0,61.7,28.6
+751135202,Croulebarbe 2,Paris,9947.0,62.8,28.6
+952190102,Grande Tour,GrandeCouronne,4284.5,74.5,28.5
+920500408,Joliot Boule,PetiteCouronne,6090.5,68.2,28.4
+751197312,Villette 12,Paris,8873.0,62.2,28.1
+953870000,Menouville (commune non irisée),GrandeCouronne,3634.5,96.6,28.1
+751156006,Javel 6,Paris,9868.0,60.5,28.0
+952580000,Frouville (commune non irisée),GrandeCouronne,3675.5,82.6,27.9
+952030110,Le Bois du Luat,GrandeCouronne,4244.5,60.0,27.9
+920040503,Grésillons III,PetiteCouronne,6302.0,67.7,27.9
+751135025,Gare 25,Paris,8199.0,62.2,27.8
+930630109,Grands Champs 02,PetiteCouronne,5763.5,67.4,27.7
+781900101,Plaine des Courlis,GrandeCouronne,5920.0,66.6,27.5
+920750102,Châtillon,PetiteCouronne,6998.0,67.3,27.5
+751208018,Charonne 18,Paris,8469.0,61.1,27.4
+751187207,Chapelle 7,Paris,7955.0,61.4,27.4
+920460111,Le Clos,PetiteCouronne,6630.0,63.6,27.4
+751197310,Villette 10,Paris,6357.0,63.8,27.2
+940030108,Laplace 1,PetiteCouronne,5444.5,67.6,27.1
+920480102,Meudon la Forêt 2,PetiteCouronne,5487.0,74.6,27.1
+911220104,Hacquinière Paris Chevreuse,GrandeCouronne,4477.0,63.7,27.0
+751124802,Quinze-Vingts 2,Paris,9843.0,64.5,26.8
+785510101,Iris 1,GrandeCouronne,5357.0,70.1,26.7
+751176714,Batignolles 14,Paris,10000.0,65.5,26.7
+916790000,Villiers-le-Bâcle (commune non irisée),GrandeCouronne,4406.0,63.0,26.7
+920350112,Moulin Bailly,PetiteCouronne,6182.0,65.6,26.6
+930480604,Centre Ville Jean Moulin Espoir 4,PetiteCouronne,6833.0,70.6,26.5
+920500804,Acacias Ouest,PetiteCouronne,4821.0,80.9,26.2
+751155717,Saint-Lambert 17,Paris,9380.0,61.7,26.2
+930630111,Ormes,PetiteCouronne,5923.0,64.9,26.1
+786460304,Chantiers 4,GrandeCouronne,6106.0,65.8,26.1
+751155704,Saint-Lambert 4,Paris,8209.0,70.6,26.0
+751207916,Père Lachaise 16,Paris,8809.0,61.9,26.0
+751135017,Gare 17,Paris,11541.0,66.4,26.0
+751155801,Necker 1,Paris,10393.0,71.5,25.9
+786460207,Montreuil 7,GrandeCouronne,6906.0,64.2,25.9
+751145611,Plaisance 11,Paris,9189.0,65.1,25.9
+751155713,Saint-Lambert 13,Paris,10042.5,62.2,25.9
+930500115,Iris 15,PetiteCouronne,4211.0,80.9,25.9
+751145609,Plaisance 9,Paris,9187.5,69.7,25.8
+751145302,Montparnasse 2,Paris,11662.0,62.2,25.8
+751114303,Roquette 3,Paris,10661.0,67.9,25.7
+751010303,Palais Royal 3,Paris,14949.5,64.3,25.7
+781580108,Saint-Antoine,GrandeCouronne,8374.0,63.0,25.7
+751156007,Javel 7,Paris,8886.0,64.0,25.6
+751197409,Pont de Flandre 9,Paris,6856.0,77.1,25.6
+940680602,Les Mûriers 2,PetiteCouronne,5730.0,60.9,25.5
+940680501,La Varenne 1,PetiteCouronne,6767.0,61.0,25.4
+784180103,La Borde,GrandeCouronne,5703.0,62.7,25.4
+751145308,Montparnasse 8,Paris,11768.0,60.7,25.3
+780340000,Auteuil (commune non irisée),GrandeCouronne,3846.0,93.6,25.3
+751124507,Bel-Air 7,Paris,9361.5,62.1,25.1
+751197306,Villette 6,Paris,8531.0,72.2,24.9
+751135028,Gare 28,Paris,7326.0,68.2,24.9
+781580107,Rueil,GrandeCouronne,7715.0,65.2,24.8
+786400103,Le Clos,GrandeCouronne,6333.0,62.2,24.8
+751134901,Salpêtrière 1,Paris,9265.5,63.5,24.8
+751145606,Plaisance 6,Paris,9444.0,61.3,24.7
+751083101,Madeleine 1,Paris,11897.5,70.3,24.7
+920440121,Eiffel 4,PetiteCouronne,8330.5,64.8,24.7
+786460505,Clagny 5,GrandeCouronne,6949.0,66.1,24.6
+751197403,Pont de Flandre 3,Paris,8566.0,60.1,24.6
+751083108,Madeleine 8,Paris,10938.0,60.8,24.6
+751124609,Picpus 9,Paris,8979.0,67.2,24.5
+920500101,Chenevreux,PetiteCouronne,5711.0,70.4,24.5
+920120403,République Point du Jour 6,PetiteCouronne,7656.0,70.0,24.4
+751124813,Quinze-Vingts 13,Paris,10981.0,73.7,24.4
+751155702,Saint-Lambert 2,Paris,8366.5,69.7,24.4
+751155727,Saint-Lambert 27,Paris,10690.0,66.8,24.1
+920260505,Diderot,PetiteCouronne,7083.0,60.4,24.0
+751135115,Maison Blanche 15,Paris,8540.0,61.2,24.0
+920630501,Buzenval 1,PetiteCouronne,5938.0,60.7,24.0
+751208022,Charonne 22,Paris,7500.0,73.3,23.9
+751135119,Maison Blanche 19,Paris,9442.0,71.6,23.9
+786460503,Clagny 3,GrandeCouronne,6326.0,66.4,23.9
+782420106,Parc Montaigne Église,GrandeCouronne,5393.5,75.3,23.8
+930500108,Iris 8,PetiteCouronne,4522.0,77.5,23.8
+920470000,Marnes-la-Coquette (commune non irisée),PetiteCouronne,6942.0,69.5,23.8
+930480205,Bas Montreuil Est 5,PetiteCouronne,6452.0,69.8,23.6
+940370101,Centre Ville 1,PetiteCouronne,5957.0,84.1,23.6
+751135111,Maison Blanche 11,Paris,9079.0,64.8,23.6
+940680803,Saint-Maur Créteil 3,PetiteCouronne,6448.0,69.0,23.6
+914770106,Lozère,GrandeCouronne,4793.0,60.6,23.6
+920620305,Seine 2,PetiteCouronne,7500.0,60.8,23.6
+751208004,Charonne 4,Paris,9133.0,65.5,23.5
+920640101,Fouilleuse,PetiteCouronne,6529.0,62.4,23.5
+783220105,Les Metz Pont Colbert,GrandeCouronne,5814.0,62.0,23.5
+920230102,Centre Ville 2,PetiteCouronne,6246.0,60.2,23.5
+952100501,Centre Ville-Tour du Lac,GrandeCouronne,5887.0,60.8,23.4
+920260702,Hôtel de Ville,PetiteCouronne,6597.0,69.9,23.4
+952100301,Residentiel-Place Verdun,GrandeCouronne,5949.0,67.3,23.4
+920230101,Centre Ville 1,PetiteCouronne,6386.0,64.2,23.4
+751197525,Amérique 25,Paris,6497.0,72.1,23.3
+751176614,Plaine Monceau 14,Paris,9545.0,66.1,23.3
+751135023,Gare 23,Paris,8222.0,72.9,23.2
+751207911,Père Lachaise 11,Paris,9103.0,60.0,23.1
+785861101,L'Union Nord,GrandeCouronne,4690.5,63.3,23.1
+751197406,Pont de Flandre 6,Paris,7174.0,62.2,23.0
+920480204,Bas Meudon 2,PetiteCouronne,7214.0,63.2,23.0
+751145617,Plaisance 17,Paris,10221.0,73.1,23.0
+920360202,Fossé de l'Aumône 2,PetiteCouronne,5193.0,67.2,23.0
+751114319,Roquette 19,Paris,10574.0,71.3,22.9
+781580102,Aubert,GrandeCouronne,5359.0,76.8,22.9
+920120404,République Point du Jour 5,PetiteCouronne,7653.0,60.1,22.8
+751124509,Bel-Air 9,Paris,8837.0,69.4,22.8
+751166108,Auteuil 8,Paris,9829.0,60.1,22.8
+751207906,Père Lachaise 6,Paris,9514.0,68.6,22.7
+751124704,Bercy 4,Paris,9300.0,62.6,22.7
+786460405,Notre-Dame 5,GrandeCouronne,7237.0,63.8,22.7
+920500203,Saint-Cloud,PetiteCouronne,5575.0,74.3,22.6
+940170703,Quatre Cités 3,PetiteCouronne,5089.0,78.0,22.6
+930550801,Verpantin,PetiteCouronne,6679.0,79.7,22.6
+940420105,Platanes,PetiteCouronne,6027.5,65.2,22.5
+751207811,Saint-Fargeau 11,Paris,8688.0,68.9,22.5
+751186914,Grandes Carrières 14,Paris,10457.0,61.1,22.5
+786460506,Clagny 6,GrandeCouronne,7973.0,69.2,22.4
+751083006,Faubourg du Roule 6,Paris,12414.0,61.6,22.4
+920480201,Bellevue 1,PetiteCouronne,6225.5,60.7,22.4
+920230304,La Gare 4,PetiteCouronne,7756.0,61.1,22.4
+940370106,Chaperon Vert,PetiteCouronne,6564.0,73.4,22.2
+940180109,Bercy,PetiteCouronne,6102.0,69.3,22.2
+751124622,Picpus 22,Paris,9500.0,66.9,22.2
+751197317,Villette 17,Paris,6544.5,72.8,22.1
+940760119,Lebon,PetiteCouronne,6548.0,78.3,22.1
+751145503,Petit Montrouge 3,Paris,7596.0,76.7,22.1
+955820105,Pasteur II,GrandeCouronne,4867.0,61.1,22.1
+751197611,Combat 11,Paris,8740.0,65.8,22.0
+751135102,Maison Blanche 2,Paris,7833.0,74.9,22.0
+751176813,Épinettes 13,Paris,8380.0,66.2,22.0
+751197512,Amérique 12,Paris,7317.0,72.1,21.9
+751083210,Europe 10,Paris,12956.0,62.9,21.9
+785750101,Rhodon Saint-Paul,GrandeCouronne,4469.0,65.4,21.9
+930450105,Les Sentes,PetiteCouronne,6596.0,73.1,21.9
+940690101,Ouest Quartier du Pont,PetiteCouronne,6602.0,64.7,21.9
+920630801,Centre Ville 1,PetiteCouronne,7475.0,63.7,21.9
+751114205,Saint-Ambroise 5,Paris,10660.5,60.3,21.9
+920020404,Clinique du Bois de Verrières,PetiteCouronne,5613.0,63.9,21.8
+920750111,Brancion,PetiteCouronne,6383.0,72.1,21.8
+751197610,Combat 10,Paris,8750.0,73.2,21.8
+751124805,Quinze-Vingts 5,Paris,10426.0,64.0,21.8
+920460108,Les Sablonnières,PetiteCouronne,6818.0,64.3,21.8
+785610000,Saint-Lambert (commune non irisée),GrandeCouronne,3901.0,88.1,21.8
+786460301,Chantiers 1,GrandeCouronne,7152.5,64.3,21.8
+940680702,La Pie 2,PetiteCouronne,6413.0,66.5,21.8
+916450108,ZAC de Vaupépins,GrandeCouronne,5296.5,75.6,21.7
+751197401,Pont de Flandre 1,Paris,7214.5,76.0,21.6
+751197408,Pont de Flandre 8,Paris,7423.0,67.7,21.6
+940430106,Les Closeaux-Les Martinets,PetiteCouronne,5119.0,75.5,21.6
+751093402,Chaussée d'Antin 2,Paris,12804.0,62.9,21.5
+751197309,Villette 9,Paris,6382.0,66.1,21.4
+751186925,Grandes Carrières 25,Paris,8333.0,68.5,21.4
+940810202,Parc des Lilas,PetiteCouronne,4907.5,71.6,21.4
+920640111,Pasteur 2,PetiteCouronne,8101.0,64.4,21.4
+920240303,Bateliers,PetiteCouronne,6886.0,72.4,21.3
+751208013,Charonne 13,Paris,8948.0,62.6,21.3
+751156023,Jardin Citroën-Cévennes,Paris,8528.5,81.6,21.2
+751135105,Maison Blanche 5,Paris,8706.5,63.8,21.1
+920240405,Morel,PetiteCouronne,7210.0,66.3,20.9
+751135029,Gare 29,Paris,7811.5,74.9,20.9
+940810301,Bellevue,PetiteCouronne,5635.5,75.4,20.6
+751103712,Saint-Vincent de Paul 12,Paris,8708.0,74.9,20.5
+751208005,Charonne 5,Paris,9318.0,63.7,20.5
+751156008,Javel 8,Paris,9792.0,77.4,20.5
+751156001,Javel 1,Paris,8227.0,81.2,20.4
+920240404,Sanzillon,PetiteCouronne,7182.0,75.9,20.4
+920770105,Centre-La Prairie,PetiteCouronne,6266.0,60.4,20.4
+786460101,Jussieu 1,GrandeCouronne,6102.0,69.5,20.4
+751124812,Quinze-Vingts 12,Paris,10072.0,72.5,20.2
+930710105,Savigny 2,PetiteCouronne,4759.0,79.6,20.2
+751187018,Clignancourt 18,Paris,8531.0,65.3,20.1
+920220109,Iris 0109,PetiteCouronne,6579.0,67.7,20.1
+920020406,Bas Graviers,PetiteCouronne,5933.0,70.4,20.1
+940810211,Édouard Tremblay,PetiteCouronne,5556.0,66.9,20.1
+920070114,Quartier 14,PetiteCouronne,6336.5,76.5,20.0
+930480206,Bas Montreuil Est 6,PetiteCouronne,7018.0,64.1,19.9
+920260504,Arletty,PetiteCouronne,6372.0,76.8,19.9
+920640105,Coteaux 2,PetiteCouronne,7375.0,70.3,19.9
+751155916,Grenelle 16,Paris,11814.0,72.4,19.8
+751207801,Saint-Fargeau 1,Paris,7468.0,78.0,19.7
+784550102,Le Village,GrandeCouronne,5102.0,64.4,19.7
+940030106,Jules Ferry 1,PetiteCouronne,6016.0,65.8,19.7
+920750110,Jean Jaurès,PetiteCouronne,6329.0,73.0,19.7
+920620102,Défense Sud,PetiteCouronne,6667.0,68.4,19.6
+751134904,Salpêtrière 4,Paris,9478.5,75.0,19.6
+751145604,Plaisance 4,Paris,9226.0,75.4,19.6
+784230116,Manet Sud,GrandeCouronne,4770.0,64.2,19.6
+940710101,Le Grand Val,PetiteCouronne,4840.0,67.0,19.4
+751197410,Pont de Flandre 10,Paris,7830.0,77.2,19.3
+751187023,Clignancourt 23,Paris,9065.5,65.2,19.3
+751135101,Maison Blanche 1,Paris,7980.0,78.2,19.2
+920640108,Montretout 2,PetiteCouronne,8621.0,69.1,19.1
+751104010,Hôpital Saint-Louis 10,Paris,9337.0,71.0,19.1
+920440120,Eiffel 3,PetiteCouronne,9115.0,77.6,19.0
+751208025,Charonne 25,Paris,9136.0,74.5,19.0
+920330106,Petit Garches,PetiteCouronne,7992.5,70.4,19.0
+751124620,Picpus 20,Paris,9950.0,64.8,18.9
+751187108,Goutte d'Or 8,Paris,8214.0,63.2,18.9
+751166223,Muette 23,Paris,16667.5,71.0,18.8
+751082904,Champs Élysées 4,Paris,14694.0,64.4,18.8
+751207705,Belleville 5,Paris,8599.0,78.3,18.8
+751207908,Père Lachaise 8,Paris,8915.0,80.3,18.8
+751135026,Gare 26,Paris,8750.0,72.6,18.7
+751197520,Amérique 20,Paris,7692.0,73.2,18.7
+751135030,Gare 30,Paris,8597.0,77.7,18.6
+751010101,Saint-Germain l'Auxerrois 1,Paris,13183.5,63.5,18.6
+751187103,Goutte d'Or 3,Paris,8257.0,66.7,18.4
+751010103,Saint-Germain l'Auxerrois 3,Paris,13916.5,67.4,18.3
+751186921,Grandes Carrières 21,Paris,9506.0,63.7,18.2
+751135016,Gare 16,Paris,10781.0,78.7,18.1
+751197308,Villette 8,Paris,7623.0,77.9,18.1
+751135027,Gare 27,Paris,8167.0,79.2,18.1
+751166410,Chaillot 10,Paris,16607.0,66.5,18.1
+920730109,Cité Jardins 1,PetiteCouronne,7377.0,71.8,18.0
+751197505,Amérique 5,Paris,9000.0,79.5,17.9
+920500204,Garches,PetiteCouronne,7045.0,73.2,17.8
+751082905,Champs Élysées 5,Paris,14142.0,65.2,17.8
+751207709,Belleville 9,Paris,8909.5,70.3,17.6
+751114405,Sainte-Marguerite 5,Paris,10091.0,64.5,17.6
+751145622,Plaisance 22,Paris,11174.5,60.0,17.6
+915380000,Saint-Aubin (commune non irisée),GrandeCouronne,4403.5,77.1,17.4
+916450107,Les Prés Hauts,GrandeCouronne,4915.0,74.8,17.4
+751010102,Saint-Germain l'Auxerrois 2,Paris,18627.0,72.5,17.3
+751135107,Maison Blanche 7,Paris,8943.5,81.6,17.2
+751197518,Amérique 18,Paris,5962.0,79.2,17.2
+920480208,Val Fleury 2,PetiteCouronne,6969.5,72.3,17.2
+751135006,Gare 6,Paris,9107.5,74.5,17.1
+751187102,Goutte d'Or 2,Paris,8057.0,64.8,17.0
+751114112,Folie Méricourt 12,Paris,9882.0,69.9,16.9
+920620204,Wilson 2,PetiteCouronne,7800.0,76.3,16.8
+751197523,Amérique 23,Paris,8179.0,75.0,16.6
+751197504,Amérique 4,Paris,8358.5,78.8,16.6
+751208010,Charonne 10,Paris,7612.5,75.2,16.4
+930640111,Fort de Rosny,PetiteCouronne,4991.0,75.1,16.4
+783020000,La Hauteville (commune non irisée),GrandeCouronne,4109.0,78.0,16.3
+781960000,Davron (commune non irisée),GrandeCouronne,4235.0,86.4,16.3
+751104012,Hôpital Saint-Louis 12,Paris,9258.0,84.2,16.2
+751010206,Les Halles 6,Paris,13636.0,73.1,16.0
+930610105,Séverine,PetiteCouronne,6667.0,79.8,15.9
+930450104,Le Fort,PetiteCouronne,6425.0,78.1,15.7
+751166413,Chaillot 13,Paris,10749.0,63.2,15.7
+751124511,Bel-Air 11,Paris,7386.0,85.8,15.7
+751145311,Montparnasse 11,Paris,12988.5,81.6,15.6
+751155920,Grenelle 20,Paris,11765.0,79.2,15.1
+920120305,Pont de Sèvres 2,PetiteCouronne,6800.0,63.5,15.0
+751176615,Plaine Monceau 15,Paris,8722.0,81.7,14.8
+930510203,Richardets 3,PetiteCouronne,4859.0,80.4,14.5
+781580105,Pré Vert,GrandeCouronne,7570.5,85.3,14.5
+783050000,Herbeville (commune non irisée),GrandeCouronne,4343.0,93.6,14.3
+950180601,Chateaubriand,GrandeCouronne,9507.0,85.8,14.3
+751093408,Chaussée d'Antin 8,Paris,11033.0,66.0,13.9
+783220103,HEC-Domaine Saint-Marc,GrandeCouronne,6896.5,80.6,13.4
+751155818,Necker 18,Paris,10095.0,82.8,13.3
+955390103,Nord de Saint-Brice,GrandeCouronne,6799.5,86.0,12.9
+783720108,Forêt de Marly,GrandeCouronne,6199.0,81.4,12.9
+751093409,Chaussée d'Antin 9,Paris,10956.5,76.4,9.6
+751093401,Chaussée d'Antin 1,Paris,7672.0,79.2,7.9
+751093406,Chaussée d'Antin 6,Paris,12286.0,79.6,7.3

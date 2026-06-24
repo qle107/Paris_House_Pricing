@@ -104,7 +104,11 @@ def assemble_features(min_population: int = 0) -> pd.DataFrame:
     if not rents.empty:
         col = next((c for c in rents.columns if "loypredm2" in c or "loyer" in c), None)
         if col:
-            f = f.merge(rents[["code_commune", col]].rename(columns={col: "loyer_m2"}), on="code_commune", how="left")
+            r = rents[["code_commune", col]].rename(columns={col: "loyer_m2"}).copy()
+            # Source stores rent with European comma decimals ("18,00") -> parse to float.
+            r["loyer_m2"] = pd.to_numeric(r["loyer_m2"].astype(str).str.replace(",", ".", regex=False),
+                                          errors="coerce")
+            f = f.merge(r, on="code_commune", how="left")
 
     risk = store.read_table("risk")
     if not risk.empty and "n_risques" in risk:

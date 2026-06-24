@@ -15,8 +15,17 @@ from rei.scoring.indicators import percentile_score
 log = get_logger(__name__)
 CRS_METRIC = 2154  # Lambert-93 (metres) for areas / spatial joins
 
-INSTITUTIONAL_W = {"appreciation": 0.30, "rental": 0.25, "value": 0.20, "development": 0.15, "risk": 0.10}
-ALPHA_W = {"appreciation": 0.35, "value": 0.25, "transit": 0.20, "development": 0.10, "rental": 0.10}
+# Recalibrated for IDF-wide coverage (see RANKING_METHODOLOGY_REVIEW.md). Value
+# enters only trap-adjusted; toxicity / illiquidity act through the trap score and
+# the quality gates rather than as positive weights; the dead "transit" term is gone.
+INSTITUTIONAL_W = {"appreciation": 0.28, "rental": 0.22, "risk": 0.15,
+                   "value_adj": 0.15, "development": 0.10, "liquidity": 0.10}
+ALPHA_W = {"appreciation": 0.40, "rental": 0.20, "development": 0.15,
+           "value_adj": 0.15, "liquidity": 0.10}
+
+# Value-trap blend (0 = clean, 100 = severe): cheap *because* fundamentals are weak.
+TRAP_W = {"weak_appreciation": 0.30, "weak_rental": 0.25, "high_toxicity": 0.20,
+          "illiquidity": 0.15, "weak_risk": 0.10}
 
 
 def _discount_to_score(pct: pd.Series) -> pd.Series:
@@ -105,23 +114,67 @@ def _wavg(parts: dict[str, tuple[pd.Series, float]], index) -> tuple[pd.Series, 
     return score.round(1), (wsum / full_w).round(2)
 
 
+def value_trap_score(appreciation, rental, toxicity, liquidity, risk) -> pd.Series:
+    """0 = no trap, 100 = severe. High when a location is cheap but its fundamentals
+    (growth, demand, liquidity) are weak or its toxicity is high. Inputs are 0-100
+    sub-scores. (Population / employment trends would strengthen this but the census
+    feeds are single-year today — see RANKING_METHODOLOGY_REVIEW.md.)"""
+    parts = {
+        "weak_appreciation": 100 - appreciation,
+        "weak_rental":       100 - rental,
+        "high_toxicity":     toxicity,
+        "illiquidity":       100 - liquidity,
+        "weak_risk":         100 - risk,
+    }
+    return sum(parts[k] * w for k, w in TRAP_W.items()).round(1)
+
+
+def apply_gates(score, appreciation, rental, toxicity, risk, liquidity, trap) -> pd.Series:
+    """Stop one strong factor (e.g. a large discount) promoting a structurally weak
+    location: hard caps, then multiplicative penalties, then a value-trap haircut."""
+    s = pd.to_numeric(score, errors="coerce")
+    s = s.where(appreciation >= 40, np.minimum(s, 55.0))   # weak growth cannot rank high
+    s = s.where(rental >= 40, np.minimum(s, 55.0))         # weak demand cannot rank high
+    s = s.mask(toxicity > 70, s * 0.85)
+    s = s.mask(risk < 30, s * 0.85)
+    s = s.mask(liquidity < 15, s * 0.85)                   # extremely thin market
+    s = s * (1 - 0.40 * trap / 100)
+    return s.round(1)
+
+
 def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
-    """Institutional sub-scores and composites per iris_code."""
+    """Institutional sub-scores, value-trap score and gated composites per iris_code."""
     f = base.copy()
     f["iris_code"] = f["iris_code"].astype(str)
     mkt = _iris_market(iris_geom.assign(iris_code=iris_geom["iris_code"].astype(str)))
     cov = _iris_coverage(iris_geom.assign(iris_code=iris_geom["iris_code"].astype(str)))
     f = f.merge(mkt, on="iris_code", how="left").merge(cov, on="iris_code", how="left")
 
+    # Forward signal: wire in the trained price-growth forecast (commune level).
+    if "code_commune" in f.columns:
+        fc = store.read_table("ml_forecast")
+        if fc is not None and not fc.empty and "expected_price_cagr" in fc.columns:
+            fc = fc[["code_commune", "expected_price_cagr"]].copy()
+            fc["code_commune"] = fc["code_commune"].astype(str)
+            f = f.merge(fc, on="code_commune", how="left")
+
     idx = f.index
     liq = f["n_sales"] if "n_sales" in f else f.get("liquidity")
     mom = f.get("price_cagr")
     supply = f.get("zoning_share_au")
+    fwd = f.get("expected_price_cagr")
+    rent = pd.to_numeric(f.get("loyer_m2"), errors="coerce") if "loyer_m2" in f else None
 
+    liq_pct = percentile_score(liq, 1) if liq is not None else pd.Series(50.0, index=idx)
+
+    # VALUE: hedonic discount (still location-blind — see refactor note) used only trap-adjusted.
     value = _discount_to_score(f["discount_pct"]) if "discount_pct" in f else None
     development = percentile_score(1 - f["coverage_ratio"], 1) if "coverage_ratio" in f and f["coverage_ratio"].notna().any() else None
+
+    # APPRECIATION: forward forecast + historical momentum + supply (renormalised over present terms).
     appreciation, appr_cov = _wavg({
-        "momentum": (percentile_score(mom, 1) if mom is not None and mom.notna().any() else None, 0.20 + 0.15),
+        "forward":  (percentile_score(fwd, 1) if fwd is not None and fwd.notna().any() else None, 0.45),
+        "momentum": (percentile_score(mom, 1) if mom is not None and mom.notna().any() else None, 0.40),
         "supply":   (percentile_score(supply, 1) if supply is not None and supply.notna().any() else None, 0.15),
     }, idx)
 
@@ -130,8 +183,10 @@ def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
         "liquidity":  (percentile_score(liq, 1) if liq is not None and liq.notna().any() else None, 0.15),
     }, idx)
 
+    # RENTAL: real rent level + transaction liquidity (was liquidity only).
     rental, rental_cov = _wavg({
-        "liquidity": (percentile_score(liq, 1) if liq is not None and liq.notna().any() else None, 0.10),
+        "rent":      (percentile_score(rent, 1) if rent is not None and rent.notna().any() else None, 0.60),
+        "liquidity": (percentile_score(liq, 1) if liq is not None and liq.notna().any() else None, 0.40),
     }, idx)
 
     toxicity, tox_cov = _wavg({
@@ -139,31 +194,35 @@ def compute_institutional(iris_geom, base: pd.DataFrame) -> pd.DataFrame:
         "weak_liquidity": (percentile_score(liq, -1) if liq is not None and liq.notna().any() else None, 0.20),
     }, idx)
 
+    # Gate / trap inputs: neutral-fill so gating is deterministic.
+    g_appr, g_rent, g_tox = appreciation.fillna(50.0), rental.fillna(50.0), toxicity.fillna(50.0)
+    g_risk, g_liq = risk.fillna(50.0), liq_pct.fillna(50.0)
+    trap = value_trap_score(g_appr, g_rent, g_tox, g_liq, g_risk)
+    value_adj = (value * (1 - 0.85 * trap / 100)).round(1) if value is not None else None
+
     out = pd.DataFrame({"iris_code": f["iris_code"]})
     out["inst_value"] = None if value is None else value.round(1)
+    out["inst_value_adj"] = value_adj
     out["inst_development"] = development
     out["inst_appreciation"] = appreciation
     out["inst_risk"] = risk
     out["inst_rental"] = rental
     out["inst_toxicity"] = toxicity
+    out["value_trap_score"] = trap
     out["expected_prix_m2"] = f.get("expected_prix_m2")
     out["observed_prix_m2"] = f.get("observed_prix_m2")
     out["discount_pct"] = f.get("discount_pct")
     out["coverage_ratio"] = f.get("coverage_ratio")
 
-    comp = {"appreciation": out["inst_appreciation"], "rental": out["inst_rental"],
-            "value": out["inst_value"], "development": out["inst_development"], "risk": out["inst_risk"]}
-    inst, inst_cov = _wavg({k: (comp[k], INSTITUTIONAL_W[k]) for k in INSTITUTIONAL_W}, idx)
-    alpha, alpha_cov = _wavg({
-        "appreciation": (out["inst_appreciation"], ALPHA_W["appreciation"]),
-        "value": (out["inst_value"], ALPHA_W["value"]),
-        "transit": (None, ALPHA_W["transit"]),
-        "development": (out["inst_development"], ALPHA_W["development"]),
-        "rental": (out["inst_rental"], ALPHA_W["rental"]),
-    }, idx)
-    out["institutional_score"] = inst
-    out["institutional_rank"] = inst.rank(ascending=False, method="min").astype("Int64")
-    out["alpha_score"] = alpha
+    comp = {"appreciation": g_appr, "rental": g_rent, "risk": g_risk,
+            "value_adj": value_adj, "development": development, "liquidity": g_liq}
+    inst_base, inst_cov = _wavg({k: (comp[k], INSTITUTIONAL_W[k]) for k in INSTITUTIONAL_W}, idx)
+    out["institutional_score"] = apply_gates(inst_base, g_appr, g_rent, g_tox, g_risk, g_liq, trap)
+    out["institutional_rank"] = out["institutional_score"].rank(ascending=False, method="min").astype("Int64")
+
+    alpha_base, _ = _wavg({k: (comp[k], ALPHA_W[k]) for k in ALPHA_W}, idx)
+    out["alpha_score"] = apply_gates(alpha_base, g_appr, g_rent, g_tox, g_risk, g_liq, trap)
     out["data_coverage"] = inst_cov
-    log.info("Institutional scoring: %d IRIS | mean data_coverage=%.2f", len(out), float(inst_cov.mean()))
+    log.info("Institutional scoring (trap-aware): %d IRIS | mean trap=%.1f | mean coverage=%.2f",
+             len(out), float(trap.mean()), float(inst_cov.mean()))
     return out
