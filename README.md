@@ -118,11 +118,13 @@ One caveat: French portals only search by commune and they blur exact addresses,
 
 Drop your PNGs into `docs/screenshots/` using the filenames below and they'll render here.
 
-| IRIS attractiveness choropleth | Colour-by metric + top-10 leaderboard |
-|:--:|:--:|
-| ![img.png](docs/screenshots/img.png) | ![img_1.png](docs/screenshots/img_1.png) |
-| IRIS detail panel (institutional breakdown) | Selected-zone highlight |
-| ![img_2.png](docs/screenshots/img_2.png) | ![img_3.png](docs/screenshots/img_3.png) |
+|       IRIS attractiveness choropleth        |  Colour-by metric + top-10 leaderboard   |
+|:-------------------------------------------:|:----------------------------------------:|
+|    ![img.png](docs/screenshots/img.png)     | ![img_1.png](docs/screenshots/img_1.png) |
+| IRIS detail panel (institutional breakdown) |         Selected-zone highlight          |
+|  ![img_2.png](docs/screenshots/img_2.png)   | ![img_3.png](docs/screenshots/img_3.png) |
+|              Listing properties               |           Hover on the listing           |
+|  ![img.png](docs/screenshots/listing_img.png)   | ![img.png](docs/screenshots/listing_details.png)|
 
 <!-- Tip: 1600px-wide PNGs look best. Captions above can be edited freely. -->
 
