@@ -66,6 +66,13 @@ def export_geojson(out_dir: str | Path) -> list[str]:
         if _write(up, out / "parcels.geojson"):
             written.append("parcels")
 
+    listings = store.read_table("listings")
+    if listings is not None and not listings.empty and {"lat", "lon"} <= set(listings.columns):
+        pts = gpd.GeoDataFrame(listings.copy(),
+                               geometry=gpd.points_from_xy(listings["lon"], listings["lat"]), crs=4326)
+        if _write(pts, out / "listings.geojson"):
+            written.append("listings")
+
     for layer, fname in [("zoning", "zoning"), ("transit_stops", "transit"),
                          ("transport_projects", "projects")]:
         if _write(store.read_geo(layer), out / f"{fname}.geojson"):

@@ -32,6 +32,7 @@
   <label><input type="checkbox" id="t-transit"> Transit stops</label>
   <label><input type="checkbox" id="t-zoning"> PLU zoning</label>
   <label><input type="checkbox" id="t-parcels"> Parcel buildable-upside</label>
+  <label><input type="checkbox" id="t-listings" checked> Property listings</label>
   <label style="margin-top:8px;display:block">Colour IRIS by:
     <select id="iris-metric" style="width:100%;margin-top:3px">
       <option value="score_total">Attractiveness (base)</option>
@@ -63,7 +64,9 @@
     <span class="swatch" style="background:#74c476"></span>10% &nbsp;
     <span class="swatch" style="background:#c7e9c0"></span>20%<br>
     <span class="swatch" style="background:#e6550d"></span>GPE / transport project<br>
-    <span class="swatch" style="background:#3182bd"></span>Transit stop</div>
+    <span class="swatch" style="background:#3182bd"></span>Transit stop<br>
+    <span class="swatch" style="background:#1d91c0"></span>Listing (sale) &nbsp;
+    <span class="swatch" style="background:#6a51a3"></span>rent</div>
 </div>
 <div id="ranking" class="panel">
   <strong id="rank-title">Top 10</strong>
@@ -108,6 +111,7 @@ function panForPopup(e){            // pan a low click into the upper area so a 
 }
 
 let irisFeatures=[];
+let listingsFeatures=[];
 let selectedIris=null;
 const METRICS={
   score_total:        {t:"Attractiveness",    d:"Weighted blend of six components (0–100)."},
@@ -217,13 +221,14 @@ function refreshMetric(){
 
 map.on("load", async () => {
   const present={};
-  for (const f of ["iris","communes","parcels","zoning","transit","projects"]) present[f]=await exists(`./${f}.geojson`);
+  for (const f of ["iris","communes","parcels","zoning","transit","projects","listings"]) present[f]=await exists(`./${f}.geojson`);
   if(present.iris)     map.addSource("iris",{type:"geojson",data:"./iris.geojson",generateId:true});
   if(present.communes) map.addSource("communes",{type:"geojson",data:"./communes.geojson"});
   if(present.parcels)  map.addSource("parcels",{type:"geojson",data:"./parcels.geojson"});
   if(present.zoning)   map.addSource("zoning",{type:"geojson",data:"./zoning.geojson"});
   if(present.transit)  map.addSource("transit",{type:"geojson",data:"./transit.geojson"});
   if(present.projects) map.addSource("projects",{type:"geojson",data:"./projects.geojson"});
+  if(present.listings) map.addSource("listings",{type:"geojson",data:"./listings.geojson"});
 
   if(present.iris){
     map.addLayer({id:"iris-fill",type:"fill",source:"iris",paint:{"fill-color":irisColor,
@@ -241,6 +246,7 @@ map.on("load", async () => {
   if(present.parcels)  map.addLayer({id:"parcels-fill",type:"fill",source:"parcels",layout:{visibility:"none"},paint:{"fill-color":upsideColor,"fill-opacity":0.75,"fill-outline-color":"#7a0177"}});
   if(present.transit)  map.addLayer({id:"transit-pt",type:"circle",source:"transit",layout:{visibility:"none"},paint:{"circle-radius":3,"circle-color":"#3182bd","circle-stroke-width":0.5,"circle-stroke-color":"#fff"}});
   if(present.projects) map.addLayer({id:"projects-pt",type:"circle",source:"projects",paint:{"circle-radius":6,"circle-color":"#e6550d","circle-stroke-width":1.5,"circle-stroke-color":"#fff"}});
+  if(present.listings) map.addLayer({id:"listings-pt",type:"circle",source:"listings",paint:{"circle-radius":5,"circle-color":["match",["get","transaction"],"rent","#6a51a3","#1d91c0"],"circle-stroke-width":1,"circle-stroke-color":"#fff","circle-opacity":0.9}});
   if(present.iris) map.addLayer({id:"iris-highlight",type:"line",source:"iris",
     filter:["==",["to-string",["get","iris_code"]],"__none__"],
     paint:{"line-color":"#ff00d4","line-width":4,"line-blur":0.2,"line-opacity":1}});
@@ -270,6 +276,7 @@ map.on("load", async () => {
     document.getElementById("rank-list").innerHTML='<div class="muted">IRIS not scored yet — re-run with --score-level iris.</div>';
     console.warn("IRIS: ./iris.geojson not found — run with --score-level iris.");
   }
+  if(present.listings){ try{ const lj=await (await fetch("./listings.geojson")).json(); listingsFeatures=lj.features||[]; }catch(e){ console.warn("listings load failed", e); } }
   wireHover(); wireToggles(); wireAnalyst();
 });
 
@@ -286,7 +293,7 @@ function wireHover(){
 function wireToggles(){
   const pairs=[["t-iris",["iris-fill","iris-line"]],["t-hotspots",["hotspots"]],
     ["t-communes",["communes-fill","communes-line"]],["t-projects",["projects-pt"]],
-    ["t-transit",["transit-pt"]],["t-zoning",["zoning-fill"]],["t-parcels",["parcels-fill"]]];
+    ["t-transit",["transit-pt"]],["t-zoning",["zoning-fill"]],["t-parcels",["parcels-fill"]],["t-listings",["listings-pt"]]];
   for(const [id,ls] of pairs){const el=document.getElementById(id); if(!el) continue;
     el.addEventListener("change",()=>{const v=el.checked?"visible":"none"; ls.forEach(L=>map.getLayer(L)&&map.setLayoutProperty(L,"visibility",v));});}
 }
@@ -316,6 +323,22 @@ function instBlock(p){
     `<tr><td>Discount</td><td><b>${disc}</b></td></tr>`+
     `<tr><td>Outlook</td><td>appr ${outlook(p.inst_appreciation)} &middot; rent ${outlook(p.inst_rental)}</td></tr>`;
 }
+function listingsBlock(irisCode, communeCode){
+  if(!listingsFeatures.length) return "";
+  const inIris=listingsFeatures.filter(f=>String((f.properties||{}).iris_code)===String(irisCode));
+  const inCom =listingsFeatures.filter(f=>String((f.properties||{}).code_commune)===String(communeCode));
+  if(!inIris.length && !inCom.length) return `<tr><td colspan="2" class="muted" style="padding-top:6px">No listings fetched for this area.</td></tr>`;
+  const base=inIris.length?inIris:inCom;
+  const rows=base.slice(0,12).map(f=>{const q=f.properties; const rent=q.transaction==="rent";
+    const price=rent?(fmtEur(q.price)+"/mo"):fmtEur(q.price);
+    const link=q.url?` <a href="${q.url}" target="_blank" rel="noopener noreferrer">↗</a>`:"";
+    return `<tr><td>${q.type_local||"?"}${q.surface!=null?" "+Math.round(q.surface)+"m²":""}</td><td>${price}${link}</td></tr>`;}).join("");
+  const head=inIris.length
+    ? `<b>Listings in this IRIS (${inIris.length})</b>`+(inCom.length>inIris.length?` <span class="muted">&middot; ${inCom.length} in commune</span>`:"")
+    : `<b>Listings in this commune (${inCom.length})</b> <span class="muted">&middot; none pinned to this exact IRIS</span>`;
+  const more=base.length>12?`<tr><td colspan="2" class="muted">+${base.length-12} more</td></tr>`:"";
+  return `<tr><td colspan="2" style="padding-top:6px">${head}</td></tr>`+rows+more;
+}
 map.on("click","iris-fill",(e)=>{const p=e.features[0].properties;
   setSelectedIris(p); panForPopup(e);
   const tier=(+p.hotspot_tier>0)?`<tr><td>Hotspot</td><td><b>top ${p.hotspot_tier}%</b></td></tr>`:"";
@@ -324,7 +347,7 @@ map.on("click","iris-fill",(e)=>{const p=e.features[0].properties;
     `<tr><td>IRIS</td><td>${p.iris_code}</td></tr>`+
     `<tr><td>Commune</td><td>${p.code_commune}</td></tr>`+
     `<tr><td>Attractiveness</td><td><b>${p.score_total!=null?(+p.score_total).toFixed(1):"n/a"}</b> &middot; #${p.rank??"n/a"}</td></tr>`+
-    `${tier}${instBlock(p)}${forecastBlock(p)}</table>`+
+    `${tier}${instBlock(p)}${forecastBlock(p)}${listingsBlock(p.iris_code, p.code_commune)}</table>`+
     `<div class="muted" style="margin-top:5px">🧠 Open <b>AI Analyst</b> for a copy-ready prompt on this zone.</div>`).addTo(map);});
 
 map.on("click","communes-fill",(e)=>{const p=e.features[0].properties; panForPopup(e);
@@ -334,5 +357,27 @@ map.on("click","projects-pt",(e)=>{const p=e.features[0].properties;
   new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<h3>${p.project||"Project"}</h3><table class="kv"><tr><td>Line</td><td>${p.line??""}</td></tr><tr><td>Mode</td><td>${p.mode??""}</td></tr><tr><td>Opening</td><td>${p.opening??""}</td></tr><tr><td>Status</td><td>${p.status??""}</td></tr></table>`).addTo(map);});
 map.on("click","parcels-fill",(e)=>{const p=e.features[0].properties;
   new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<h3>Parcel ${p.id_parcelle||""}</h3><table class="kv"><tr><td>Upside</td><td><b>${p.upside_m2!=null?Math.round(p.upside_m2):"n/a"} m²</b></td></tr><tr><td>Zone</td><td>${p.zone_family??""}</td></tr></table>`).addTo(map);});
+// Listings show on HOVER (~250ms delay) as a transient tooltip — never stacks on the IRIS stats popup.
+const listingPopup=new maplibregl.Popup({closeButton:false,closeOnClick:false,maxWidth:"250px",anchor:"bottom",offset:10});
+let _lShow=null,_lHide=null,_lId=null;
+function listingHTML(p){const rent=p.transaction==="rent";
+  const price=rent?(fmtEur(p.price)+"/mo"):fmtEur(p.price);
+  const pm=p.prix_m2!=null?(rent?Math.round(p.prix_m2)+" €/m²/mo":fmtEur(p.prix_m2)+"/m²"):"n/a";
+  const link=p.url?`<a href="${p.url}" target="_blank" rel="noopener noreferrer">View listing ↗</a>`:"";
+  return `<h3>${p.type_local||"Listing"} · ${rent?"rent":"sale"}</h3><table class="kv">`+
+    `<tr><td>Price</td><td><b>${price}</b></td></tr>`+
+    `<tr><td>€/m²</td><td>${pm}</td></tr>`+
+    `<tr><td>Surface</td><td>${p.surface!=null?Math.round(p.surface)+" m²":"n/a"}${p.rooms!=null?" · "+Math.round(p.rooms)+"p":""}</td></tr>`+
+    `<tr><td>Area</td><td>${p.code_commune||""} · IRIS ${p.iris_code||"n/a"}</td></tr></table>`+
+    `<div style="margin-top:4px">${link}</div>`;}
+function _listingShow(lngLat,html){ listingPopup.setLngLat(lngLat).setHTML(html).addTo(map);
+  const el=listingPopup.getElement(); if(el){ el.onmouseenter=()=>clearTimeout(_lHide); el.onmouseleave=()=>listingPopup.remove(); } }
+map.on("mousemove","listings-pt",(e)=>{ if(!e.features.length) return;
+  map.getCanvas().style.cursor="pointer"; clearTimeout(_lHide);
+  const f=e.features[0], id=f.properties.listing_id; if(id===_lId) return;
+  _lId=id; clearTimeout(_lShow); const lngLat=e.lngLat, html=listingHTML(f.properties);
+  _lShow=setTimeout(()=>_listingShow(lngLat,html), 250); });
+map.on("mouseleave","listings-pt",()=>{ map.getCanvas().style.cursor="";
+  clearTimeout(_lShow); _lId=null; _lHide=setTimeout(()=>listingPopup.remove(), 350); });
 </script>
 </body></html>

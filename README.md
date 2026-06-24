@@ -12,7 +12,7 @@ Factors with no data gfeed are weighted out and renormalised rather than faked, 
 
 ## Contents
 
-[Quickstart](#quickstart-no-database) · [Scoring model](#scoring-model) · [Price forecast](#price-forecast) · [The map](#the-map) · [Screenshots](#screenshots) · [Architecture](#architecture) · [Data sources](#data-sources) · [Production (Docker + PostGIS)](#production-docker--postgis) · [Tests and development](#tests-and-development) · [Roadmap](#roadmap)
+[Quickstart](#quickstart-no-database) · [Scoring model](#scoring-model) · [Price forecast](#price-forecast) · [The map](#the-map) · [Property listings](#property-listings) · [Screenshots](#screenshots) · [Architecture](#architecture) · [Data sources](#data-sources) · [Production (Docker + PostGIS)](#production-docker--postgis) · [Tests and development](#tests-and-development) · [Roadmap](#roadmap)
 
 ## Quickstart (no database)
 
@@ -29,6 +29,7 @@ python main.py --score-level commune     # commune-only (faster, no IRIS layer)
 python main.py --communes 75056,93066,93070
 python main.py --with-parcels            # add cadastre + zoning + parcel upside
 python main.py --with-transit            # also download GTFS (large)
+python main.py --with-listings           # overlay live for-sale / rent listings on the map
 python main.py --skip-ingest             # reuse files already in ./data
 python main.py --no-serve                # build files, don't open the server
 ```
@@ -49,13 +50,16 @@ Institutional scores (`rei/scoring/institutional.py`) answer a narrower question
 | Development | Can I create value? Underbuilt land (footprint coverage)* | data-backed (cadastre + buildings) |
 | Appreciation | Will it be worth more later? Price momentum + supply constraint | partial |
 | Risk | What can go wrong? Price volatility + liquidity (higher = safer) | partial |
-| Rental | Can I rent easily and raise rents? Liquidity (+ density) | stub-heavy |
+| Rental | Can I rent easily and raise rents? Real rent level + transaction liquidity | data-backed (ANIL rents + DVF) |
 | Toxicity | What to avoid? Falling price + weak liquidity (0 = good, 100 = avoid) | partial |
+| Value-trap | Cheap for good reasons, or a trap? Weak appreciation, rental, liquidity, and toxicity combined (0 = clean, 100 = severe) | derived |
 
 ```
-Institutional = 0.30·Appreciation + 0.25·Rental + 0.20·Value + 0.15·Development + 0.10·Risk
-Alpha         = 0.35·Appreciation + 0.25·Value + 0.20·Transit + 0.10·Development + 0.10·Rental
+Institutional = 0.28·Appreciation + 0.22·Rental + 0.15·Risk + 0.15·Value(adj) + 0.10·Development + 0.10·Liquidity
+Alpha         = 0.40·Appreciation + 0.20·Rental + 0.15·Development + 0.15·Value(adj) + 0.10·Liquidity
 ```
+
+Both composites are trap-aware. Value counts only after a value-trap penalty, and quality gates cap any area whose appreciation or rental demand is weak, so a large discount on its own can no longer push a structurally weak IRIS to the top. The recalibration, its before/after rankings, and the reasoning behind them are in `RANKING_METHODOLOGY_REVIEW.md`.
 
 Weights are renormalised over the components that have data on a given run, so missing feeds never inflate a score. The per-IRIS `data_coverage` field reports how much of the weight was real.
 
@@ -94,7 +98,21 @@ The forecast is commune-level, so every IRIS in a commune shows that commune's f
 
 Served from `./webmap/` (source: `dashboards/map/index_files.html`).
 
-You can switch the choropleth between Attractiveness, Institutional, Alpha, Value, Appreciation, Development, and Risk; the legend and explainer update with a plain-language description of the selected metric. A top-10 leaderboard in the bottom-right lists the best IRIS for whatever metric you pick, and clicking a row zooms to that neighbourhood and draws a magenta highlight outline around it. Clicking any zone opens a detail panel with its full breakdown: every sub-score, observed vs expected €/m², discount %, outlook, and how much of the score is data-backed. Layers include the IRIS choropleth, hotspot tiers, commune fallback, PLU zoning, transit and GPE projects, and parcel buildable-upside.
+You can colour the choropleth by Attractiveness, Institutional, Acquisition Alpha, Best buy (trap-adjusted value), Expected growth (the price forecast), Appreciation, Development, or Risk; the legend and explainer update with a plain-language description of each. An Area scope selector limits both the map and the leaderboard to all of Île-de-France, Paris only, or outside Paris. A top-10 leaderboard in the bottom-right lists the best IRIS for the chosen metric, and clicking a row zooms to that neighbourhood and outlines it in magenta. Clicking any zone opens a detail panel with its full breakdown: every sub-score, observed vs expected €/m², discount, outlook, the price forecast, and the listings inside that IRIS. Layers include the IRIS choropleth, hotspot tiers, commune fallback, PLU zoning, transit and GPE projects, parcel buildable-upside, and property listings. Hover a listing point to read its price, size, and a link to the original ad.
+
+## Property listings
+
+The map can overlay what is currently for sale or for rent, one point per advert, each tagged to the IRIS it falls in. Hover a point to read its price, €/m², size, and a link to the source listing. Click an IRIS to list the adverts inside it, with the commune total for context.
+
+Listings come from a pluggable source. The default is a small bundled sample so the map runs offline. To pull real adverts, the project ships a self-operated reader for Bien'ici's public map API:
+
+```bash
+python main.py --with-listings --skip-ingest    # source and scope set via environment
+```
+
+On Windows the easy path is to double-click `fetch_listings.bat`: it fetches all of Paris (the 20 arrondissements), saves the result, and opens the map. Scope and volume are set with environment variables: `REI_LISTINGS_SCOPE` (`paris` or `all`), `REI_LISTINGS_LOCATIONS` (specific communes), `REI_LISTINGS_LIMIT`, and `REI_LISTINGS_RPS`. Every run also writes a dated copy to `data/listings_snapshots/`, so the data builds up over time for price-change and time-on-market analysis.
+
+One caveat: French portals only search by commune and they blur exact addresses, so a point can land in a neighbouring IRIS. Read listings at the IRIS or commune level rather than pin by pin. The sources, the legal position on scraping, and the trade-offs are written up in `LISTINGS_FEASIBILITY.md`.
 
 ## Screenshots
 
@@ -174,6 +192,7 @@ database/        DDL, matviews, indexes
 airflow/dags/    schedules
 docker/          compose stack
 dashboards/map/  MapLibre map (index_files.html)
+analysis/        one-off analysis scripts (ranking review)
 docs/            strategy notes · screenshots
 tests/
 ```
@@ -190,5 +209,4 @@ Phase 1 (data-backed scores from existing feeds) is in place. Phase 2 wires the 
 | Development | Building heights for true FAR / underbuilt potential |
 | Supply | Sit@del permits pipeline (DiDo) into the supply signal |
 
-See `IRIS_AUDIT.md` for the IRIS architecture audit and root-cause notes.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+Background reading: `RANKING_METHODOLOGY_REVIEW.md` (the institutional and alpha recalibration and the value-trap framework), `LISTINGS_FEASIBILITY.md` (live-listing sources and the scraping question), and `docs/` (architecture and strategy).

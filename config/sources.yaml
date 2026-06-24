@@ -124,6 +124,17 @@ sources:
     variables: [segment_marche, prix_m2, filtre_qualite]
     score: 8
 
+  listings:
+    name: "Property listings (for-sale / for-rent) - pluggable source"
+    collector: rei.ingestion.listings.ListingsCollector
+    tier: scaffold        # ships a SAMPLE provider; bring your own API/scraper (see LISTINGS_FEASIBILITY.md)
+    portal: "see LISTINGS_FEASIBILITY.md"
+    auth: none            # REI_LISTINGS_PROVIDER=sample|scraper (+ REI_LISTINGS_SCRAPE_URL for the scraper template)
+    cadence: continuous
+    granularity: address  # geocoded (BAN) then assigned to IRIS by point-in-polygon
+    variables: [url, transaction, type_local, price, surface, prix_m2, lat, lon]
+    score: 8
+
   rental_observatoires:
     name: "Observatoires Locaux des Loyers (OLL) + carte des loyers ANIL"
     collector: rei.ingestion.rental.RentObservatoryCollector

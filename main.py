@@ -57,7 +57,7 @@ def _choose_horizon(years, requested, min_base_years=3):
 
 def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, score_level,
                  with_forecast=False, forecast_horizon=5, dvf_years=None,
-                 refresh=False, retrain=False):
+                 refresh=False, retrain=False, with_listings=False):
     from rei.api.export import export_geojson
     from rei.common.store import geo_exists, table_exists, using_files
     from rei.scoring.files_engine import score
@@ -144,6 +144,10 @@ def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, sco
         except Exception as exc:
             print(f"  [warn] forecast: {exc}")
 
+    if with_listings:
+        print("== Ingesting property listings (provider=%s) ==" % os.environ.get("REI_LISTINGS_PROVIDER", "sample"))
+        _run("listings")
+
     print("== Exporting GeoJSON for the map ==")
     webmap = ROOT / "webmap"
     webmap.mkdir(exist_ok=True)
@@ -181,6 +185,8 @@ def main():
                     help="comma-separated DVF years to ingest, e.g. 2020,2021,2022,2023,2024,2025 (default: last 2)")
     ap.add_argument("--refresh", action="store_true", help="re-fetch sources even if local data already exists")
     ap.add_argument("--retrain", action="store_true", help="refit the forecast model even if a saved one exists")
+    ap.add_argument("--with-listings", action="store_true",
+                    help="ingest property listings as map points (sample provider by default; see LISTINGS_FEASIBILITY.md)")
     ap.add_argument("--no-serve", action="store_true", help="build files only, don't serve")
     ap.add_argument("--port", type=int, default=8000)
     a = ap.parse_args()
@@ -191,7 +197,7 @@ def main():
     dvf_years = [int(y) for y in a.dvf_years.split(",")] if a.dvf_years else None
     webmap, written = run_pipeline(communes, a.skip_ingest, a.profile, a.with_transit, a.with_parcels,
                                    a.score_level, a.with_forecast, a.forecast_horizon, dvf_years,
-                                   a.refresh, a.retrain)
+                                   a.refresh, a.retrain, a.with_listings)
     print(f"\nWrote map layers {written} -> {webmap}")
     print(f"Scores CSV -> {Path(os.environ['REI_DATA_DIR']) / 'tables' / 'commune_score.csv'}")
     if not a.no_serve:

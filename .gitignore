@@ -18,6 +18,9 @@ service-account*.json
 *.parquet
 *.geojson
 
+# ── Generated analysis outputs (re-created by analysis/ranking_review.py) ─
+/analysis/*.csv
+
 # ── Heavy artifacts: ML models, archives, raw geo ────────────────────
 *.joblib
 *.pkl
