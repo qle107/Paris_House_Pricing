@@ -2,9 +2,9 @@
 REM ============================================================
 REM  Fetch REAL property listings from Bien'ici onto the map.
 REM  Just double-click this file - no typing needed.
-REM  It pulls listings for ALL of PARIS (the 20 arrondissements),
-REM  saves a dated snapshot, and opens the map. Then click any
-REM  IRIS zone to see the listings inside it.
+REM  It pulls ALL listings for ALL of PARIS (the 20 arrondissements),
+REM  both for-sale AND for-rent, saves a dated snapshot, and opens the
+REM  map. Then click any IRIS zone to see the listings inside it.
 REM
 REM  Want a different area? Edit REI_LISTINGS_SCOPE below:
 REM     paris   = all 20 Paris arrondissements (default)
@@ -17,13 +17,17 @@ cd /d "%~dp0"
 
 set REI_LISTINGS_PROVIDER=bienici
 set REI_LISTINGS_SCOPE=paris
-set REI_LISTINGS_LIMIT=2000
-set REI_LISTINGS_PER_COMMUNE=100
-set REI_LISTINGS_RPS=0.5
+set REI_LISTINGS_TRANSACTION=both
+REM  Caps set high so "full Paris" is not truncated. Bien'ici hard-caps any one
+REM  search at ~2400 ads (100 pages), so PER_COMMUNE above that just means
+REM  "take everything available per arrondissement"; LIMIT is the buy+rent total.
+set REI_LISTINGS_LIMIT=60000
+set REI_LISTINGS_PER_COMMUNE=3000
+set REI_LISTINGS_RPS=1.0
 
 echo.
-echo Fetching Bien'ici listings for ALL of Paris (20 arrondissements)...
-echo This can take a few minutes - please wait.
+echo Fetching ALL Bien'ici listings for Paris (20 arrondissements, sale + rent)...
+echo This pulls every available ad and takes about 5-10 minutes - please wait.
 echo.
 
 if exist ".venv\Scripts\python.exe" (

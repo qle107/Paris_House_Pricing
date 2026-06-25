@@ -89,7 +89,7 @@ class ScraperProvider(ListingsProvider):
 
 class BieniciProvider(ListingsProvider):
     """Self-operated reader for Bien'ici's public map JSON API, with rate-limited
-    LAZY pagination (24/page, stop at `limit`, polite rps). OPT-IN only
+    LAZY pagination (100/page, stop at `limit`, polite rps). OPT-IN only
     (FREI_LISTINGS_PROVIDER=bienici).
 
     ⚠️  Bien'ici listings are protected by its ToS and the EU sui-generis database
@@ -99,7 +99,7 @@ class BieniciProvider(ListingsProvider):
     coordinates (blurInfo) + ad URL + surface are added here.
 
     Config (env): REI_LISTINGS_LOCATIONS="saint-ouen-93400,paris-11e",
-    REI_LISTINGS_TRANSACTION=buy|rent, REI_LISTINGS_LIMIT=200, REI_LISTINGS_RPS=0.5.
+    REI_LISTINGS_TRANSACTION=buy|rent|both, REI_LISTINGS_LIMIT=200, REI_LISTINGS_RPS=0.5.
     Bien'ici caps a search at 100 pages (~2,500 ads) — scope by commune to get more.
     """
     name = "bienici"
@@ -114,14 +114,19 @@ class BieniciProvider(ListingsProvider):
     def __init__(self, rps: float | None = None):
         self.http = HttpClient(rps=rps if rps is not None else float(os.environ.get("REI_LISTINGS_RPS", "0.5")),
                                headers=self.HEADERS)
+        self._zcache: dict = {}
 
     def _zone_ids(self, location: str) -> list:
+        if location in self._zcache:          # one suggest call per location, reused across buy/rent
+            return self._zcache[location]
         data = self.http.get_json(self.SUGGEST, params={"q": location})
-        return data[0].get("zoneIds", []) if isinstance(data, list) and data else []
+        ids = data[0].get("zoneIds", []) if isinstance(data, list) and data else []
+        self._zcache[location] = ids
+        return ids
 
-    def _page(self, zone_ids, filter_type, property_type, page):
+    def _page(self, zone_ids, filter_type, property_type, page, size=100):
         import json
-        filters = {"size": 24, "from": (page - 1) * 24, "page": page, "onTheMarket": [True],
+        filters = {"size": size, "from": (page - 1) * size, "page": page, "onTheMarket": [True],
                    "filterType": filter_type, "propertyType": property_type,
                    "zoneIdsByTypes": {"zoneIds": zone_ids},
                    "sortBy": "publicationDate", "sortOrder": "desc"}
@@ -176,33 +181,42 @@ class BieniciProvider(ListingsProvider):
             return locs[:cap] if cap else locs
         return ["saint-ouen-93400"]
 
+    @staticmethod
+    def _transactions(transaction) -> list:
+        """buy | rent | both → the filterType(s) to fetch in one run."""
+        tx = (transaction or os.environ.get("REI_LISTINGS_TRANSACTION", "buy")).lower()
+        if tx in ("both", "all", "buy+rent", "buyrent"):
+            return ["buy", "rent"]
+        return ["rent" if tx in ("rent", "location") else "buy"]
+
     def fetch(self, locations=None, transaction=None, limit=None, max_pages=100, per_commune=None, **kwargs) -> pd.DataFrame:
         locations = locations or self._resolve_locations()
-        ft = (transaction or os.environ.get("REI_LISTINGS_TRANSACTION", "buy")).lower()
-        ft = "rent" if ft in ("rent", "location") else "buy"
+        fts = self._transactions(transaction)
         limit = int(limit or os.environ.get("REI_LISTINGS_LIMIT", "2000"))
         per_commune = int(per_commune or os.environ.get("REI_LISTINGS_PER_COMMUNE", "50"))
+        size = int(os.environ.get("REI_LISTINGS_PAGE_SIZE", "100"))   # larger page = fewer requests
         rows: list[dict] = []
-        for i, loc in enumerate(locations):
-            if len(rows) >= limit:
-                break
-            zone_ids = self._zone_ids(loc.strip())
-            if not zone_ids:
-                log.warning("bienici: no zoneIds for '%s' (skipped)", loc)
-                continue
-            got = 0
-            for page in range(1, max_pages + 1):
-                data = self._page(zone_ids, ft, ["flat", "house"], page) or {}
-                ads = data.get("realEstateAds", [])
-                if not ads:
+        for ft in fts:
+            for i, loc in enumerate(locations):
+                if len(rows) >= limit:
                     break
-                rows.extend(self._parse(a, ft) for a in ads)
-                got += len(ads)
-                if got >= per_commune or len(rows) >= limit or got >= (data.get("total") or 0):
-                    break
-            if (i + 1) % 25 == 0:
-                log.info("bienici: %d/%d communes scanned, %d ads so far", i + 1, len(locations), len(rows))
-        log.info("bienici: fetched %d ads from %d location(s)", len(rows), len(locations))
+                zone_ids = self._zone_ids(loc.strip())
+                if not zone_ids:
+                    log.warning("bienici: no zoneIds for '%s' (skipped)", loc)
+                    continue
+                got = 0
+                for page in range(1, max_pages + 1):
+                    data = self._page(zone_ids, ft, ["flat", "house"], page, size) or {}
+                    ads = data.get("realEstateAds", [])
+                    if not ads:
+                        break
+                    rows.extend(self._parse(a, ft) for a in ads)
+                    got += len(ads)
+                    if got >= per_commune or len(rows) >= limit or got >= (data.get("total") or 0):
+                        break
+                if (i + 1) % 25 == 0:
+                    log.info("bienici: %s %d/%d communes scanned, %d ads so far", ft, i + 1, len(locations), len(rows))
+        log.info("bienici: fetched %d ads from %d location(s) x [%s]", len(rows), len(locations), "+".join(fts))
         return pd.DataFrame(rows[:limit])
 
 

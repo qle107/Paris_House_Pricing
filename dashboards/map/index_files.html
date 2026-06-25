@@ -6,25 +6,42 @@
 <link href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
 <style>
-  html,body{margin:0;height:100%;font-family:system-ui,Segoe UI,Roboto,sans-serif;color:#1f2733}
+  /* Design tokens — single source of truth for colour, radius, elevation, motion. */
+  :root{
+    --ink:#1f2733; --muted:#6b7280; --line:#e3e7ee; --hover:#eef3f8;
+    --panel:#fff; --panel-line:#e9edf3;
+    --accent:#c0008f; --accent-line:#c7008f; --accent-soft:#fbe6f4;
+    --radius:10px; --radius-sm:6px;
+    --shadow:0 2px 14px rgba(15,23,42,.18);
+    --ring:0 0 0 3px rgba(192,0,143,.35);
+    --t:.16s ease;
+  }
+  html,body{margin:0;height:100%;font-family:system-ui,Segoe UI,Roboto,sans-serif;color:var(--ink)}
   #map{position:absolute;inset:0}
-  .panel{position:absolute;z-index:1;background:#fff;border-radius:10px;box-shadow:0 2px 14px rgba(15,23,42,.18);padding:13px 15px;font-size:13px}
+  .panel{position:absolute;z-index:1;background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);box-shadow:var(--shadow);padding:13px 15px;font-size:13px}
+  /* Visible keyboard focus on every native control (previously relied on browser default). */
+  select:focus-visible,button:focus-visible,input:focus-visible{outline:none;box-shadow:var(--ring);border-radius:var(--radius-sm)}
   #controls{top:12px;left:12px;width:252px}#legend{bottom:24px;left:12px;width:252px}
   #ranking{bottom:24px;right:12px;width:236px;max-height:52vh;overflow:auto}
   #analyst{top:58px;right:12px;width:360px;max-height:82vh;overflow:auto;display:none}
-  #analyst button,#analyst-toggle{cursor:pointer;border:1px solid #c7008f;background:#fff;color:#c0008f;border-radius:6px;padding:6px}
+  #analyst button,#analyst-toggle{cursor:pointer;border:1px solid var(--accent-line);background:var(--panel);color:var(--accent);border-radius:var(--radius-sm);padding:6px;transition:background var(--t),box-shadow var(--t)}
+  #analyst button:hover,#analyst-toggle:hover{background:var(--accent-soft)}
+  #analyst button:active,#analyst-toggle:active{box-shadow:inset 0 1px 3px rgba(15,23,42,.15)}
   #analyst-toggle{font-weight:600}
-  .rank-row:hover{background:#eef3f8;border-radius:4px}
+  .rank-row{transition:background var(--t)}
+  .rank-row:hover{background:var(--hover);border-radius:4px}
   #controls h1{font-size:14px;margin:0 0 9px;letter-spacing:.2px}
-  #controls label{display:block;margin:4px 0;cursor:pointer}
-  select{border:1px solid #d3d8e0;border-radius:6px;padding:3px 5px;font-size:12px}
+  #controls label{display:block;margin:4px 0;padding:2px 4px;border-radius:4px;cursor:pointer;transition:background var(--t)}
+  #controls label:hover{background:var(--hover)}
+  select{border:1px solid var(--line);border-radius:var(--radius-sm);padding:3px 5px;font-size:12px;background:var(--panel);color:var(--ink);transition:border-color var(--t),box-shadow var(--t)}
+  select:hover{border-color:var(--accent-line)}
   .swatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
   .ramp{height:10px;border-radius:4px;margin:6px 0;background:linear-gradient(90deg,#d73027,#fee08b,#1a9850,#006837)}
-  .muted{color:#6b7280;font-size:11px}
+  .muted{color:var(--muted);font-size:11px}
   .maplibregl-popup-content{font-size:12px;max-width:300px;border-radius:10px;padding:12px 14px}
   .maplibregl-popup-content h3{margin:0 0 2px;font-size:14px}
   table.kv{width:100%;border-collapse:collapse}table.kv td{padding:1px 6px 1px 0;vertical-align:top}
-  .sec{margin-top:8px;border-top:1px solid #eef0f3;padding-top:6px}
+  .sec{margin-top:8px;border-top:1px solid var(--panel-line);padding-top:6px}
   .sec-h{font-weight:600;font-size:12px;margin-bottom:3px}
   .scorechip{display:inline-block;padding:1px 8px;border-radius:10px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
   .db{display:flex;align-items:center;gap:6px;margin:3px 0;font-size:11px}
@@ -36,7 +53,7 @@
   .chip-r{background:#fde0dd;color:#b30000}.chip-y{background:#fff3cd;color:#8a6d00}
   .memo p{margin:6px 0;line-height:1.45}.memo-h{font-size:15px;font-weight:600}
   .memo-score{font-size:12px;color:#374151;margin:3px 0 7px}
-  .memo-rec{border-top:1px solid #eef0f3;padding-top:6px}
+  .memo-rec{border-top:1px solid var(--panel-line);padding-top:6px}
   .verdict{font-weight:700}
 </style></head>
 <body>
@@ -107,10 +124,11 @@ const scoreColor=["interpolate",["linear"],["coalesce",["get","score"],-1],...RA
 const hotspotColor=["match",["coalesce",["get","hotspot_tier"],0],5,"#238b45",10,"#74c476",20,"#c7e9c0","#cccccc"];
 const zoningColor=["match",["slice",["coalesce",["get","typezone"],""],0,2],"U","#fb9a99","AU","#e31a1c","A","#a6d96a","N","#1a9850","#bdbdbd"];
 const upsideColor=["interpolate",["linear"],["coalesce",["get","upside_m2"],0],0,"#fde0dd",500,"#fa9fb5",2000,"#dd3497",8000,"#7a0177"];
+const PARIS=[2.3522,48.8566];   // [lng,lat] — MapLibre order; the map opens here.
 
 const map=new maplibregl.Map({container:"map",style:{version:8,
   sources:{carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png","https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],tileSize:256,attribution:"© OpenStreetMap, © CARTO"}},
-  layers:[{id:"carto",type:"raster",source:"carto"}]},center:[2.35,48.86],zoom:11});
+  layers:[{id:"carto",type:"raster",source:"carto"}]},center:PARIS,zoom:11});
 map.addControl(new maplibregl.NavigationControl(),"top-right");
 map.addControl(new maplibregl.ScaleControl());
 
@@ -306,14 +324,21 @@ function refreshMetric(){
 
 map.on("load", async () => {
   const present={};
-  for (const f of ["iris","communes","parcels","zoning","transit","projects","listings"]) present[f]=await exists(`./${f}.geojson`);
-  if(present.iris)     map.addSource("iris",{type:"geojson",data:"./iris.geojson",generateId:true});
+  for (const f of ["communes","parcels","zoning","transit","projects"]) present[f]=await exists(`./${f}.geojson`);
+  // Fetch the two large layers once and reuse the parsed GeoJSON for the source, the
+  // leaderboard, and the listings index (these were previously downloaded 2–3× each).
+  const irisGJ     = await fetch("./iris.geojson").then(r=>r.ok?r.json():null).catch(()=>null);
+  const listingsGJ = await fetch("./listings.geojson").then(r=>r.ok?r.json():null).catch(()=>null);
+  present.iris=!!irisGJ; present.listings=!!listingsGJ;
+
+  if(present.iris)     map.addSource("iris",{type:"geojson",data:irisGJ,generateId:true});
   if(present.communes) map.addSource("communes",{type:"geojson",data:"./communes.geojson"});
   if(present.parcels)  map.addSource("parcels",{type:"geojson",data:"./parcels.geojson"});
   if(present.zoning)   map.addSource("zoning",{type:"geojson",data:"./zoning.geojson"});
   if(present.transit)  map.addSource("transit",{type:"geojson",data:"./transit.geojson"});
   if(present.projects) map.addSource("projects",{type:"geojson",data:"./projects.geojson"});
-  if(present.listings) map.addSource("listings",{type:"geojson",data:"./listings.geojson"});
+  // Listings can be thousands of points: cluster them so we never render them all at once.
+  if(present.listings) map.addSource("listings",{type:"geojson",data:listingsGJ,cluster:true,clusterRadius:50,clusterMaxZoom:14});
 
   if(present.iris){
     map.addLayer({id:"iris-fill",type:"fill",source:"iris",paint:{"fill-color":irisColor,
@@ -331,18 +356,22 @@ map.on("load", async () => {
   if(present.parcels)  map.addLayer({id:"parcels-fill",type:"fill",source:"parcels",layout:{visibility:"none"},paint:{"fill-color":upsideColor,"fill-opacity":0.75,"fill-outline-color":"#7a0177"}});
   if(present.transit)  map.addLayer({id:"transit-pt",type:"circle",source:"transit",layout:{visibility:"none"},paint:{"circle-radius":3,"circle-color":"#3182bd","circle-stroke-width":0.5,"circle-stroke-color":"#fff"}});
   if(present.projects) map.addLayer({id:"projects-pt",type:"circle",source:"projects",paint:{"circle-radius":6,"circle-color":"#e6550d","circle-stroke-width":1.5,"circle-stroke-color":"#fff"}});
-  if(present.listings) map.addLayer({id:"listings-pt",type:"circle",source:"listings",paint:{"circle-radius":5,"circle-color":["match",["get","transaction"],"rent","#6a51a3","#1d91c0"],"circle-stroke-width":1,"circle-stroke-color":"#fff","circle-opacity":0.9}});
+  if(present.listings){
+    map.addLayer({id:"listings-clusters",type:"circle",source:"listings",filter:["has","point_count"],
+      paint:{"circle-color":["step",["get","point_count"],"#9ecae1",25,"#6baed6",100,"#3182bd"],
+        "circle-radius":["step",["get","point_count"],14,25,18,100,24],
+        "circle-opacity":0.85,"circle-stroke-width":1,"circle-stroke-color":"#fff"}});
+    map.addLayer({id:"listings-count",type:"symbol",source:"listings",filter:["has","point_count"],
+      layout:{"text-field":["get","point_count_abbreviated"],"text-size":12},paint:{"text-color":"#08306b"}});
+    map.addLayer({id:"listings-pt",type:"circle",source:"listings",filter:["!",["has","point_count"]],
+      paint:{"circle-radius":5,"circle-color":["match",["get","transaction"],"rent","#6a51a3","#1d91c0"],"circle-stroke-width":1,"circle-stroke-color":"#fff","circle-opacity":0.9}});
+  }
   if(present.iris) map.addLayer({id:"iris-highlight",type:"line",source:"iris",
     filter:["==",["to-string",["get","iris_code"]],"__none__"],
     paint:{"line-color":"#ff00d4","line-width":4,"line-blur":0.2,"line-opacity":1}});
 
-  const fitTo = present.iris ? "iris" : (present.communes ? "communes" : null);
-  if(fitTo){ try{
-    const gj=await (await fetch(`./${fitTo}.geojson`)).json();
-    const b=new maplibregl.LngLatBounds();
-    gj.features.forEach(ft=>{ const g=ft.geometry; if(!g) return; const cs=(g.type==="MultiPolygon"?g.coordinates.flat(2):g.coordinates.flat(1)); cs.forEach(c=>b.extend(c)); });
-    if(!b.isEmpty()) map.fitBounds(b,{padding:30});
-  }catch(_){} }
+  // Open focused on Paris and zoom IN — never the old zoom-out-to-fit-all-of-Île-de-France jump.
+  map.flyTo({center:PARIS, zoom:13, speed:0.6, curve:1.2, essential:true});
 
   const sel=document.getElementById("iris-metric");
   if(sel) sel.addEventListener("change", refreshMetric);
@@ -350,18 +379,16 @@ map.on("load", async () => {
   if(scopeSel) scopeSel.addEventListener("change", applyScope);
   document.getElementById("status").textContent = "Layers: " + Object.keys(present).filter(k=>present[k]).join(", ");
   if(present.iris){
-    try{
-      const fj=await (await fetch("./iris.geojson")).json(); const fs=fj.features||[]; irisFeatures=fs;
-      const scored=fs.filter(f=>f.properties&&f.properties.score_total!=null).length;
-      const hot=fs.filter(f=>+((f.properties||{}).hotspot_tier||0)>0).length;
-      console.log(`IRIS loaded: ${fs.length}  IRIS scored: ${scored}  IRIS hotspots: ${hot}`);
-      refreshMetric();
-    }catch(e){ console.warn("IRIS diag: failed to read iris.geojson", e); }
+    const fs=irisGJ.features||[]; irisFeatures=fs;
+    const scored=fs.filter(f=>f.properties&&f.properties.score_total!=null).length;
+    const hot=fs.filter(f=>+((f.properties||{}).hotspot_tier||0)>0).length;
+    console.log(`IRIS loaded: ${fs.length}  IRIS scored: ${scored}  IRIS hotspots: ${hot}`);
+    refreshMetric();
   } else {
     document.getElementById("rank-list").innerHTML='<div class="muted">IRIS not scored yet — re-run with --score-level iris.</div>';
     console.warn("IRIS: ./iris.geojson not found — run with --score-level iris.");
   }
-  if(present.listings){ try{ const lj=await (await fetch("./listings.geojson")).json(); listingsFeatures=lj.features||[]; }catch(e){ console.warn("listings load failed", e); } }
+  if(present.listings) listingsFeatures=listingsGJ.features||[];
   wireHover(); wireToggles(); wireAnalyst();
 });
 
@@ -378,7 +405,8 @@ function wireHover(){
 function wireToggles(){
   const pairs=[["t-iris",["iris-fill","iris-line"]],["t-hotspots",["hotspots"]],
     ["t-communes",["communes-fill","communes-line"]],["t-projects",["projects-pt"]],
-    ["t-transit",["transit-pt"]],["t-zoning",["zoning-fill"]],["t-parcels",["parcels-fill"]],["t-listings",["listings-pt"]]];
+    ["t-transit",["transit-pt"]],["t-zoning",["zoning-fill"]],["t-parcels",["parcels-fill"]],
+    ["t-listings",["listings-pt","listings-clusters","listings-count"]]];
   for(const [id,ls] of pairs){const el=document.getElementById(id); if(!el) continue;
     el.addEventListener("change",()=>{const v=el.checked?"visible":"none"; ls.forEach(L=>map.getLayer(L)&&map.setLayoutProperty(L,"visibility",v));});}
 }
@@ -452,6 +480,14 @@ map.on("click","projects-pt",(e)=>{const p=e.features[0].properties;
   new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<h3>${p.project||"Project"}</h3><table class="kv"><tr><td>Line</td><td>${p.line??""}</td></tr><tr><td>Mode</td><td>${p.mode??""}</td></tr><tr><td>Opening</td><td>${p.opening??""}</td></tr><tr><td>Status</td><td>${p.status??""}</td></tr></table>`).addTo(map);});
 map.on("click","parcels-fill",(e)=>{const p=e.features[0].properties;
   new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<h3>Parcel ${p.id_parcelle||""}</h3><table class="kv"><tr><td>Upside</td><td><b>${p.upside_m2!=null?Math.round(p.upside_m2):"n/a"} m²</b></td></tr><tr><td>Zone</td><td>${p.zone_family??""}</td></tr></table>`).addTo(map);});
+// Click a cluster to zoom in until it breaks apart into individual listings.
+map.on("click","listings-clusters",(e)=>{
+  const f=map.queryRenderedFeatures(e.point,{layers:["listings-clusters"]})[0]; if(!f) return;
+  map.getSource("listings").getClusterExpansionZoom(f.properties.cluster_id)
+    .then(z=>map.easeTo({center:f.geometry.coordinates, zoom:z})).catch(()=>{});
+});
+map.on("mouseenter","listings-clusters",()=>{ map.getCanvas().style.cursor="pointer"; });
+map.on("mouseleave","listings-clusters",()=>{ map.getCanvas().style.cursor=""; });
 // Listings show on HOVER (~250ms delay) as a transient tooltip — never stacks on the IRIS stats popup.
 const listingPopup=new maplibregl.Popup({closeButton:false,closeOnClick:false,maxWidth:"250px",anchor:"bottom",offset:10});
 let _lShow=null,_lHide=null,_lId=null;
