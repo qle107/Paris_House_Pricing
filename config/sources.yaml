@@ -308,7 +308,7 @@ sources:
   schools_directory:
     name: "MEN - annuaire de l'education (etablissements geolocalises)"
     collector: rei.ingestion.education.SchoolLocationsCollector
-    tier: scaffold        # confirm ODS slug; writes the school_points geo layer
+    tier: runnable        # fr-en-annuaire-education; per-departement fetch -> school_points geo
     portal: "https://data.education.gouv.fr/"
     api: "https://data.education.gouv.fr/api/explore/v2.1"
     auth: none
@@ -318,10 +318,10 @@ sources:
     score: 7
 
   hospitals_finess:
-    name: "FINESS - etablissements de sante (geolocalises)"
+    name: "OSM/FINESS - etablissements de sante (geolocalises)"
     collector: rei.ingestion.health.HospitalsCollector
-    tier: scaffold        # confirm geolocated FINESS slug; writes hospital_points
-    portal: "https://finess.esante.gouv.fr/"
+    tier: runnable        # osm-france-healthcare (hospitals+clinics) -> hospital_points geo
+    portal: "https://public.opendatasoft.com/explore/dataset/osm-france-healthcare/"
     api: "https://public.opendatasoft.com/api/explore/v2.1"
     auth: none
     cadence: continuous
@@ -332,7 +332,7 @@ sources:
   social_housing_sru:
     name: "Inventaire SRU (art. 55) - logements sociaux par commune"
     collector: rei.ingestion.social_housing.SruCollector
-    tier: scaffold        # confirm data.gouv slug; commune-grain, broadcast to IRIS
+    tier: runnable        # communes-et-inventaire-sru (data.gouv); commune-grain, broadcast to IRIS
     portal: "https://www.data.gouv.fr/"
     api: "https://www.data.gouv.fr/api/1"
     auth: none

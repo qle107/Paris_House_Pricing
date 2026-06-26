@@ -64,7 +64,7 @@ class SchoolLocationsCollector(OpendatasoftCollector):
 
     source_id = "schools_directory"
     base = "https://data.education.gouv.fr/api/explore/v2.1"
-    dataset = "fr-en-annuaire-education"  # confirm latest slug in catalog
+    dataset = "fr-en-annuaire-education"
 
     def collect(self, communes: list[str] | None = None,
                 departements: list[str] | None = None, **_) -> int:
@@ -72,13 +72,22 @@ class SchoolLocationsCollector(OpendatasoftCollector):
 
         from rei.common.store import write_geo
 
-        where = None
+        frames: list[pd.DataFrame] = []
         if communes:
-            where = "code_commune in (%s)" % ",".join(f'"{c}"' for c in communes)
+            joined = ",".join(f'"{c}"' for c in communes)
+            frames.append(self.fetch_records(where=f"code_commune in ({joined})"))
         elif departements:
-            where = "code_departement in (%s)" % ",".join(f'"{d}"' for d in departements)
-        df = self.fetch_records(where=where)
-        pts = normalize_school_points(df)
+            # One request per department to stay under the ODS 10k offset cap and keep
+            # full coverage across Ile-de-France.
+            for d in departements:
+                frames.append(self.fetch_records(where=f'code_departement="{d}"'))
+        else:
+            frames.append(self.fetch_records())
+
+        frames = [f for f in frames if f is not None and not f.empty]
+        if not frames:
+            return 0
+        pts = normalize_school_points(pd.concat(frames, ignore_index=True))
         if pts.empty:
             return 0
         gdf = gpd.GeoDataFrame(pts, geometry=gpd.points_from_xy(pts["longitude"], pts["latitude"]), crs=4326)

@@ -22,5 +22,24 @@ def test_normalize_sru_uses_rate_column_and_pads_code():
     assert out["sru_deficit_pct"] == 12.5
 
 
+def test_normalize_sru_accented_spaced_headers():
+    # real data.gouv headers carry accents, spaces and units
+    raw = pd.DataFrame({"Code commune": ["93066"],
+                        "Nombre de logements sociaux": [3000],
+                        "Résidences principales": [12000]})
+    out = normalize_sru(raw).iloc[0]
+    assert out["code_commune"] == "93066"
+    assert out["social_housing_share"] == 25.0
+    assert out["sru_deficit_pct"] == 0.0
+
+
+def test_normalize_sru_rate_header_with_percent_unit():
+    raw = pd.DataFrame({"INSEE": ["75056"], "Taux de logements sociaux (%)": [21.3]})
+    out = normalize_sru(raw).iloc[0]
+    assert out["code_commune"] == "75056"
+    assert out["social_housing_share"] == 21.3
+    assert out["sru_deficit_pct"] == 3.7                  # 25 - 21.3
+
+
 def test_normalize_sru_missing_columns_returns_empty():
     assert normalize_sru(pd.DataFrame({"foo": [1], "bar": [2]})).empty
