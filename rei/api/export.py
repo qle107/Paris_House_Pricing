@@ -63,6 +63,30 @@ def export_geojson(out_dir: str | Path) -> list[str]:
             fd["iris_code"] = fd["iris_code"].astype(str)
             iris["iris_code"] = iris["iris_code"].astype(str)
             iris = iris.merge(fd, on="iris_code", how="left")
+        acc = store.read_table("accessibility")
+        if acc is not None and not acc.empty and "iris_code" in iris.columns:
+            keep = [c for c in ["iris_code", "school_access_score", "hospital_access_score",
+                                "n_schools_1km", "n_hospitals_3km"] if c in acc.columns]
+            acc = acc[keep].copy()
+            acc["iris_code"] = acc["iris_code"].astype(str)
+            iris["iris_code"] = iris["iris_code"].astype(str)
+            iris = iris.merge(acc, on="iris_code", how="left")
+        liv = store.read_table("liveability")
+        if liv is not None and not liv.empty and "iris_code" in iris.columns:
+            keep = [c for c in ["iris_code", "family_liveability_score",
+                                "liveability_coverage"] if c in liv.columns]
+            liv = liv[keep].copy()
+            liv["iris_code"] = liv["iris_code"].astype(str)
+            iris["iris_code"] = iris["iris_code"].astype(str)
+            iris = iris.merge(liv, on="iris_code", how="left")
+        sh = store.read_table("social_housing")
+        if sh is not None and not sh.empty and "code_commune" in iris.columns:
+            keep = [c for c in ["code_commune", "social_housing_share",
+                                "sru_deficit_pct"] if c in sh.columns]
+            sh = sh[keep].copy()
+            sh["code_commune"] = sh["code_commune"].astype(str)
+            iris["code_commune"] = iris["code_commune"].astype(str)
+            iris = iris.merge(sh, on="code_commune", how="left")
         iris = iris.to_crs(CRS_METRIC)
         iris["geometry"] = iris.geometry.simplify(10)
         if _write(iris, out / "iris.geojson"):

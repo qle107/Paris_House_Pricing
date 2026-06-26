@@ -83,6 +83,10 @@ def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, sco
         _run("rental_observatoires", departements=IDF_DEPARTEMENTS)
         _run("sitadel_permits", communes=communes)
         _run("georisques", communes=communes)   # natural-hazard overlay -> climate haircut
+        # Public-amenity + social feeds for the accessibility / liveability / SRU indicators.
+        _run("schools_directory", departements=IDF_DEPARTEMENTS)
+        _run("hospitals_finess", departements=IDF_DEPARTEMENTS)
+        _run("social_housing_sru", communes=communes)
         # Forward-looking project pipeline (verified Grand Paris core seed; light, keyless).
         _run("transport_projects")
         _run("development_projects")
@@ -126,6 +130,22 @@ def run_pipeline(communes, skip_ingest, profile, with_transit, with_parcels, sco
             print(f"  future_development: {n} IRIS scored")
         except Exception as exc:
             print(f"  [warn] future development: {exc}")
+
+        print("== Scoring amenity accessibility (per-IRIS) ==")
+        try:
+            from rei.scoring.accessibility_iris import run_files as score_access
+            n = score_access()
+            print(f"  accessibility: {n} IRIS scored")
+        except Exception as exc:
+            print(f"  [warn] accessibility: {exc}")
+
+        print("== Scoring family liveability (per-IRIS) ==")
+        try:
+            from rei.scoring.liveability import run_files as score_liveability
+            n = score_liveability()
+            print(f"  liveability: {n} IRIS scored")
+        except Exception as exc:
+            print(f"  [warn] liveability: {exc}")
 
     if with_forecast:
         from rei.ml.predict import predict_all

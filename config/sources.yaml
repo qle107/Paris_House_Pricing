@@ -305,6 +305,42 @@ sources:
     variables: [ips, effectifs, type_etab, resultats_brevet, lat, lon]
     score: 7
 
+  schools_directory:
+    name: "MEN - annuaire de l'education (etablissements geolocalises)"
+    collector: rei.ingestion.education.SchoolLocationsCollector
+    tier: scaffold        # confirm ODS slug; writes the school_points geo layer
+    portal: "https://data.education.gouv.fr/"
+    api: "https://data.education.gouv.fr/api/explore/v2.1"
+    auth: none
+    cadence: annual
+    granularity: address
+    variables: [uai, nom_etablissement, code_commune, lat, lon]
+    score: 7
+
+  hospitals_finess:
+    name: "FINESS - etablissements de sante (geolocalises)"
+    collector: rei.ingestion.health.HospitalsCollector
+    tier: scaffold        # confirm geolocated FINESS slug; writes hospital_points
+    portal: "https://finess.esante.gouv.fr/"
+    api: "https://public.opendatasoft.com/api/explore/v2.1"
+    auth: none
+    cadence: continuous
+    granularity: address
+    variables: [finess, nom, code_commune, lat, lon]
+    score: 7
+
+  social_housing_sru:
+    name: "Inventaire SRU (art. 55) - logements sociaux par commune"
+    collector: rei.ingestion.social_housing.SruCollector
+    tier: scaffold        # confirm data.gouv slug; commune-grain, broadcast to IRIS
+    portal: "https://www.data.gouv.fr/"
+    api: "https://www.data.gouv.fr/api/1"
+    auth: none
+    cadence: annual
+    granularity: commune
+    variables: [social_housing_share, sru_target_rate, sru_deficit_pct]
+    score: 7
+
   crime_ssmsi:
     name: "SSMSI - bases communales de la delinquance enregistree"
     collector: rei.ingestion.crime.CrimeCollector

@@ -143,6 +143,8 @@ Drop your PNGs into `docs/screenshots/` using the filenames below and they'll re
 
 The same collector code serves both backends; `rei/common/store.py` dispatches to Parquet or PostGIS based on `REI_STORAGE`.
 
+Data layering follows the **Bronze / Silver / Gold (Medallion)** pattern — see [docs/data_architecture.md](docs/data_architecture.md) for the full per-dataset mapping (and the equivalence to the EFREI *Urban Data Explorer* layers). Family-segment indicators (school & hospital accessibility, social housing / SRU, family liveability) are computed per IRIS alongside the institutional suite.
+
 ## Data sources
 
 Registry: `config/sources.yaml`. Architecture notes: `docs/`.
